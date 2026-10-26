@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVAT - Écosystème Universel & ELAWS</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #10b981;
+            --text-main: #f8fafc;
+            --text-secondary: #94a3b8;
+        }
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #334155;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .card h3 {
+            margin-top: 0;
+            color: var(--accent-color);
+            font-size: 1.2rem;
+        }
+        .btn {
+            background-color: var(--accent-color);
+            color: #0f172a;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            margin-top: 1rem;
+        }
+        .btn:hover {
+            opacity: 0.9;
+        }
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: var(--card-bg);
+            color: var(--text-secondary);
+            border-top: 1px solid #334155;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">🌿 EVAT / ELAWS</div>
+        <div>Statut : <span style="color: var(--accent-color);">● Sécurisé & Actif</span></div>
+    </header>
+
+    <main>
+        <div class="hero">
+            <h1>Écosystème Universel de la Vie et des Métiers</h1>
+            <p>Piloté par <strong>ELAWS</strong> (Assistant intelligent souverain)</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>Vitals Métiers</h3>
+                <p>Gestion intelligente adaptée à chaque corps de métier (santé, agriculture, artisanat, etc.).</p>
+                <button class="btn" onclick="alert('Connexion à ELAWS établie avec succès !')">Lancer ELAWS</button>
+            </div>
+            <div class="card">
+                <h3>Sécurité & Souveraineté</h3>
+                <p>Protection active des données et mode hors-ligne opérationnel.</p>
+                <button class="btn" onclick="alert('Système 100% protégé et intègre.')">Vérifier le Système</button>
+            </div>
+            <div class="card">
+                <h3>Module Écologie</h3>
+                <p>Suivi des performances et de l'impact environnemental en temps réel.</p>
+                <button class="btn" onclick="alert('Rapport écologique à jour.')">Voir les Rapports</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 EVAT. Conçu par ELAWS. Tous droits réservés.
+    </footer>
+
+</body>
+</html>
