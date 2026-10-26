@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. & ELAWS - Écosystème Universel</title>
+    <title>E.V.A.T. & ELAWS - Écosystème Universel Multi-Métiers</title>
     <style>
         :root {
             --bg-color: #f8fafc;
@@ -13,6 +13,20 @@
             --accent: #10b981;
             --accent-hover: #059669;
             --border-color: #e2e8f0;
+        }
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+        }
+        [data-theme="eco"] {
+            --bg-color: #000000;
+            --card-bg: #121212;
+            --text-main: #22c55e;
+            --text-secondary: #16a34a;
+            --border-color: #14532d;
         }
         * { box-sizing: border-box; }
         body {
@@ -24,6 +38,7 @@
             flex-direction: column;
             min-height: 100vh;
             padding: 10px;
+            transition: background 0.3s, color 0.3s;
         }
         header {
             display: flex;
@@ -34,10 +49,11 @@
             border-radius: 8px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             margin-bottom: 10px;
+            border: 1px solid var(--border-color);
         }
         .header-left { display: flex; align-items: center; gap: 10px; }
         .menu-toggle {
-            background: #0f172a;
+            background: var(--accent);
             color: white;
             border: none;
             padding: 8px 12px;
@@ -45,19 +61,19 @@
             font-size: 1.1rem;
             cursor: pointer;
         }
-        .title { font-size: 1rem; font-weight: bold; color: var(--text-main); }
+        .title { font-size: 1rem; font-weight: bold; }
         .header-right { display: flex; align-items: center; gap: 6px; }
         .btn-top {
-            background-color: #e2e8f0;
+            background-color: var(--border-color);
             padding: 6px 10px;
             border-radius: 6px;
             border: none;
             font-size: 11px;
             font-weight: bold;
-            color: #334155;
+            color: var(--text-main);
             cursor: pointer;
         }
-        .badge-eco {
+        .badge-info {
             font-size: 10.5px;
             color: var(--accent);
             font-weight: 600;
@@ -66,17 +82,17 @@
         }
         .sidebar {
             display: none;
-            background-color: #0f172a;
-            color: white;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 12px;
         }
         .sidebar.open { display: block; }
-        .sidebar h3 { font-size: 0.9rem; color: #38bdf8; margin-top: 0; border-bottom: 1px solid #334155; padding-bottom: 6px; }
+        .sidebar h3 { font-size: 0.9rem; color: var(--accent); margin-top: 0; border-bottom: 1px solid var(--border-color); padding-bottom: 6px; }
         .menu-item {
-            background: rgba(255,255,255,0.08);
-            color: #f8fafc;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--text-main);
             padding: 10px;
             border-radius: 6px;
             margin-bottom: 6px;
@@ -85,8 +101,9 @@
             text-align: left;
             font-size: 0.85rem;
             cursor: pointer;
+            font-weight: 500;
         }
-        .menu-item:hover { background: rgba(255,255,255,0.15); }
+        .menu-item:hover { background: rgba(16, 185, 129, 0.2); }
         .module-container { flex: 1; max-width: 700px; width: 100%; margin: 0 auto; }
         .card {
             background-color: var(--card-bg);
@@ -97,15 +114,28 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.03);
         }
         .card-title { font-size: 14px; font-weight: 600; color: var(--text-secondary); margin-top: 0; margin-bottom: 6px; }
-        .score-text { font-size: 15px; font-weight: bold; color: var(--text-main); margin-bottom: 6px; }
-        .text { font-size: 13.5px; color: #334155; margin-bottom: 12px; line-height: 1.5; }
+        .score-text { font-size: 15px; font-weight: bold; margin-bottom: 6px; }
+        .text { font-size: 13.5px; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.5; }
         .tool-card {
-            background: #f8fafc;
+            background: var(--bg-color);
             padding: 10px;
             border-radius: 6px;
             margin-bottom: 6px;
             border-left: 4px solid var(--accent);
             font-size: 12.5px;
+            color: var(--text-main);
+        }
+        .badge-metier {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            cursor: pointer;
         }
         .input-group { display: flex; gap: 8px; margin-bottom: 8px; }
         .input {
@@ -113,7 +143,8 @@
             border: 1px solid var(--border-color);
             border-radius: 6px;
             padding: 9px;
-            background: #fff;
+            background: var(--card-bg);
+            color: var(--text-main);
             font-size: 13px;
         }
         select.input { width: 100%; margin-bottom: 8px; }
@@ -131,99 +162,75 @@
         .btn-action:hover { background-color: var(--accent-hover); }
     </style>
 </head>
-<body>
+<body data-theme="light">
 
     <header>
         <div class="header-left">
             <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-            <div class="title" id="lblTitle">E.V.A.T. & ELAWS</div>
+            <div class="title">E.V.A.T. & ELAWS</div>
         </div>
         <div class="header-right">
-            <button class="btn-top" onclick="changerLangue()" id="lblLang">FR / EN</button>
-            <button class="btn-top" style="background:#fee2e2; color:#b91c1c;" onclick="toggleEco()" id="lblEco">🔋 Mode Éco</button>
+            <button class="btn-top" onclick="changerTheme()">🎨 Thème</button>
+            <button class="btn-top" onclick="changerLangue()">🌐 FR/EN</button>
         </div>
     </header>
 
-    <div class="badge-eco" id="lblOffline">🟢 100% Souverain | Basse Consommation | Hors-ligne</div>
+    <div class="badge-info">🟢 Profils Multi-Métiers | Évolution Jeunes & Adultes | Hors-ligne</div>
 
     <div id="sideMenu" class="sidebar">
-        <h3>📂 Menu & Navigation</h3>
-        <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Outils Métier</button>
+        <h3>📂 Navigation Principale</h3>
+        <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Profils Multi-Métiers</button>
         <button class="menu-item" onclick="switchTab('appel')">📞 Appels & Traduction Maternelle</button>
-        <button class="menu-item" onclick="switchTab('motivation')">💡 Inspiration & Énergie</button>
+        <button class="menu-item" onclick="switchTab('motivation')">💡 Inspiration & Évolution</button>
         <button class="menu-item" onclick="switchTab('ia')">🤖 Assistant ELAWS AI</button>
-        
-        <h3 style="margin-top: 12px;">👷 Choisir votre Métier</h3>
-        <button class="menu-item" onclick="choisirMetier('Couturier / Tailleur')">✂️ Couturier / Tailleur</button>
-        <button class="menu-item" onclick="choisirMetier('Cuisinier / Restauration')">🍳 Cuisinier / Restauration</button>
-        <button class="menu-item" onclick="choisirMetier('Artisan / Architecte / BTP')">🏗️ Artisan / Architecte / BTP</button>
-        <button class="menu-item" onclick="choisirMetier('Agriculteur / Terre')">🌾 Agriculteur / Terre</button>
-        <button class="menu-item" onclick="choisirMetier('Médecin / Santé')">🩺 Médecin / Santé</button>
-        <button class="menu-item" onclick="choisirMetier('Journaliste / Enquêteur')">📰 Journaliste / Enquêteur</button>
     </div>
 
     <div class="module-container" id="mainContent"></div>
 
     <script>
-        let langue = 'FR';
         let activeTab = 'accueil';
-        let metierActif = { nom: 'Non défini', outils: [] };
-        let modeEco = false;
-        let citation = '"Chaque grand voyage commence par un seul pas. ELAWS est à vos côtés."';
-        let reponseIA = "Bonjour ! Je suis ELAWS, votre assistant local et privé.";
-        
+        // Liste des métiers du profil de l'utilisateur (polyvalence / évolution)
+        let mesMetiers = ['Agriculteur', 'Couturier'];
+        let metierActif = 'Agriculteur';
+        let themeIndex = 0;
+        const themes = ['light', 'dark', 'eco'];
+        const themeNoms = ['Clair Lumineux', 'Sombre Pro', 'Éco-Batterie'];
+
         let contacts = [
             { nom: "Mon Conjoint / Famille", telephone: "06 00 00 00 01", langueMaternelle: "Éwé / Mina" },
             { nom: "Partenaire / Fournisseur", telephone: "06 00 00 00 02", langueMaternelle: "Kabiyè" }
         ];
         let historiqueAppel = "Prêt pour les appels sécurisés et traduction instantanée.";
-
-        const dbMetiers = {
-            'Couturier / Tailleur': [
-                "✂️ Catalogue de modèles et patrons de couture",
-                "📏 Carnet de prises de mesures clients (Poitrine, Longueur)",
-                "🧵 Gestion des stocks de tissus et bobines de fil",
-                "📅 Suivi des dates d'essayage et de livraison"
-            ],
-            'Cuisinier / Restauration': [
-                "🍳 Fiches techniques de recettes professionnelles",
-                "📦 Gestion des stocks et inventaire des produits frais",
-                "⏰ Minuteurs de cuisson et plan de cuisine",
-                "📋 Calculateur de coûts de revient des plats"
-            ],
-            'Artisan / Architecte / BTP': [
-                "📐 Plans de construction et devis estimatifs",
-                "🔨 Inventaire des matériaux (Ciment, Fer, Bois)",
-                "👷 Suivi des chantiers et journal des tâches",
-                "📐 Outil de calcul de surfaces et volumes"
-            ],
-            'Agriculteur / Terre': [
-                "🌾 Suivi des cycles de récolte et des parcelles",
-                "💧 Planification de l'irrigation et météo locale",
-                "🌱 Gestion des semences, engrais et intrants",
-                "🚜 Suivi et maintenance du matériel agricole"
-            ],
-            'Médecin / Santé': [
-                "🩺 Registre des consultations et dossiers patients",
-                "💊 Gestion de la pharmacie et des stocks de médicaments",
-                "📅 Planification des rendez-vous de soins",
-                "📋 Protocoles d'urgence et aide au diagnostic"
-            ],
-            'Journaliste / Enquêteur': [
-                "📰 Carnet d'enquêtes et contacts de sources",
-                "🎙️ Enregistreur et notes de terrain sécurisées",
-                "📅 Planning de publication et rédaction d'articles",
-                "🔍 Analyse des faits et recoupement d'informations"
-            ]
-        };
+        let reponseIA = "Bonjour ! Je suis ELAWS, votre assistant universel et compagnon d'évolution.";
+        let citation = '"Chaque grand voyage commence par un seul pas. Évoluez à votre rythme."';
 
         function toggleMenu() { document.getElementById('sideMenu').classList.toggle('open'); }
-        function changerLangue() { langue = langue === 'FR' ? 'EN' : 'FR'; render(); }
-        function toggleEco() {
-            modeEco = !modeEco;
-            document.body.style.background = modeEco ? '#000000' : '#f8fafc';
-            document.body.style.color = modeEco ? '#22c55e' : '#0f172a';
-            alert(modeEco ? "Mode Éco activé (Écran sombre, batterie ultra-préservée pour anciens téléphones)." : "Mode Normal rétabli.");
+        
+        function changerTheme() {
+            themeIndex = (themeIndex + 1) % themes.length;
+            document.body.setAttribute('data-theme', themes[themeIndex]);
+            alert("Thème appliqué : " + themeNoms[themeIndex]);
+        }
+
+        function changerLangue() { alert("Mode Multilingue actif."); }
+
+        function ajouterMetierProfil() {
+            const input = document.getElementById('inputNouveauMetier');
+            const val = input.value.trim();
+            if(val && !mesMetiers.includes(val)) {
+                mesMetiers.push(val);
+                metierActif = val; // Bascule automatique sur le nouveau métier ajouté
+                input.value = '';
+                alert(`Métier "${val}" ajouté avec succès à votre profil polyvalent !`);
+                render();
+            } else if(val) {
+                metierActif = val;
+                render();
+            }
+        }
+
+        function selectionnerMetierActif(nom) {
+            metierActif = nom;
             render();
         }
 
@@ -232,25 +239,37 @@
             content.innerHTML = '';
 
             if (activeTab === 'accueil') {
-                let outilsHtml = '';
-                if (metierActif.nom !== 'Non défini' && dbMetiers[metierActif.nom]) {
-                    outilsHtml = `<div style="margin-top:10px;"><strong>🛠️ Outils actifs : ${metierActif.nom}</strong>`;
-                    dbMetiers[metierActif.nom].forEach(o => { outilsHtml += `<div class="tool-card">${o}</div>`; });
-                    outilsHtml += `</div>`;
-                }
+                let badgesHtml = '';
+                mesMetiers.forEach(m => {
+                    const styleActive = m === metierActif ? 'background: var(--accent); color: white;' : '';
+                    badgesHtml += `<span class="badge-metier" style="${styleActive}" onclick="selectionnerMetierActif('${m}')">💼 ${m}</span>`;
+                });
+
                 content.innerHTML = `
                     <div class="card">
-                        <h3 class="card-title">Bienvenue dans E.V.A.T.</h3>
-                        <p class="text">Sélectionnez votre métier via le menu (☰) pour charger vos outils instantanément. Conçu pour tous (enfants, adultes, illettrés) et ultra-léger pour anciens téléphones.</p>
-                        <div class="score-text">Métier actuel : ${metierActif.nom}</div>
-                        ${outilsHtml}
+                        <h3 class="card-title">Mon Profil Polyvalent & Évolution de Carrière</h3>
+                        <p class="text">Vous pouvez ajouter plusieurs métiers à votre profil (idéal pour les personnes polyvalentes, les enfants ou les élèves qui évoluent de domaine en domaine) :</p>
+                        
+                        <div class="input-group">
+                            <input type="text" id="inputNouveauMetier" class="input" placeholder="Ajouter un métier (ex: Maçon, Étudiant, Éleveur...)">
+                            <button class="btn-action" style="width:auto;" onclick="ajouterMetierProfil()">Ajouter / Activer</button>
+                        </div>
+
+                        <div style="margin-top: 12px; margin-bottom: 12px;">
+                            <strong>Vos métiers enregistrés (cliquez pour basculer) :</strong><br><br>
+                            ${badgesHtml}
+                        </div>
+
+                        <div class="score-text" style="margin-top:15px; color: var(--accent);">🛠️ Espace de travail actif : ${metierActif}</div>
+                        <div class="tool-card">• Fiches de gestion, outils et tableaux de bord spécifiques pour : <strong>${metierActif}</strong></div>
+                        <div class="tool-card">• Historique et compétences conservés lors de vos transitions de carrière.</div>
                     </div>
                 `;
             } else if (activeTab === 'appel') {
                 let listC = '';
                 contacts.forEach(c => {
                     listC += `<div class="tool-card" style="display:flex; justify-content:space-between; align-items:center;">
-                        <div><strong>👤 ${c.nom}</strong><br><small>📞 ${c.telephone} | ${c.langueMaternelle}</small></div>
+                        <div><strong>👤 ${c.nom}</strong><br><small>📞 ${c.telephone} | Langue : ${c.langueMaternelle}</small></div>
                         <button class="btn-action" style="width:auto; padding:6px 12px;" onclick="lancerAppel('${c.nom}')">Appeler</button>
                     </div>`;
                 });
@@ -262,25 +281,24 @@
                         <select id="langC" class="input"><option>Éwé / Mina</option><option>Kabiyè</option><option>Français</option><option>Yoruba</option><option>Haoussa</option></select>
                         <button class="btn-action" onclick="addC()" style="margin-bottom:12px;">Ajouter Contact</button>
                         <h4 style="margin:8px 0;">Contacts :</h4>${listC}
-                        <div style="background:#f1f5f9; padding:10px; border-radius:6px; margin-top:10px; font-size:12.5px;">🎧 ${historiqueAppel}</div>
+                        <div style="background:var(--bg-color); padding:10px; border-radius:6px; margin-top:10px; font-size:12.5px;">🎧 ${historiqueAppel}</div>
                     </div>
                 `;
             } else if (activeTab === 'motivation') {
-                content.innerHTML = `<div class="card"><h3 class="card-title">Inspiration & Énergie</h3><div class="score-text" style="font-style:italic;">${citation}</div><button class="btn-action" onclick="alerteInsp()">Nouvelle Énergie</button></div>`;
+                content.innerHTML = `<div class="card"><h3 class="card-title">Inspiration & Évolution</h3><div class="score-text" style="font-style:italic;">${citation}</div><button class="btn-action" onclick="alerteInsp()">Nouvelle Énergie</button></div>`;
             } else if (activeTab === 'ia') {
-                content.innerHTML = `<div class="card"><h3 class="card-title">Assistant ELAWS</h3><div style="background:#f1f5f9; padding:10px; border-radius:6px; margin-bottom:10px; font-size:13px;">🤖 ${reponseIA}</div><div class="input-group"><input type="text" id="inIA" class="input" placeholder="Votre question..."><button class="btn-action" style="width:auto;" onclick="askIA()">Envoyer</button></div></div>`;
+                content.innerHTML = `<div class="card"><h3 class="card-title">Assistant ELAWS (Compagnon d'Évolution)</h3><div style="background:var(--bg-color); padding:10px; border-radius:6px; margin-bottom:10px; font-size:13px;">🤖 ${reponseIA}</div><div class="input-group"><input type="text" id="inIA" class="input" placeholder="Votre question..."><button class="btn-action" style="width:auto;" onclick="askIA()">Envoyer</button></div></div>`;
             }
         }
 
         function switchTab(t) { activeTab = t; document.getElementById('sideMenu').classList.remove('open'); render(); }
-        function choisirMetier(nom) { metierActif = { nom: nom, outils: dbMetiers[nom] }; document.getElementById('sideMenu').classList.remove('open'); alert("Métier activé : " + nom); switchTab('accueil'); }
         function addC() {
             const n = document.getElementById('nomC').value, t = document.getElementById('telC').value, l = document.getElementById('langC').value;
             if(n && t) { contacts.push({nom:n, telephone:t, langueMaternelle:l}); alert("Contact ajouté !"); render(); }
         }
         function lancerAppel(nom) { historiqueAppel = `Appel sécurisé en cours avec ${nom} - Traduction vocale active.`; render(); }
-        function alerteInsp() { alert("Le succès appartient à ceux qui entreprennent !"); }
-        function askIA() { const v = document.getElementById('inIA').value; if(v) { reponseIA = `ELAWS : "${v}" -> Analysé et optimisé localement.`; render(); } }
+        function alerteInsp() { alert("Le succès appartient à ceux qui apprennent et entreprennent chaque jour !"); }
+        function askIA() { const v = document.getElementById('inIA').value; if(v) { reponseIA = `ELAWS : "${v}" -> Analysé pour accompagner votre polyvalence et votre évolution.`; render(); } }
 
         render();
     </script>
