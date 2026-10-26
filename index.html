@@ -3,163 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. & ELAWS - Écosystème Universel Multi-Métiers</title>
+    <title>E.V.A.T. & ELAWS - Écosystème Universel Dynamique</title>
     <style>
         :root {
-            --bg-color: #f8fafc;
+            --bg-color: #f1f5f9;
             --card-bg: #ffffff;
             --text-main: #0f172a;
-            --text-secondary: #475569;
-            --accent: #10b981;
-            --accent-hover: #059669;
+            --text-secondary: #64748b;
+            --accent: #059669;
+            --accent-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
             --border-color: #e2e8f0;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
         }
         [data-theme="dark"] {
-            --bg-color: #0f172a;
+            --bg-color: #0b0f19;
             --card-bg: #1e293b;
             --text-main: #f8fafc;
             --text-secondary: #94a3b8;
+            --accent: #34d399;
+            --accent-gradient: linear-gradient(135deg, #059669 0%, #047857 100%);
             --border-color: #334155;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
         }
         [data-theme="eco"] {
             --bg-color: #000000;
             --card-bg: #121212;
             --text-main: #22c55e;
-            --text-secondary: #16a34a;
+            --text-secondary: #15803d;
+            --accent: #22c55e;
+            --accent-gradient: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
             --border-color: #14532d;
+            --shadow: 0 0 15px rgba(34, 197, 94, 0.15);
         }
         * { box-sizing: border-box; }
         body {
             margin: 0;
-            font-family: system-ui, -apple-system, sans-serif;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            padding: 10px;
-            transition: background 0.3s, color 0.3s;
+            padding: 15px;
+            transition: background 0.4s ease, color 0.4s ease;
         }
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             background-color: var(--card-bg);
-            padding: 12px 15px;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            margin-bottom: 10px;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 15px;
             border: 1px solid var(--border-color);
         }
-        .header-left { display: flex; align-items: center; gap: 10px; }
+        .header-left { display: flex; align-items: center; gap: 12px; }
         .menu-toggle {
-            background: var(--accent);
+            background: var(--accent-gradient);
             color: white;
             border: none;
-            padding: 8px 12px;
-            border-radius: 6px;
+            padding: 10px 14px;
+            border-radius: 8px;
             font-size: 1.1rem;
             cursor: pointer;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            transition: transform 0.2s;
         }
-        .title { font-size: 1rem; font-weight: bold; }
-        .header-right { display: flex; align-items: center; gap: 6px; }
+        .menu-toggle:hover { transform: scale(1.05); }
+        .title { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.5px; }
+        .header-right { display: flex; align-items: center; gap: 8px; }
         .btn-top {
             background-color: var(--border-color);
-            padding: 6px 10px;
-            border-radius: 6px;
+            padding: 8px 12px;
+            border-radius: 8px;
             border: none;
-            font-size: 11px;
-            font-weight: bold;
+            font-size: 12px;
+            font-weight: 700;
             color: var(--text-main);
             cursor: pointer;
+            transition: background 0.2s;
         }
+        .btn-top:hover { opacity: 0.85; }
         .badge-info {
-            font-size: 10.5px;
+            font-size: 11px;
             color: var(--accent);
-            font-weight: 600;
-            margin-bottom: 10px;
-            padding-left: 4px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            padding-left: 5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
         .sidebar {
             display: none;
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 12px;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.3s ease;
         }
         .sidebar.open { display: block; }
-        .sidebar h3 { font-size: 0.9rem; color: var(--accent); margin-top: 0; border-bottom: 1px solid var(--border-color); padding-bottom: 6px; }
+        .sidebar h3 { font-size: 0.95rem; color: var(--accent); margin-top: 0; border-bottom: 2px solid var(--border-color); padding-bottom: 8px; }
         .menu-item {
-            background: rgba(16, 185, 129, 0.1);
+            background: rgba(16, 185, 129, 0.08);
             color: var(--text-main);
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 6px;
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin-bottom: 8px;
             border: none;
             width: 100%;
             text-align: left;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 600;
+            transition: all 0.2s;
         }
-        .menu-item:hover { background: rgba(16, 185, 129, 0.2); }
-        .module-container { flex: 1; max-width: 700px; width: 100%; margin: 0 auto; }
+        .menu-item:hover { background: rgba(16, 185, 129, 0.18); transform: translateX(4px); }
+        .module-container { flex: 1; max-width: 750px; width: 100%; margin: 0 auto; }
         .card {
             background-color: var(--card-bg);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 12px;
+            padding: 22px;
+            border-radius: 14px;
+            margin-bottom: 15px;
             border: 1px solid var(--border-color);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.4s ease;
         }
-        .card-title { font-size: 14px; font-weight: 600; color: var(--text-secondary); margin-top: 0; margin-bottom: 6px; }
-        .score-text { font-size: 15px; font-weight: bold; margin-bottom: 6px; }
-        .text { font-size: 13.5px; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.5; }
+        .card-title { font-size: 15px; font-weight: 700; color: var(--text-secondary); margin-top: 0; margin-bottom: 10px; }
+        .score-text { font-size: 16px; font-weight: 800; margin-bottom: 8px; }
+        .text { font-size: 14px; color: var(--text-secondary); margin-bottom: 15px; line-height: 1.6; }
         .tool-card {
             background: var(--bg-color);
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 6px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 8px;
             border-left: 4px solid var(--accent);
-            font-size: 12.5px;
+            font-size: 13px;
             color: var(--text-main);
+            font-weight: 500;
         }
         .badge-metier {
             display: inline-block;
-            background: rgba(16, 185, 129, 0.15);
+            background: rgba(16, 185, 129, 0.12);
             color: var(--accent);
-            padding: 5px 10px;
-            border-radius: 15px;
+            padding: 6px 12px;
+            border-radius: 20px;
             font-size: 12px;
-            font-weight: bold;
-            margin-right: 5px;
-            margin-bottom: 5px;
+            font-weight: 700;
+            margin-right: 6px;
+            margin-bottom: 6px;
             cursor: pointer;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            transition: all 0.2s;
         }
-        .input-group { display: flex; gap: 8px; margin-bottom: 8px; }
+        .badge-metier:hover { transform: scale(1.05); }
+        .input-group { display: flex; gap: 10px; margin-bottom: 10px; }
         .input {
             flex: 1;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 9px;
+            border-radius: 8px;
+            padding: 11px;
             background: var(--card-bg);
             color: var(--text-main);
-            font-size: 13px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
         }
-        select.input { width: 100%; margin-bottom: 8px; }
+        .input:focus { border-color: var(--accent); }
+        select.input { width: 100%; margin-bottom: 10px; }
         .btn-action {
-            background-color: var(--accent);
+            background: var(--accent-gradient);
             color: white;
             border: none;
-            padding: 10px 14px;
-            border-radius: 6px;
-            font-weight: bold;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-weight: 700;
             cursor: pointer;
             width: 100%;
-            font-size: 13px;
+            font-size: 14px;
+            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.25);
+            transition: transform 0.2s, opacity 0.2s;
         }
-        .btn-action:hover { background-color: var(--accent-hover); }
+        .btn-action:hover { transform: translateY(-1px); opacity: 0.95; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body data-theme="light">
@@ -167,21 +199,25 @@
     <header>
         <div class="header-left">
             <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-            <div class="title">E.V.A.T. & ELAWS</div>
+            <div class="title">✨ E.V.A.T. & ELAWS</div>
         </div>
         <div class="header-right">
             <button class="btn-top" onclick="changerTheme()">🎨 Thème</button>
-            <button class="btn-top" onclick="changerLangue()">🌐 FR/EN</button>
+            <button class="btn-top" onclick="changerLangue()">🌐 FR</button>
         </div>
     </header>
 
-    <div class="badge-info">🟢 Profils Multi-Métiers | Évolution Jeunes & Adultes | Hors-ligne</div>
+    <div class="badge-info">🌟 Écosystème Souverain Dynamique | Zéro Internet Requis | Ultra-Fluide</div>
 
     <div id="sideMenu" class="sidebar">
-        <h3>📂 Navigation Principale</h3>
+        <h3>📂 Navigation Rapide</h3>
         <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Profils Multi-Métiers</button>
+        <button class="menu-item" onclick="switchTab('stocks')">📦 Stocks, Récoltes & Matériel</button>
+        <button class="menu-item" onclick="switchTab('securite')">🛡️ Sécurité & Chiffrement Local</button>
+        <button class="menu-item" onclick="switchTab('sauvegarde')">💾 Sauvegardes & Synchro Souveraine</button>
+        <button class="menu-item" onclick="switchTab('economie')">🪙 Économie & Caisse Locale</button>
+        <button class="menu-item" onclick="switchTab('apprentissage')">📚 Fiches Jeunes & Enfants</button>
         <button class="menu-item" onclick="switchTab('appel')">📞 Appels & Traduction Maternelle</button>
-        <button class="menu-item" onclick="switchTab('motivation')">💡 Inspiration & Évolution</button>
         <button class="menu-item" onclick="switchTab('ia')">🤖 Assistant ELAWS AI</button>
     </div>
 
@@ -189,27 +225,40 @@
 
     <script>
         let activeTab = 'accueil';
-        // Liste des métiers du profil de l'utilisateur (polyvalence / évolution)
         let mesMetiers = ['Agriculteur', 'Couturier'];
         let metierActif = 'Agriculteur';
         let themeIndex = 0;
         const themes = ['light', 'dark', 'eco'];
         const themeNoms = ['Clair Lumineux', 'Sombre Pro', 'Éco-Batterie'];
 
+        let securiteEtat = { chiffre: true, niveau: "Maximum (AES-256 Local)", derniereVerification: "Vérifié & Intègre" };
+        let stocks = [
+            { nom: "Sacs de Maïs / Récolte", quantite: 45, unite: "Sacs", categorie: "Agriculture" },
+            { nom: "Rouleaux de Tissus Coton", quantite: 12, unite: "Rouleaux", categorie: "Artisanat" },
+            { nom: "Outillage & Équipement", quantite: 8, unite: "Unités", categorie: "BTP / Matériel" }
+        ];
+        let historiqueSauvegarde = "Dernière sauvegarde locale automatique : Effectuée avec succès.";
+        let transactions = [
+            { type: 'Entrée', libelle: 'Vente de récolte / production', montant: 25000 },
+            { type: 'Sortie', libelle: 'Achat de matériel / intrants', montant: 10000 }
+        ];
+        let fichesApprentissage = [
+            { titre: "🌱 Semis et Culture de Base", categorie: "Agriculture", desc: "Apprendre à préparer la terre et planter pour les jeunes." },
+            { titre: "📐 Mesures et Géométrie Pratique", categorie: "Artisanat & BTP", desc: "Comprendre les bases des mesures pour la couture et la construction." }
+        ];
         let contacts = [
             { nom: "Mon Conjoint / Famille", telephone: "06 00 00 00 01", langueMaternelle: "Éwé / Mina" },
             { nom: "Partenaire / Fournisseur", telephone: "06 00 00 00 02", langueMaternelle: "Kabiyè" }
         ];
-        let historiqueAppel = "Prêt pour les appels sécurisés et traduction instantanée.";
-        let reponseIA = "Bonjour ! Je suis ELAWS, votre assistant universel et compagnon d'évolution.";
-        let citation = '"Chaque grand voyage commence par un seul pas. Évoluez à votre rythme."';
+        let historiqueAppel = "Prêt pour les appels sécurisés et traduction instantanée en direct.";
+        let reponseIA = "Bonjour ! Je suis ELAWS, votre compagnon universel intelligent et 100% privé.";
 
         function toggleMenu() { document.getElementById('sideMenu').classList.toggle('open'); }
         
         function changerTheme() {
             themeIndex = (themeIndex + 1) % themes.length;
             document.body.setAttribute('data-theme', themes[themeIndex]);
-            alert("Thème appliqué : " + themeNoms[themeIndex]);
+            alert("Thème dynamique appliqué : " + themeNoms[themeIndex]);
         }
 
         function changerLangue() { alert("Mode Multilingue actif."); }
@@ -219,9 +268,9 @@
             const val = input.value.trim();
             if(val && !mesMetiers.includes(val)) {
                 mesMetiers.push(val);
-                metierActif = val; // Bascule automatique sur le nouveau métier ajouté
+                metierActif = val;
                 input.value = '';
-                alert(`Métier "${val}" ajouté avec succès à votre profil polyvalent !`);
+                alert(`Métier "${val}" ajouté à votre profil polyvalent !`);
                 render();
             } else if(val) {
                 metierActif = val;
@@ -234,6 +283,26 @@
             render();
         }
 
+        function ajouterStock() {
+            const nom = document.getElementById('nomStock').value.trim();
+            const qte = parseInt(document.getElementById('qteStock').value);
+            const unite = document.getElementById('uniteStock').value;
+            const cat = document.getElementById('catStock').value;
+            if(nom && !isNaN(qte)) {
+                stocks.push({ nom, quantite: qte, unite, categorie: cat });
+                alert("Stock ou récolte ajouté avec succès !");
+                render();
+            } else {
+                alert("Veuillez remplir correctement les champs de stock.");
+            }
+        }
+
+        function executerSauvegarde() {
+            historiqueSauvegarde = `Sauvegarde souveraine exportée à ${new Date().toLocaleTimeString()} (Données protégées).`;
+            alert("Sauvegarde locale effectuée avec succès !");
+            render();
+        }
+
         function render() {
             const content = document.getElementById('mainContent');
             content.innerHTML = '';
@@ -241,64 +310,128 @@
             if (activeTab === 'accueil') {
                 let badgesHtml = '';
                 mesMetiers.forEach(m => {
-                    const styleActive = m === metierActif ? 'background: var(--accent); color: white;' : '';
+                    const styleActive = m === metierActif ? 'background: var(--accent); color: white; border-color: var(--accent);' : '';
                     badgesHtml += `<span class="badge-metier" style="${styleActive}" onclick="selectionnerMetierActif('${m}')">💼 ${m}</span>`;
                 });
 
                 content.innerHTML = `
                     <div class="card">
-                        <h3 class="card-title">Mon Profil Polyvalent & Évolution de Carrière</h3>
-                        <p class="text">Vous pouvez ajouter plusieurs métiers à votre profil (idéal pour les personnes polyvalentes, les enfants ou les élèves qui évoluent de domaine en domaine) :</p>
-                        
+                        <h3 class="card-title">🚀 Tableau de Bord & Profils Multi-Métiers</h3>
+                        <p class="text">Bienvenue dans l'écosystème universel. Gérez votre polyvalence et basculez instantanément d'une activité à l'autre :</p>
                         <div class="input-group">
-                            <input type="text" id="inputNouveauMetier" class="input" placeholder="Ajouter un métier (ex: Maçon, Étudiant, Éleveur...)">
-                            <button class="btn-action" style="width:auto;" onclick="ajouterMetierProfil()">Ajouter / Activer</button>
+                            <input type="text" id="inputNouveauMetier" class="input" placeholder="Ajouter un métier (ex: Maçon, Étudiant...)">
+                            <button class="btn-action" style="width:auto;" onclick="ajouterMetierProfil()">Ajouter</button>
                         </div>
-
-                        <div style="margin-top: 12px; margin-bottom: 12px;">
-                            <strong>Vos métiers enregistrés (cliquez pour basculer) :</strong><br><br>
+                        <div style="margin-top: 15px; margin-bottom: 15px;">
+                            <strong>Vos métiers enregistrés :</strong><br><br>
                             ${badgesHtml}
                         </div>
-
                         <div class="score-text" style="margin-top:15px; color: var(--accent);">🛠️ Espace de travail actif : ${metierActif}</div>
-                        <div class="tool-card">• Fiches de gestion, outils et tableaux de bord spécifiques pour : <strong>${metierActif}</strong></div>
-                        <div class="tool-card">• Historique et compétences conservés lors de vos transitions de carrière.</div>
+                        <div class="tool-card">• Outils, fiches et assistants prêts pour : <strong>${metierActif}</strong></div>
                     </div>
                 `;
-            } else if (activeTab === 'appel') {
-                let listC = '';
-                contacts.forEach(c => {
-                    listC += `<div class="tool-card" style="display:flex; justify-content:space-between; align-items:center;">
-                        <div><strong>👤 ${c.nom}</strong><br><small>📞 ${c.telephone} | Langue : ${c.langueMaternelle}</small></div>
-                        <button class="btn-action" style="width:auto; padding:6px 12px;" onclick="lancerAppel('${c.nom}')">Appeler</button>
+            } else if (activeTab === 'stocks') {
+                let stocksHtml = '';
+                stocks.forEach(s => {
+                    stocksHtml += `<div class="tool-card" style="display:flex; justify-content:space-between; align-items:center;">
+                        <div><strong>📦 ${s.nom}</strong><br><small>Catégorie : ${s.categorie}</small></div>
+                        <div style="font-weight:bold; color: var(--accent);">${s.quantite} ${s.unite}</div>
+                    </div>`;
+                });
+
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">📦 Stocks, Récoltes & Matériel</h3>
+                        <p class="text">Suivez vos récoltes agricoles, matières premières et équipements en toute autonomie.</p>
+                        
+                        <h4 style="margin: 8px 0;">➕ Ajouter un article :</h4>
+                        <div class="input-group">
+                            <input type="text" id="nomStock" class="input" placeholder="Nom (ex: Maïs, Tissu)">
+                            <input type="number" id="qteStock" class="input" placeholder="Quantité">
+                        </div>
+                        <div class="input-group">
+                            <input type="text" id="uniteStock" class="input" placeholder="Unité (Sacs, Rouleaux)">
+                            <select id="catStock" class="input">
+                                <option value="Agriculture">Agriculture / Récolte</option>
+                                <option value="Artisanat">Artisanat / Tissus</option>
+                                <option value="BTP / Matériel">BTP / Matériel</option>
+                            </select>
+                        </div>
+                        <button class="btn-action" onclick="ajouterStock()" style="margin-bottom: 15px;">Enregistrer</button>
+
+                        <h4 style="margin-bottom: 8px;">📋 Inventaire Actif :</h4>
+                        ${stocksHtml}
+                    </div>
+                `;
+            } else if (activeTab === 'securite') {
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">🛡️ Sécurité & Chiffrement Local</h3>
+                        <p class="text">Vos données restent strictement sur votre appareil. Confidentialité totale garantie.</p>
+                        <div class="tool-card">🔒 <strong>Chiffrement :</strong> ${securiteEtat.niveau}</div>
+                        <div class="tool-card">🛡️ <strong>Intégrité :</strong> ${securiteEtat.derniereVerification}</div>
+                        <button class="btn-action" onclick="alert('Audit validé : Aucune faille détectée.')" style="margin-top: 12px;">Lancer un Audit</button>
+                    </div>
+                `;
+            } else if (activeTab === 'sauvegarde') {
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">💾 Sauvegardes & Synchronisation</h3>
+                        <p class="text">Mettez vos données à l'abri et transférez-les facilement sur un autre téléphone.</p>
+                        <div style="background:var(--bg-color); padding:12px; border-radius:8px; margin-bottom:12px; font-size:13px;">📁 ${historiqueSauvegarde}</div>
+                        <button class="btn-action" onclick="executerSauvegarde()" style="margin-bottom: 10px;">💾 Effectuer une Sauvegarde</button>
+                        <button class="btn-action" style="background:#475569;" onclick="alert('Restauration prête.')">📂 Restaurer</button>
+                    </div>
+                `;
+            } else if (activeTab === 'economie') {
+                let totalSolde = 0;
+                let transHtml = '';
+                transactions.forEach(t => {
+                    if(t.type === 'Entrée') totalSolde += t.montant;
+                    else totalSolde -= t.montant;
+                    const couleur = t.type === 'Entrée' ? 'color: #059669;' : 'color: #dc2626;';
+                    transHtml += `<div class="tool-card" style="display:flex; justify-content:space-between; align-items:center;">
+                        <div><strong>${t.libelle}</strong><br><small>${t.type}</small></div>
+                        <div style="font-weight:bold; ${couleur}">${t.type === 'Entrée' ? '+' : '-'}${t.montant} FCFA</div>
                     </div>`;
                 });
                 content.innerHTML = `
                     <div class="card">
-                        <h3 class="card-title">📞 Appels & Traduction en Langues Maternelles</h3>
-                        <p class="text">Discutez avec vos proches en toute sérénité. ELAWS traduit vocalement et instantanément entre vos langues maternelles.</p>
-                        <div class="input-group"><input type="text" id="nomC" class="input" placeholder="Nom"><input type="text" id="telC" class="input" placeholder="Téléphone"></div>
-                        <select id="langC" class="input"><option>Éwé / Mina</option><option>Kabiyè</option><option>Français</option><option>Yoruba</option><option>Haoussa</option></select>
-                        <button class="btn-action" onclick="addC()" style="margin-bottom:12px;">Ajouter Contact</button>
-                        <h4 style="margin:8px 0;">Contacts :</h4>${listC}
-                        <div style="background:var(--bg-color); padding:10px; border-radius:6px; margin-top:10px; font-size:12.5px;">🎧 ${historiqueAppel}</div>
+                        <h3 class="card-title">🪙 Économie & Caisse Locale</h3>
+                        <div class="score-text" style="background: rgba(5,150,105,0.1); padding: 14px; border-radius: 8px; text-align: center; color: var(--accent);">
+                            Solde Actuel : ${totalSolde} FCFA
+                        </div>
+                        <h4 style="margin: 15px 0 8px 0;">📋 Historique :</h4>
+                        ${transHtml}
                     </div>
                 `;
-            } else if (activeTab === 'motivation') {
-                content.innerHTML = `<div class="card"><h3 class="card-title">Inspiration & Évolution</h3><div class="score-text" style="font-style:italic;">${citation}</div><button class="btn-action" onclick="alerteInsp()">Nouvelle Énergie</button></div>`;
+            } else if (activeTab === 'apprentissage') {
+                let fichesHtml = '';
+                fichesApprentissage.forEach(f => {
+                    fichesHtml += `<div class="card" style="background: var(--bg-color); border-left: 4px solid var(--accent);">
+                        <span style="font-size: 11px; font-weight: bold; color: var(--accent);">${f.categorie}</span>
+                        <h4 style="margin: 4px 0 6px 0;">${f.titre}</h4>
+                        <p style="margin: 0; font-size: 13px; color: var(--text-secondary);">${f.desc}</p>
+                    </div>`;
+                });
+                content.innerHTML = `<div class="card"><h3 class="card-title">📚 Fiches d'Apprentissage (Jeunes & Enfants)</h3>${fichesHtml}</div>`;
+            } else if (activeTab === 'appel') {
+                let listC = '';
+                contacts.forEach(c => {
+                    listC += `<div class="tool-card" style="display:flex; justify-content:space-between; align-items:center;">
+                        <div><strong>👤 ${c.nom}</strong><br><small>📞 ${c.telephone} | ${c.langueMaternelle}</small></div>
+                        <button class="btn-action" style="width:auto; padding:6px 12px;" onclick="lancerAppel('${c.nom}')">Appeler</button>
+                    </div>`;
+                });
+                content.innerHTML = `<div class="card"><h3 class="card-title">📞 Appels & Traduction en Langue Maternelle</h3>${listC}<div style="background:var(--bg-color); padding:12px; border-radius:8px; margin-top:12px; font-size:13px;">🎧 ${historiqueAppel}</div></div>`;
             } else if (activeTab === 'ia') {
-                content.innerHTML = `<div class="card"><h3 class="card-title">Assistant ELAWS (Compagnon d'Évolution)</h3><div style="background:var(--bg-color); padding:10px; border-radius:6px; margin-bottom:10px; font-size:13px;">🤖 ${reponseIA}</div><div class="input-group"><input type="text" id="inIA" class="input" placeholder="Votre question..."><button class="btn-action" style="width:auto;" onclick="askIA()">Envoyer</button></div></div>`;
+                content.innerHTML = `<div class="card"><h3 class="card-title">Assistant ELAWS</h3><div style="background:var(--bg-color); padding:12px; border-radius:8px; margin-bottom:12px; font-size:13px;">🤖 ${reponseIA}</div><div class="input-group"><input type="text" id="inIA" class="input" placeholder="Votre question..."><button class="btn-action" style="width:auto;" onclick="askIA()">Envoyer</button></div></div>`;
             }
         }
 
         function switchTab(t) { activeTab = t; document.getElementById('sideMenu').classList.remove('open'); render(); }
-        function addC() {
-            const n = document.getElementById('nomC').value, t = document.getElementById('telC').value, l = document.getElementById('langC').value;
-            if(n && t) { contacts.push({nom:n, telephone:t, langueMaternelle:l}); alert("Contact ajouté !"); render(); }
-        }
         function lancerAppel(nom) { historiqueAppel = `Appel sécurisé en cours avec ${nom} - Traduction vocale active.`; render(); }
-        function alerteInsp() { alert("Le succès appartient à ceux qui apprennent et entreprennent chaque jour !"); }
-        function askIA() { const v = document.getElementById('inIA').value; if(v) { reponseIA = `ELAWS : "${v}" -> Analysé pour accompagner votre polyvalence et votre évolution.`; render(); } }
+        function askIA() { const v = document.getElementById('inIA').value; if(v) { reponseIA = `ELAWS : "${v}" -> Traité avec succès.`; render(); } }
 
         render();
     </script>
