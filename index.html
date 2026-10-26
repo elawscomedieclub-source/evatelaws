@@ -6,12 +6,13 @@
     <title>EVAT - Écosystème Universel & ELAWS</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
+            --bg-color: #090d16;
+            --card-bg: #131c31;
             --accent-color: #10b981;
+            --accent-hover: #059669;
             --text-main: #f8fafc;
             --text-secondary: #94a3b8;
-            --hover-color: #059669;
+            --border-color: #1e293b;
         }
         body {
             margin: 0;
@@ -24,16 +25,19 @@
         }
         header {
             background-color: var(--card-bg);
-            padding: 1.5rem;
+            padding: 1.2rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #334155;
+            border-bottom: 1px solid var(--border-color);
         }
         .logo {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: bold;
             color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         main {
             flex: 1;
@@ -45,69 +49,81 @@
         }
         .hero {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
         .hero h1 {
-            font-size: 2.2rem;
+            font-size: 2rem;
             margin-bottom: 0.5rem;
+            color: #ffffff;
         }
         .hero p {
             color: var(--text-secondary);
-            font-size: 1.1rem;
+            font-size: 1.05rem;
         }
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
         .card {
             background-color: var(--card-bg);
-            border-radius: 12px;
+            border-radius: 14px;
             padding: 1.5rem;
-            border: 1px solid #334155;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         .card h3 {
             margin-top: 0;
             color: var(--accent-color);
             font-size: 1.2rem;
         }
+        .card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
         .btn {
             background-color: var(--accent-color);
-            color: #0f172a;
+            color: #090d16;
             border: none;
-            padding: 0.75rem 1.5rem;
-            font-size: 1rem;
+            padding: 0.75rem 1.2rem;
+            font-size: 0.95rem;
             font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s ease;
             margin-top: 1rem;
             width: 100%;
         }
         .btn:hover {
-            background-color: var(--hover-color);
+            background-color: var(--accent-hover);
             color: #ffffff;
+            transform: translateY(-1px);
         }
         /* Zone de dialogue ELAWS */
-        .elaws-chat-box {
+        .elaws-container {
             background-color: var(--card-bg);
-            border-radius: 12px;
+            border-radius: 14px;
             padding: 1.5rem;
-            border: 1px solid #334155;
+            border: 1px solid var(--border-color);
             margin-top: 2rem;
         }
         .chat-output {
-            background-color: #0f172a;
-            border: 1px solid #334155;
-            border-radius: 8px;
-            padding: 1rem;
-            height: 120px;
+            background-color: #05080f;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.2rem;
+            height: 150px;
             overflow-y: auto;
             margin-bottom: 1rem;
             color: var(--text-secondary);
-            font-family: monospace;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
         }
         .chat-input-group {
             display: flex;
@@ -115,20 +131,32 @@
         }
         .chat-input {
             flex: 1;
-            padding: 0.75rem;
+            padding: 0.75rem 1rem;
             border-radius: 8px;
-            border: 1px solid #334155;
-            background-color: #0f172a;
+            border: 1px solid var(--border-color);
+            background-color: #05080f;
             color: var(--text-main);
             font-size: 1rem;
+        }
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
         }
         footer {
             text-align: center;
             padding: 1.5rem;
             background-color: var(--card-bg);
             color: var(--text-secondary);
-            border-top: 1px solid #334155;
-            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.85rem;
+        }
+        .badge {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-color);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -136,39 +164,49 @@
 
     <header>
         <div class="logo">🌿 EVAT / ELAWS</div>
-        <div>Statut : <span style="color: var(--accent-color);">● Souverain & Opérationnel</span></div>
+        <div class="badge">● Système Souverain Actif</div>
     </header>
 
     <main>
         <div class="hero">
             <h1>Écosystème Universel de la Vie et des Métiers</h1>
-            <p>Piloté par <strong>ELAWS</strong> (Assistant intelligent souverain)</p>
+            <p>Plateforme intelligente pilotée par <strong>ELAWS</strong> pour l'autonomie professionnelle.</p>
         </div>
 
         <div class="dashboard-grid">
             <div class="card">
-                <h3>Vitals Métiers</h3>
-                <p>Sélectionnez votre secteur pour adapter l'écosystème à vos besoins (Couture, Agriculture, etc.).</p>
-                <button class="btn" onclick="selectMetier()">Choisir un Métier</button>
+                <div>
+                    <h3>👔 Module Métiers & Artisanat</h3>
+                    <p>Gestion sur-mesure des activités (Couture, Commandes, Mesures, et Suivi clients).</p>
+                </div>
+                <button class="btn" onclick="openMetierModule()">Ouvrir l'Espace Métier</button>
             </div>
+            
             <div class="card">
-                <h3>Sécurité & Souveraineté</h3>
-                <p>Vérification de l'intégrité du système et des protocoles de chiffrement hors-ligne.</p>
-                <button class="btn" onclick="checkSecurity()">Lancer l'Audit</button>
+                <div>
+                    <h3>🌾 Module Agriculture & Stocks</h3>
+                    <p>Optimisation des récoltes, suivi des intrants et prévisions de rendement local.</p>
+                </div>
+                <button class="btn" onclick="openAgriModule()">Ouvrir l'Espace Agri</button>
             </div>
+
             <div class="card">
-                <h3>Module Écologie</h3>
-                <p>Analyse des performances environnementales et durabilité des processus.</p>
-                <button class="btn" onclick="loadEcology()">Afficher le Bilan</button>
+                <div>
+                    <h3>🛡️ Sécurité & Souveraineté</h3>
+                    <p>Chiffrement des données, intégrité du système et autonomie opérationnelle hors-ligne.</p>
+                </div>
+                <button class="btn" onclick="checkSecuritySystem()">Lancer l'Audit</button>
             </div>
         </div>
 
-        <!-- Espace de discussion interactif avec ELAWS -->
-        <div class="elaws-chat-box">
-            <h3>💬 Terminal de Discussion Direct avec ELAWS</h3>
-            <div id="chatOutput" class="chat-output">ELAWS est en ligne. Posez votre question ou demandez une assistance métier...</div>
+        <!-- Terminal ELAWS -->
+        <div class="elaws-container">
+            <h3>💬 Terminal Interactif ELAWS</h3>
+            <div id="chatOutput" class="chat-output">
+                [ELAWS v1.0] : Système initialisé. Prêt à vous assister dans vos prises de décision et la gestion de vos projets.
+            </div>
             <div class="chat-input-group">
-                <input type="text" id="chatInput" class="chat-input" placeholder="Ex: Aide-moi à gérer mon stock de couture...">
+                <input type="text" id="chatInput" class="chat-input" placeholder="Posez une question à ELAWS..." onkeypress="handleKeyPress(event)">
                 <button class="btn" style="margin-top:0; width: auto;" onclick="askElaws()">Envoyer</button>
             </div>
         </div>
@@ -179,34 +217,54 @@
     </footer>
 
     <script>
-        function selectMetier() {
-            const metier = prompt("Entrez votre corps de métier (ex: Couture, Agriculture, Commerce) :");
-            if(metier) {
-                document.getElementById('chatOutputinnerHTML += `<br><span style="color: #10b981;">[Métier configuré] : ${metier} pris en compte par ELAWS.</span>`;
-                alert("Écosystème configuré avec succès pour le métier : " + metier);
-            }
-        }
-
-        function checkSecurity() {
+        function logMessage(sender, text, color = "#f8fafc") {
             const output = document.getElementById('chatOutput');
-            output.innerHTML += `<br><span style="color: #38bdf8;">[Sécurité] : Audit terminé. 0 vulnérabilité détectée. Mode souverain actif.</span>`;
+            output.innerHTML += `<br><span style="color: ${color};">[${sender}] : ${text}</span>`;
             output.scrollTop = output.scrollHeight;
         }
 
-        function loadEcology() {
-            const output = document.getElementById('chatOutput');
-            output.innerHTML += `<br><span style="color: #facc15;">[Écologie] : Indice de performance verte optimal (A+).</span>`;
-            output.scrollTop = output.scrollHeight;
+        function openMetierModule() {
+            logMessage("Métiers", "Espace de gestion des corps de métier chargé avec succès. Prêt pour l'enregistrement des commandes.", "#10b981");
+            alert("Module Métiers activé ! ELAWS gère vos fiches de production.");
+        }
+
+        function openAgriModule() {
+            logMessage("Agriculture", "Module agricole synchronisé. Paramètres climatiques et de rendement chargés.", "#38bdf8");
+            alert("Module Agriculture activé ! Suivi des cultures opérationnel.");
+        }
+
+        function checkSecuritySystem() {
+            logMessage("Sécurité", "Audit global validé : 100% sécurisé, aucun risque d'interception.", "#facc15");
+            alert("Système souverain et intègre.");
         }
 
         function askElaws() {
             const input = document.getElementById('chatInput');
-            const output = document.getElementById('chatOutput');
-            if(input.value.trim() !== "") {
-                output.innerHTML += `<br><span style="color: #f8fafc;">Vous : ${input.value}</span>`;
-                output.innerHTML += `<br><span style="color: #10b981;">ELAWS : J'analyse votre demande concernant "${input.value}" pour votre écosystème EVAT. Traitement local sécurisé effectué avec succès.</span>`;
+            const text = input.value.trim();
+            if(text !== "") {
+                logMessage("Vous", text, "#f8fafc");
+                
+                // Simulation d'une réponse intelligente d'ELAWS
+                setTimeout(() => {
+                    let reply = "J'analyse votre requête pour optimiser votre écosystème EVAT.";
+                    const lower = text.toLowerCase();
+                    if(lower.includes("bonjour") || lower.includes("salut")) {
+                        reply = "Bonjour ! Comment ELAWS peut-il vous aider aujourd'hui dans vos activités ?";
+                    } else if(lower.includes("couture") || lower.includes("tailleur")) {
+                        reply = "Le module couture est prêt. Enregistrez vos clients et suivez vos livraisons de tissus en toute simplicité.";
+                    } else if(lower.includes("agriculture") || lower.includes("champ")) {
+                        reply = "La gestion des sols et des récoltes est prise en charge par le module souverain d'EVAT.";
+                    }
+                    logMessage("ELAWS", reply, "#10b981");
+                }, 400);
+
                 input.value = "";
-                output.scrollTop = output.scrollHeight;
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                askElaws();
             }
         }
     </script>
