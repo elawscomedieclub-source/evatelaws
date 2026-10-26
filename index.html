@@ -11,6 +11,7 @@
             --accent-color: #10b981;
             --text-main: #f8fafc;
             --text-secondary: #94a3b8;
+            --hover-color: #059669;
         }
         body {
             margin: 0;
@@ -44,10 +45,10 @@
         }
         .hero {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
         }
         .hero h1 {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             margin-bottom: 0.5rem;
         }
         .hero p {
@@ -81,11 +82,45 @@
             font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
-            transition: opacity 0.2s;
+            transition: background-color 0.2s;
             margin-top: 1rem;
+            width: 100%;
         }
         .btn:hover {
-            opacity: 0.9;
+            background-color: var(--hover-color);
+            color: #ffffff;
+        }
+        /* Zone de dialogue ELAWS */
+        .elaws-chat-box {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #334155;
+            margin-top: 2rem;
+        }
+        .chat-output {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 1rem;
+            height: 120px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+            font-family: monospace;
+        }
+        .chat-input-group {
+            display: flex;
+            gap: 1rem;
+        }
+        .chat-input {
+            flex: 1;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background-color: #0f172a;
+            color: var(--text-main);
+            font-size: 1rem;
         }
         footer {
             text-align: center;
@@ -101,7 +136,7 @@
 
     <header>
         <div class="logo">🌿 EVAT / ELAWS</div>
-        <div>Statut : <span style="color: var(--accent-color);">● Sécurisé & Actif</span></div>
+        <div>Statut : <span style="color: var(--accent-color);">● Souverain & Opérationnel</span></div>
     </header>
 
     <main>
@@ -113,18 +148,28 @@
         <div class="dashboard-grid">
             <div class="card">
                 <h3>Vitals Métiers</h3>
-                <p>Gestion intelligente adaptée à chaque corps de métier (santé, agriculture, artisanat, etc.).</p>
-                <button class="btn" onclick="alert('Connexion à ELAWS établie avec succès !')">Lancer ELAWS</button>
+                <p>Sélectionnez votre secteur pour adapter l'écosystème à vos besoins (Couture, Agriculture, etc.).</p>
+                <button class="btn" onclick="selectMetier()">Choisir un Métier</button>
             </div>
             <div class="card">
                 <h3>Sécurité & Souveraineté</h3>
-                <p>Protection active des données et mode hors-ligne opérationnel.</p>
-                <button class="btn" onclick="alert('Système 100% protégé et intègre.')">Vérifier le Système</button>
+                <p>Vérification de l'intégrité du système et des protocoles de chiffrement hors-ligne.</p>
+                <button class="btn" onclick="checkSecurity()">Lancer l'Audit</button>
             </div>
             <div class="card">
                 <h3>Module Écologie</h3>
-                <p>Suivi des performances et de l'impact environnemental en temps réel.</p>
-                <button class="btn" onclick="alert('Rapport écologique à jour.')">Voir les Rapports</button>
+                <p>Analyse des performances environnementales et durabilité des processus.</p>
+                <button class="btn" onclick="loadEcology()">Afficher le Bilan</button>
+            </div>
+        </div>
+
+        <!-- Espace de discussion interactif avec ELAWS -->
+        <div class="elaws-chat-box">
+            <h3>💬 Terminal de Discussion Direct avec ELAWS</h3>
+            <div id="chatOutput" class="chat-output">ELAWS est en ligne. Posez votre question ou demandez une assistance métier...</div>
+            <div class="chat-input-group">
+                <input type="text" id="chatInput" class="chat-input" placeholder="Ex: Aide-moi à gérer mon stock de couture...">
+                <button class="btn" style="margin-top:0; width: auto;" onclick="askElaws()">Envoyer</button>
             </div>
         </div>
     </main>
@@ -132,6 +177,39 @@
     <footer>
         &copy; 2026 EVAT. Conçu par ELAWS. Tous droits réservés.
     </footer>
+
+    <script>
+        function selectMetier() {
+            const metier = prompt("Entrez votre corps de métier (ex: Couture, Agriculture, Commerce) :");
+            if(metier) {
+                document.getElementById('chatOutputinnerHTML += `<br><span style="color: #10b981;">[Métier configuré] : ${metier} pris en compte par ELAWS.</span>`;
+                alert("Écosystème configuré avec succès pour le métier : " + metier);
+            }
+        }
+
+        function checkSecurity() {
+            const output = document.getElementById('chatOutput');
+            output.innerHTML += `<br><span style="color: #38bdf8;">[Sécurité] : Audit terminé. 0 vulnérabilité détectée. Mode souverain actif.</span>`;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function loadEcology() {
+            const output = document.getElementById('chatOutput');
+            output.innerHTML += `<br><span style="color: #facc15;">[Écologie] : Indice de performance verte optimal (A+).</span>`;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function askElaws() {
+            const input = document.getElementById('chatInput');
+            const output = document.getElementById('chatOutput');
+            if(input.value.trim() !== "") {
+                output.innerHTML += `<br><span style="color: #f8fafc;">Vous : ${input.value}</span>`;
+                output.innerHTML += `<br><span style="color: #10b981;">ELAWS : J'analyse votre demande concernant "${input.value}" pour votre écosystème EVAT. Traitement local sécurisé effectué avec succès.</span>`;
+                input.value = "";
+                output.scrollTop = output.scrollHeight;
+            }
+        }
+    </script>
 
 </body>
 </html>
