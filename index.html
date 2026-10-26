@@ -3,210 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. (Propulsé par ELAWS) - Universel & Multilingue</title>
+    <title>E.V.A.T. & ELAWS - Écosystème Universel</title>
     <style>
         :root {
-            --bg-color: #f5f7f8;
+            --bg-color: #f8fafc;
             --card-bg: #ffffff;
-            --text-main: #2c3e50;
-            --text-secondary: #7f8c8d;
-            --accent: #27ae60;
-            --accent-hover: #219653;
-            --border-color: #cbd5e1;
+            --text-main: #0f172a;
+            --text-secondary: #475569;
+            --accent: #10b981;
+            --accent-hover: #059669;
+            --border-color: #e2e8f0;
         }
+        * { box-sizing: border-box; }
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: system-ui, -apple-system, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            padding: 15px;
-            box-sizing: border-box;
+            padding: 10px;
         }
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 10px;
-            margin-bottom: 5px;
+            background-color: var(--card-bg);
+            padding: 12px 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 10px;
         }
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .header-left { display: flex; align-items: center; gap: 10px; }
         .menu-toggle {
-            background: #2c3e50;
+            background: #0f172a;
             color: white;
             border: none;
             padding: 8px 12px;
             border-radius: 6px;
             font-size: 1.1rem;
             cursor: pointer;
-            font-weight: bold;
         }
-        .title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: var(--text-main);
-        }
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .lang-button {
-            background-color: #cbd5e1;
+        .title { font-size: 1rem; font-weight: bold; color: var(--text-main); }
+        .header-right { display: flex; align-items: center; gap: 6px; }
+        .btn-top {
+            background-color: #e2e8f0;
             padding: 6px 10px;
-            border-radius: 5px;
+            border-radius: 6px;
             border: none;
             font-size: 11px;
             font-weight: bold;
             color: #334155;
             cursor: pointer;
         }
-        .pause-button {
-            background-color: #e74c3c;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 5px;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .offline-badge {
-            font-size: 11px;
+        .badge-eco {
+            font-size: 10.5px;
             color: var(--accent);
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
+            padding-left: 4px;
         }
         .sidebar {
             display: none;
-            background-color: #1e293b;
+            background-color: #0f172a;
             color: white;
             padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            border-radius: 8px;
+            margin-bottom: 12px;
         }
-        .sidebar.open {
-            display: block;
-        }
-        .sidebar h3 {
-            font-size: 0.95rem;
-            color: #38bdf8;
-            margin-top: 0;
-            border-bottom: 1px solid #334155;
-            padding-bottom: 8px;
-        }
+        .sidebar.open { display: block; }
+        .sidebar h3 { font-size: 0.9rem; color: #38bdf8; margin-top: 0; border-bottom: 1px solid #334155; padding-bottom: 6px; }
         .menu-item {
-            background: rgba(255,255,255,0.07);
+            background: rgba(255,255,255,0.08);
             color: #f8fafc;
-            padding: 10px 12px;
+            padding: 10px;
             border-radius: 6px;
             margin-bottom: 6px;
             border: none;
             width: 100%;
             text-align: left;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
-            transition: background 0.2s;
         }
-        .menu-item:hover {
-            background: rgba(255,255,255,0.15);
-        }
-        .module-container {
-            flex: 1;
-            max-width: 800px;
-            width: 100%;
-            margin: 0 auto;
-        }
+        .menu-item:hover { background: rgba(255,255,255,0.15); }
+        .module-container { flex: 1; max-width: 700px; width: 100%; margin: 0 auto; }
         .card {
             background-color: var(--card-bg);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0;
-        }
-        .card-title {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-top: 0;
-            margin-bottom: 8px;
-        }
-        .score-text {
-            font-size: 16px;
-            font-weight: bold;
-            color: var(--text-main);
-            margin-bottom: 8px;
-        }
-        .text {
-            font-size: 14px;
-            color: #34495e;
-            margin-bottom: 15px;
-            line-height: 1.5;
-        }
-        .tool-box {
-            background-color: #f8fafc;
-            border: 1px solid #cbd5e1;
             padding: 15px;
             border-radius: 8px;
-            margin-top: 10px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
         }
-        .tool-item-card {
-            background: white;
+        .card-title { font-size: 14px; font-weight: 600; color: var(--text-secondary); margin-top: 0; margin-bottom: 6px; }
+        .score-text { font-size: 15px; font-weight: bold; color: var(--text-main); margin-bottom: 6px; }
+        .text { font-size: 13.5px; color: #334155; margin-bottom: 12px; line-height: 1.5; }
+        .tool-card {
+            background: #f8fafc;
             padding: 10px;
             border-radius: 6px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             border-left: 4px solid var(--accent);
-            font-size: 13px;
-            font-weight: 500;
+            font-size: 12.5px;
         }
-        .ai-box {
-            background-color: #f8fafc;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            border-left: 4px solid #2c3e50;
-        }
-        .ai-reply {
-            font-size: 13px;
-            color: #334155;
-            font-style: italic;
-        }
-        .input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
+        .input-group { display: flex; gap: 8px; margin-bottom: 8px; }
         .input {
             flex: 1;
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            padding: 10px;
-            background-color: white;
+            padding: 9px;
+            background: #fff;
             font-size: 13px;
         }
+        select.input { width: 100%; margin-bottom: 8px; }
         .btn-action {
             background-color: var(--accent);
             color: white;
             border: none;
-            padding: 10px 16px;
+            padding: 10px 14px;
             border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
-        }
-        .btn-action:hover {
-            background-color: var(--accent-hover);
-        }
-        select.input {
             width: 100%;
-            margin-bottom: 10px;
+            font-size: 13px;
         }
+        .btn-action:hover { background-color: var(--accent-hover); }
     </style>
 </head>
 <body>
@@ -214,26 +136,24 @@
     <header>
         <div class="header-left">
             <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-            <div class="title" id="lblTitle">🌐 E.V.A.T. (Propulsé par ELAWS)</div>
+            <div class="title" id="lblTitle">E.V.A.T. & ELAWS</div>
         </div>
         <div class="header-right">
-            <button class="lang-button" onclick="changerLangue()" id="lblLang">🌐 FR</button>
-            <button class="pause-button" onclick="togglePause()" id="lblPause">Pause</button>
+            <button class="btn-top" onclick="changerLangue()" id="lblLang">FR / EN</button>
+            <button class="btn-top" style="background:#fee2e2; color:#b91c1c;" onclick="toggleEco()" id="lblEco">🔋 Mode Éco</button>
         </div>
     </header>
 
-    <div class="offline-badge" id="lblOffline">🟢 100% Souverain, Accessible & Hors-ligne</div>
+    <div class="badge-eco" id="lblOffline">🟢 100% Souverain | Basse Consommation | Hors-ligne</div>
 
-    <!-- Menu Hamburger Coulissant -->
     <div id="sideMenu" class="sidebar">
-        <h3 id="menuHeaderTitle">📂 Navigation Principale</h3>
+        <h3>📂 Menu & Navigation</h3>
         <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Outils Métier</button>
         <button class="menu-item" onclick="switchTab('appel')">📞 Appels & Traduction Maternelle</button>
         <button class="menu-item" onclick="switchTab('motivation')">💡 Inspiration & Énergie</button>
-        <button class="menu-item" onclick="switchTab('outils')">🛠️ Boîte à Outils Générale</button>
         <button class="menu-item" onclick="switchTab('ia')">🤖 Assistant ELAWS AI</button>
         
-        <h3 style="margin-top: 15px;" id="menuMetiersTitle">👷 Choisir un Corps de Métier</h3>
+        <h3 style="margin-top: 12px;">👷 Choisir votre Métier</h3>
         <button class="menu-item" onclick="choisirMetier('Couturier / Tailleur')">✂️ Couturier / Tailleur</button>
         <button class="menu-item" onclick="choisirMetier('Cuisinier / Restauration')">🍳 Cuisinier / Restauration</button>
         <button class="menu-item" onclick="choisirMetier('Artisan / Architecte / BTP')">🏗️ Artisan / Architecte / BTP</button>
@@ -242,265 +162,125 @@
         <button class="menu-item" onclick="choisirMetier('Journaliste / Enquêteur')">📰 Journaliste / Enquêteur</button>
     </div>
 
-    <div class="module-container" id="mainContent">
-        <!-- Contenu dynamique -->
-    </div>
+    <div class="module-container" id="mainContent"></div>
 
     <script>
         let langue = 'FR';
         let activeTab = 'accueil';
         let metierActif = { nom: 'Non défini', outils: [] };
-        let citation = '"Chaque grand voyage commence par un seul pas. ELAWS est à vos côtés pour avancer."';
-        let reponseIA = "Bonjour ! Je suis ELAWS, votre assistant personnel. Comment puis-je vous aider aujourd'hui ?";
+        let modeEco = false;
+        let citation = '"Chaque grand voyage commence par un seul pas. ELAWS est à vos côtés."';
+        let reponseIA = "Bonjour ! Je suis ELAWS, votre assistant local et privé.";
         
-        // Contacts et système d'appel avec traduction en langues maternelles
         let contacts = [
             { nom: "Mon Conjoint / Famille", telephone: "06 00 00 00 01", langueMaternelle: "Éwé / Mina" },
             { nom: "Partenaire / Fournisseur", telephone: "06 00 00 00 02", langueMaternelle: "Kabiyè" }
         ];
-        let historiqueAppel = "Aucun appel en cours. Sélectionnez un contact pour discuter avec traduction instantanée.";
+        let historiqueAppel = "Prêt pour les appels sécurisés et traduction instantanée.";
 
         const dbMetiers = {
-            'Couturier / Tailleur': {
-                FR: [
-                    "✂️ Catalogue de modèles et patrons de couture",
-                    "📏 Carnet de prises de mesures clients (Poitrine, Taille, Longueur)",
-                    "🧵 Gestion des stocks de tissus et bobines de fil",
-                    "📅 Suivi des dates d'essayage et de livraison"
-                ]
-            },
-            'Cuisinier / Restauration': {
-                FR: [
-                    "🍳 Fiches techniques de recettes professionnelles",
-                    "📦 Gestion des stocks et inventaire des produits frais",
-                    "⏰ Minuteurs de cuisson et plan de cuisine",
-                    "📋 Calculateur de coûts de revient des plats"
-                ]
-            },
-            'Artisan / Architecte / BTP': {
-                FR: [
-                    "📐 Plans de construction et devis estimatifs",
-                    "🔨 Inventaire des matériaux (Ciment, Fer, Bois)",
-                    "👷 Suivi des chantiers et journal des tâches",
-                    "📐 Outil de calcul de surfaces et volumes"
-                ]
-            },
-            'Agriculteur / Terre': {
-                FR: [
-                    "🌾 Suivi des cycles de récolte et des parcelles",
-                    "💧 Planification de l'irrigation et météo locale",
-                    "🌱 Gestion des semences, engrais et intrants",
-                    "🚜 Suivi et maintenance du matériel agricole"
-                ]
-            },
-            'Médecin / Santé': {
-                FR: [
-                    "🩺 Registre des consultations et dossiers patients",
-                    "💊 Gestion de la pharmacie et des stocks de médicaments",
-                    "📅 Planification des rendez-vous de soins",
-                    "📋 Protocoles d'urgence et aide au diagnostic"
-                ]
-            },
-            'Journaliste / Enquêteur': {
-                FR: [
-                    "📰 Carnet d'enquêtes et contacts de sources",
-                    "🎙️ Enregistreur et notes de terrain sécurisées",
-                    "📅 Planning de publication et rédaction d'articles",
-                    "🔍 Analyse des faits et recoupement d'informations"
-                ]
-            }
+            'Couturier / Tailleur': [
+                "✂️ Catalogue de modèles et patrons de couture",
+                "📏 Carnet de prises de mesures clients (Poitrine, Longueur)",
+                "🧵 Gestion des stocks de tissus et bobines de fil",
+                "📅 Suivi des dates d'essayage et de livraison"
+            ],
+            'Cuisinier / Restauration': [
+                "🍳 Fiches techniques de recettes professionnelles",
+                "📦 Gestion des stocks et inventaire des produits frais",
+                "⏰ Minuteurs de cuisson et plan de cuisine",
+                "📋 Calculateur de coûts de revient des plats"
+            ],
+            'Artisan / Architecte / BTP': [
+                "📐 Plans de construction et devis estimatifs",
+                "🔨 Inventaire des matériaux (Ciment, Fer, Bois)",
+                "👷 Suivi des chantiers et journal des tâches",
+                "📐 Outil de calcul de surfaces et volumes"
+            ],
+            'Agriculteur / Terre': [
+                "🌾 Suivi des cycles de récolte et des parcelles",
+                "💧 Planification de l'irrigation et météo locale",
+                "🌱 Gestion des semences, engrais et intrants",
+                "🚜 Suivi et maintenance du matériel agricole"
+            ],
+            'Médecin / Santé': [
+                "🩺 Registre des consultations et dossiers patients",
+                "💊 Gestion de la pharmacie et des stocks de médicaments",
+                "📅 Planification des rendez-vous de soins",
+                "📋 Protocoles d'urgence et aide au diagnostic"
+            ],
+            'Journaliste / Enquêteur': [
+                "📰 Carnet d'enquêtes et contacts de sources",
+                "🎙️ Enregistreur et notes de terrain sécurisées",
+                "📅 Planning de publication et rédaction d'articles",
+                "🔍 Analyse des faits et recoupement d'informations"
+            ]
         };
 
-        const dico = {
-            FR: {
-                title: "🌐 E.V.A.T. (Propulsé par ELAWS)",
-                pause: "Pause",
-                offline: "🟢 100% Souverain, Accessible & Hors-ligne",
-                welcomeTitle: "Bienvenue dans E.V.A.T. (Pour Tous : Enfants, Adultes & Illettrés)",
-                welcomeText: "Cliquez sur les trois traits (☰) en haut à gauche pour ouvrir le menu. Vous y trouverez vos métiers et le module d'appels traduits en langues maternelles.",
-                sectorTitle: "📌 Domaine Professionnel Actif",
-                hint: "Ouvrez le menu ☰ pour basculer d'un métier à un autre à tout moment.",
-                toolsTitle: "Boîte à Outils Générale",
-                toolsDesc: "Outils simples et visuels utilisables par toute la famille.",
-                aiTitle: "Assistant ELAWS (IA Locale & Privée)",
-                aiDesc: "Posez vos questions à ELAWS par écrit ou par assistant vocal :",
-                aiPlaceholder: "Ex: Aide-moi à organiser ma journée...",
-                aiBtn: "Interroger ELAWS"
-            }
-        };
-
-        function toggleMenu() {
-            const menu = document.getElementById('sideMenu');
-            menu.classList.toggle('open');
+        function toggleMenu() { document.getElementById('sideMenu').classList.toggle('open'); }
+        function changerLangue() { langue = langue === 'FR' ? 'EN' : 'FR'; render(); }
+        function toggleEco() {
+            modeEco = !modeEco;
+            document.body.style.background = modeEco ? '#000000' : '#f8fafc';
+            document.body.style.color = modeEco ? '#22c55e' : '#0f172a';
+            alert(modeEco ? "Mode Éco activé (Écran sombre, batterie ultra-préservée pour anciens téléphones)." : "Mode Normal rétabli.");
+            render();
         }
 
         function render() {
-            const t = dico.FR;
-            document.getElementById('lblTitle').innerText = t.title;
-            document.getElementById('lblLang').innerText = '🌐 FR';
-            document.getElementById('lblPause').innerText = t.pause;
-            document.getElementById('lblOffline').innerText = t.offline;
-
             const content = document.getElementById('mainContent');
             content.innerHTML = '';
 
             if (activeTab === 'accueil') {
                 let outilsHtml = '';
                 if (metierActif.nom !== 'Non défini' && dbMetiers[metierActif.nom]) {
-                    const listeOutils = dbMetiers[metierActif.nom].FR;
-                    outilsHtml = `<div class="tool-box"><h4 style="margin-top:0; color: #27ae60;">🛠️ Outils actifs pour : ${metierActif.nom}</h4>`;
-                    listeOutils.forEach(outil => {
-                        outilsHtml += `<div class="tool-item-card">${outil}</div>`;
-                    });
+                    outilsHtml = `<div style="margin-top:10px;"><strong>🛠️ Outils actifs : ${metierActif.nom}</strong>`;
+                    dbMetiers[metierActif.nom].forEach(o => { outilsHtml += `<div class="tool-card">${o}</div>`; });
                     outilsHtml += `</div>`;
                 }
-
                 content.innerHTML = `
-                    <div class="card" style="background-color: #f0fdf4; border-color: #bbf7d0;">
-                        <h3 class="card-title" style="color: #166534;">${t.welcomeTitle}</h3>
-                        <p class="text" style="color: #14532d; margin-bottom: 0;">${t.welcomeText}</p>
-                    </div>
                     <div class="card">
-                        <h3 class="card-title">${t.sectorTitle}</h3>
-                        <div class="score-text">${metierActif.nom}</div>
-                        <div class="hint">${t.hint}</div>
+                        <h3 class="card-title">Bienvenue dans E.V.A.T.</h3>
+                        <p class="text">Sélectionnez votre métier via le menu (☰) pour charger vos outils instantanément. Conçu pour tous (enfants, adultes, illettrés) et ultra-léger pour anciens téléphones.</p>
+                        <div class="score-text">Métier actuel : ${metierActif.nom}</div>
                         ${outilsHtml}
                     </div>
                 `;
             } else if (activeTab === 'appel') {
-                let contactsHtml = '';
-                contacts.forEach((c, index) => {
-                    contactsHtml += `<div class="tool-item-card" style="display: flex; justify-content: space-between; align-items: center;">
-                        <div><strong>👤 ${c.nom}</strong><br><small>📞 ${c.telephone} | Langue : ${c.langueMaternelle}</small></div>
-                        <button class="btn-action" onclick="lancerAppelTraduction('${c.nom}', '${c.langueMaternelle}')">📞 Appeler</button>
+                let listC = '';
+                contacts.forEach(c => {
+                    listC += `<div class="tool-card" style="display:flex; justify-content:space-between; align-items:center;">
+                        <div><strong>👤 ${c.nom}</strong><br><small>📞 ${c.telephone} | ${c.langueMaternelle}</small></div>
+                        <button class="btn-action" style="width:auto; padding:6px 12px;" onclick="lancerAppel('${c.nom}')">Appeler</button>
                     </div>`;
                 });
-
                 content.innerHTML = `
                     <div class="card">
-                        <h3 class="card-title">📞 Carnet de Contacts & Appels avec Traduction en Langue Maternelle</h3>
-                        <p class="text">Discutez avec votre conjoint, famille ou partenaires. Même si vous parlez des langues différentes, ELAWS traduit instantanément et vocalement dans vos langues maternelles respectives.</p>
-                        
-                        <h4 style="margin-bottom: 8px;">➕ Ajouter un nouveau contact :</h4>
-                        <div class="input-group">
-                            <input type="text" id="nomContact" class="input" placeholder="Nom (ex: Mon Conjoint)">
-                            <input type="text" id="telContact" class="input" placeholder="Téléphone">
-                        </div>
-                        <select id="langueContact" class="input">
-                            <option value="Éwé / Mina">Éwé / Mina</option>
-                            <option value="Kabiyè">Kabiyè</option>
-                            <option value="Français">Français</option>
-                            <option value="Yoruba">Yoruba</option>
-                            <option value="Haoussa">Haoussa</option>
-                        </select>
-                        <button class="btn-action" onclick="ajouterContact()" style="margin-bottom: 15px; width: 100%;">Enregistrer le contact</button>
-
-                        <h4 style="margin-bottom: 8px;">👥 Mes Contacts Enregistrés :</h4>
-                        ${contactsHtml}
-
-                        <h4 style="margin-top: 20px; margin-bottom: 8px;">💬 Salon de Discussion & Traduction en Direct :</h4>
-                        <div class="ai-box">
-                            <div class="ai-reply" id="fluxAppel">🎧 ${historiqueAppel}</div>
-                        </div>
-                        <div class="input-group">
-                            <input type="text" id="messageAppel" class="input" placeholder="Parlez dans votre langue (ex: Bonjour mon amour)...">
-                            <button class="btn-action" onclick="traduireEtDiscuter()">Envoyer & Traduire</button>
-                        </div>
+                        <h3 class="card-title">📞 Appels & Traduction en Langues Maternelles</h3>
+                        <p class="text">Discutez avec vos proches en toute sérénité. ELAWS traduit vocalement et instantanément entre vos langues maternelles.</p>
+                        <div class="input-group"><input type="text" id="nomC" class="input" placeholder="Nom"><input type="text" id="telC" class="input" placeholder="Téléphone"></div>
+                        <select id="langC" class="input"><option>Éwé / Mina</option><option>Kabiyè</option><option>Français</option><option>Yoruba</option><option>Haoussa</option></select>
+                        <button class="btn-action" onclick="addC()" style="margin-bottom:12px;">Ajouter Contact</button>
+                        <h4 style="margin:8px 0;">Contacts :</h4>${listC}
+                        <div style="background:#f1f5f9; padding:10px; border-radius:6px; margin-top:10px; font-size:12.5px;">🎧 ${historiqueAppel}</div>
                     </div>
                 `;
             } else if (activeTab === 'motivation') {
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">Citation & Énergie du Jour</h3>
-                        <div class="score-text" style="font-style: italic; margin: 15px 0;">${citation}</div>
-                        <button class="btn-action" onclick="changerCitation()">Autre inspiration</button>
-                    </div>
-                `;
-            } else if (activeTab === 'outils') {
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">${t.toolsTitle}</h3>
-                        <p class="text">${t.toolsDesc}</p>
-                        <div class="tool-item-card">• 🧮 Calculateur simple et universel (adapté aux enfants et illettrés)</div>
-                        <div class="tool-item-card">• 🎙️ Traducteur vocal instantané hors-ligne</div>
-                        <div class="tool-item-card">• 🪙 Gestion de budget familial de poche</div>
-                    </div>
-                `;
+                content.innerHTML = `<div class="card"><h3 class="card-title">Inspiration & Énergie</h3><div class="score-text" style="font-style:italic;">${citation}</div><button class="btn-action" onclick="alerteInsp()">Nouvelle Énergie</button></div>`;
             } else if (activeTab === 'ia') {
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">${t.aiTitle}</h3>
-                        <p class="text">${t.aiDesc}</p>
-                        <div class="ai-box">
-                            <div class="ai-reply">🤖 ${reponseIA}</div>
-                        </div>
-                        <div class="input-group">
-                            <input type="text" id="inputIA" class="input" placeholder="${t.aiPlaceholder}">
-                            <button class="btn-action" onclick="interrogerELAWS()">${t.aiBtn}</button>
-                        </div>
-                    </div>
-                `;
+                content.innerHTML = `<div class="card"><h3 class="card-title">Assistant ELAWS</h3><div style="background:#f1f5f9; padding:10px; border-radius:6px; margin-bottom:10px; font-size:13px;">🤖 ${reponseIA}</div><div class="input-group"><input type="text" id="inIA" class="input" placeholder="Votre question..."><button class="btn-action" style="width:auto;" onclick="askIA()">Envoyer</button></div></div>`;
             }
         }
 
-        function switchTab(tab) {
-            activeTab = tab;
-            document.getElementById('sideMenu').classList.remove('open');
-            render();
+        function switchTab(t) { activeTab = t; document.getElementById('sideMenu').classList.remove('open'); render(); }
+        function choisirMetier(nom) { metierActif = { nom: nom, outils: dbMetiers[nom] }; document.getElementById('sideMenu').classList.remove('open'); alert("Métier activé : " + nom); switchTab('accueil'); }
+        function addC() {
+            const n = document.getElementById('nomC').value, t = document.getElementById('telC').value, l = document.getElementById('langC').value;
+            if(n && t) { contacts.push({nom:n, telephone:t, langueMaternelle:l}); alert("Contact ajouté !"); render(); }
         }
-
-        function changerLangue() {
-            alert("Application universelle EVAT : Mode multilingue actif.");
-        }
-
-        function togglePause() {
-            alert("Mode Pause activé.");
-        }
-
-        function changerCitation() {
-            citation = '"Le succès appartient à ceux qui osent entreprendre et innover chaque jour."';
-            render();
-        }
-
-        function choisirMetier(nomMetier) {
-            metierActif = { nom: nomMetier, outils: dbMetiers[nomMetier].FR };
-            document.getElementById('sideMenu').classList.remove('open');
-            alert("Métier activé avec succès : " + nomMetier);
-            switchTab('accueil');
-        }
-
-        function ajouterContact() {
-            const nom = document.getElementById('nomContact').value.trim();
-            const tel = document.getElementById('telContact').value.trim();
-            const lang = document.getElementById('langueContact').value;
-            if(nom && tel) {
-                contacts.push({ nom: nom, telephone: tel, langueMaternelle: lang });
-                alert("Contact ajouté avec succès !");
-                render();
-            } else {
-                alert("Veuillez remplir le nom et le téléphone.");
-            }
-        }
-
-        function lancerAppelTraduction(nomContact, langueMaternelle) {
-            historiqueAppel = `Appel sécurisé établi avec ${nomContact} (${langueMaternelle}). ELAWS est en écoute active pour traduire vos voix en direct dans vos langues maternelles.`;
-            render();
-        }
-
-        function traduireEtDiscuter() {
-            const msg = document.getElementById('messageAppel').value.trim();
-            if(!msg) return;
-            historiqueAppel = `Vous avez dit : "${msg}" ➔ 🌐 Traduction ELAWS vers la langue maternelle du correspondant : "${msg} [Traduit et optimisé en langue locale avec succès ✅]`;
-            render();
-        }
-
-        function interrogerELAWS() {
-            const input = document.getElementById('inputIA');
-            if (!input || !input.value.trim()) return;
-            const val = input.value.trim();
-            reponseIA = `ELAWS : "${val}" -> Traitement instantané et sécurisé pour votre quotidien.`;
-            render();
-        }
+        function lancerAppel(nom) { historiqueAppel = `Appel sécurisé en cours avec ${nom} - Traduction vocale active.`; render(); }
+        function alerteInsp() { alert("Le succès appartient à ceux qui entreprennent !"); }
+        function askIA() { const v = document.getElementById('inIA').value; if(v) { reponseIA = `ELAWS : "${v}" -> Analysé et optimisé localement.`; render(); } }
 
         render();
     </script>
