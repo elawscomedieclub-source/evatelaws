@@ -102,9 +102,7 @@
         .btn:hover {
             background-color: var(--accent-hover);
             color: #ffffff;
-            transform: translateY(-1px);
         }
-        /* Zone de dialogue ELAWS */
         .elaws-container {
             background-color: var(--card-bg);
             border-radius: 14px;
@@ -137,10 +135,6 @@
             background-color: #05080f;
             color: var(--text-main);
             font-size: 1rem;
-        }
-        .chat-input:focus {
-            outline: none;
-            border-color: var(--accent-color);
         }
         footer {
             text-align: center;
@@ -199,7 +193,6 @@
             </div>
         </div>
 
-        <!-- Terminal ELAWS -->
         <div class="elaws-container">
             <h3>💬 Terminal Interactif ELAWS</h3>
             <div id="chatOutput" class="chat-output">
@@ -243,8 +236,6 @@
             const text = input.value.trim();
             if(text !== "") {
                 logMessage("Vous", text, "#f8fafc");
-                
-                // Simulation d'une réponse intelligente d'ELAWS
                 setTimeout(() => {
                     let reply = "J'analyse votre requête pour optimiser votre écosystème EVAT.";
                     const lower = text.toLowerCase();
@@ -257,7 +248,6 @@
                     }
                     logMessage("ELAWS", reply, "#10b981");
                 }, 400);
-
                 input.value = "";
             }
         }
@@ -268,6 +258,5 @@
             }
         }
     </script>
-
 </body>
 </html>
