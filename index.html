@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. & ELAWS - Écosystème Souverain Universel</title>
+    <title>E.V.A.T. & ELAWS AI - Écosystème Souverain & Hors-Ligne</title>
     
     <link rel="manifest" href="data:application/manifest+json,{
-        'name': 'E.V.A.T. & ELAWS',
+        'name': 'E.V.A.T. & ELAWS AI',
         'short_name': 'EVAT',
         'start_url': '.',
         'display': 'standalone',
@@ -116,7 +116,15 @@
             padding-left: 5px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            justify-content: space-between;
+        }
+        .offline-status {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 800;
         }
         .bottom-action-bar {
             position: fixed;
@@ -259,59 +267,61 @@
             <div class="header-left">
                 <button class="menu-toggle" onclick="toggleMenu()">☰</button>
                 <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo ELAWS" class="app-logo">
-                <div class="title">E.V.A.T. & ELAWS</div>
+                <div class="title">E.V.A.T. & ELAWS AI</div>
             </div>
             <div class="header-right">
                 <button class="btn-top" onclick="changerTheme()">🎨 Thème</button>
                 <button class="btn-top" onclick="changerProfilSession()">👤 Profils</button>
             </div>
         </header>
-        <div class="badge-info" id="badgeDomaineActif">🌍 Écosystème Souverain Universel</div>
+        <div class="badge-info">
+            <span id="badgeDomaineActif">🌍 Écosystème Souverain</span>
+            <span class="offline-status">⚡ 100% Hors-Ligne (Sans Connexion)</span>
+        </div>
     </div>
 
     <!-- BANDEAU D'INSTALLATION AUTOMATIQUE -->
     <div id="installBanner" class="card" style="display:none; border-color:var(--accent); background:rgba(5,150,105,0.15); text-align:center;">
         <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo" style="width:50px; height:50px; margin-bottom:8px; border-radius:12px;">
-        <h3 class="card-title" style="color:var(--accent); margin-bottom:6px;">📲 Installer E.V.A.T. & ELAWS</h3>
-        <p class="text" style="margin-bottom:12px;">Installez l'application en un clic pour l'utiliser en plein écran et hors-ligne !</p>
-        <button class="btn-action" id="btnInstallApp" style="font-size:15px; padding:14px;">Installer l'Application Immédiatement</button>
+        <h3 class="card-title" style="color:var(--accent); margin-bottom:6px;">📲 Installer E.V.A.T. & ELAWS AI</h3>
+        <p class="text" style="margin-bottom:12px;">Installez l'application pour l'utiliser partout, même sans aucune connexion Internet !</p>
+        <button class="btn-action" id="btnInstallApp" style="font-size:15px; padding:14px;">Installer l'Application</button>
     </div>
 
     <div id="sideMenu" class="sidebar">
-        <h3>📂 Navigation Complète E.V.A.T.</h3>
-        <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Mon Métier</button>
-        <button class="menu-item" onclick="switchTab('objectifs')">🎯 Objectifs & Projets</button>
-        <button class="menu-item" onclick="switchTab('notes')">📓 Journal de Bord (ELAWS)</button>
+        <h3>📂 Navigation & Outils</h3>
+        <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Mon Profil</button>
+        <button class="menu-item" onclick="switchTab('ia')" style="background:rgba(5,150,105,0.2); border:1px solid var(--accent);">🤖 <strong>Parler à ELAWS AI (Discussion IA)</strong></button>
+        <button class="menu-item" onclick="switchTab('atelier_specifique')">✂️ Atelier / Mesures Métier</button>
         <button class="menu-item" onclick="switchTab('factures')">🧾 Reçus & Factures</button>
+        <button class="menu-item" onclick="switchTab('economie')">🪙 Caisse & Trésorerie</button>
+        <button class="menu-item" onclick="switchTab('objectifs')">🎯 Objectifs & Projets</button>
+        <button class="menu-item" onclick="switchTab('notes')">📓 Journal de Bord</button>
         <button class="menu-item" onclick="switchTab('sauvegarde')">💾 Sauvegarde & Restauration (JSON)</button>
-        <button class="menu-item" onclick="switchTab('dossiers')">📁 Assistant Visas & Séjour</button>
         <button class="menu-item" onclick="switchTab('convertisseur')">💱 Convertisseur de Devises</button>
-        <button class="menu-item" onclick="switchTab('traduction')">🗣️ Pont de Traduction (ELAWS)</button>
-        <button class="menu-item" onclick="switchTab('carnet')">📝 Carnet de Commandes</button>
+        <button class="menu-item" onclick="switchTab('traduction')">🗣️ Pont de Traduction</button>
         <button class="menu-item" onclick="switchTab('gps')">🧭 Géolocalisation & GPS</button>
-        <button class="menu-item" onclick="switchTab('economie')">🪙 Finances & Caisse</button>
         <button class="menu-item" onclick="switchTab('camera')">📸 Caméra & Documents</button>
         <button class="menu-item" onclick="switchTab('securite')">🛡️ Sécurité & Chiffrement</button>
-        <button class="menu-item" onclick="switchTab('ia')">🤖 Assistant ELAWS AI</button>
     </div>
 
     <div class="module-container" id="mainContent"></div>
 
     <div id="bottomBar" class="bottom-action-bar" style="display:none;">
         <button class="bar-item active" onclick="switchTab('accueil')" id="barAccueil">
-            <span class="icon">💼</span><span>Métier</span>
+            <span class="icon">💼</span><span>Profil</span>
         </button>
-        <button class="bar-item" onclick="switchTab('objectifs')" id="barObj">
-            <span class="icon">🎯</span><span>Objectifs</span>
+        <button class="bar-item" onclick="switchTab('ia')" id="barIa" style="color:var(--accent);">
+            <span class="icon">🤖</span><span>ELAWS AI</span>
         </button>
-        <button class="bar-item" onclick="switchTab('notes')" id="barNotes">
-            <span class="icon">📓</span><span>Notes</span>
+        <button class="bar-item" onclick="switchTab('atelier_specifique')" id="barAtelier">
+            <span class="icon" id="iconBarMetier">✂️</span><span id="labelBarMetier">Atelier</span>
         </button>
         <button class="bar-item" onclick="switchTab('factures')" id="barFactures">
             <span class="icon">🧾</span><span>Factures</span>
         </button>
-        <button class="bar-item" onclick="switchTab('sauvegarde')" id="barSauv">
-            <span class="icon">💾</span><span>Backup</span>
+        <button class="bar-item" onclick="switchTab('economie')" id="barEco">
+            <span class="icon">🪙</span><span>Caisse</span>
         </button>
     </div>
 
@@ -365,11 +375,11 @@
                 const { outcome } = await deferredPrompt.userChoice;
                 if (outcome === 'accepted') {
                     document.getElementById('installBanner').style.display = 'none';
-                    showToast("Application installée avec succès !");
+                    showToast("Application installée pour le mode hors-ligne !");
                 }
                 deferredPrompt = null;
             } else {
-                showToast("L'application est prête sur votre écran.");
+                showToast("Application prête sur votre écran.");
             }
         });
 
@@ -378,13 +388,13 @@
         function creerNouveauProfil() {
             const nom = document.getElementById('regNom').value.trim();
             const email = document.getElementById('regEmail').value.trim();
-            const metierUnique = document.getElementById('regMetierCustom').value.trim() || 'Professionnel Indépendant';
+            const metierUnique = document.getElementById('regMetierCustom').value.trim() || 'Couturier';
             const tel = document.getElementById('regTel').value.trim();
             const nat = document.getElementById('regNationalite').value;
             const pays = document.getElementById('regPaysActuel').value;
 
-            if (!nom || !email) {
-                showToast("Veuillez renseigner votre nom et votre e-mail.");
+            if (!nom) {
+                showToast("Veuillez renseigner votre nom.");
                 return;
             }
 
@@ -392,7 +402,7 @@
             const nouveauProfil = {
                 id: nouveauId,
                 nom: nom,
-                email: email,
+                email: email || 'contact@evat.tg',
                 telephone: tel || '+228 98231402',
                 nationalite: nat,
                 paysActuel: pays,
@@ -401,16 +411,16 @@
                     { id: 1, categorie: "Finances & Business", titre: `Faire prospérer mon activité de ${metierUnique}`, statut: "En cours" }
                 ],
                 notes: [
-                    { id: 1, titre: "Bienvenue dans E.V.A.T.", texte: `Espace souverain configuré exclusivement pour : ${metierUnique}.`, date: new Date().toLocaleDateString() }
+                    { id: 1, titre: "Bienvenue dans E.V.A.T.", texte: `Espace souverain configuré hors-ligne pour : ${metierUnique}.`, date: new Date().toLocaleDateString() }
                 ],
                 solde: 50000,
-                carnet: [],
+                carnetCommandes: [],
+                mesuresClients: [], // Spécifique couturier/artisan
+                discussionsElaws: [
+                    { role: 'ai', texte: `Bonjour ${nom} ! Je suis ELAWS AI, votre intelligence artificielle souveraine. Je fonctionne à 100% sans connexion Internet pour vous accompagner dans votre métier de ${metierUnique}. Que souhaitez-vous faire ?` }
+                ],
                 historiqueFinancier: [
                     { date: new Date().toLocaleDateString(), desc: "Capital initial", montant: 50000, type: "entree" }
-                ],
-                dossiersVoyage: [
-                    { id: 1, titre: "Passeport / Pièce d'identité", statut: "Validé" },
-                    { id: 2, titre: "Justificatif de domicile", statut: "En attente" }
                 ]
             };
 
@@ -461,6 +471,42 @@
             
             sauvegarderProfilActif();
             showToast("Profil et métier mis à jour !");
+            render();
+        }
+
+        // Fonctions spécifiques pour Couturier / Artisan
+        function ajouterMesureClient() {
+            const client = document.getElementById('mesureClientNom').value.trim();
+            const typeHabit = document.getElementById('mesureTypeHabit').value.trim();
+            const poitrine = document.getElementById('mesurePoitrine').value;
+            const longueur = document.getElementById('mesureLongueur').value;
+            const manches = document.getElementById('mesureManches').value;
+            const details = document.getElementById('mesureDetails').value.trim();
+
+            if (client && typeHabit) {
+                if(!utilisateurActif.mesuresClients) utilisateurActif.mesuresClients = [];
+                utilisateurActif.mesuresClients.unshift({
+                    id: Date.now(),
+                    client,
+                    typeHabit,
+                    poitrine: poitrine || 'N/C',
+                    longueur: longueur || 'N/C',
+                    manches: manches || 'N/C',
+                    details: details || 'Aucune consigne particulière',
+                    date: new Date().toLocaleDateString()
+                });
+                sauvegarderProfilActif();
+                showToast("Fiche de mesures enregistrée (hors-ligne) !");
+                render();
+            } else {
+                showToast("Remplissez au moins le nom du client et le type d'habit.");
+            }
+        }
+
+        function supprimerMesure(id) {
+            utilisateurActif.mesuresClients = utilisateurActif.mesuresClients.filter(m => m.id !== id);
+            sauvegarderProfilActif();
+            showToast("Fiche supprimée.");
             render();
         }
 
@@ -583,22 +629,36 @@
             }
         }
 
-        function interrogerElawsAI() {
-            const q = document.getElementById('inputElawsQuestion').value.trim();
-            if (!q) { showToast("Posez une question à ELAWS."); return; }
+        function envoyerMessageElawsAI() {
+            const input = document.getElementById('inputElawsChat');
+            const q = input.value.trim();
+            if (!q) return;
+
+            if (!utilisateurActif.discussionsElaws) utilisateurActif.discussionsElaws = [];
+            utilisateurActif.discussionsElaws.push({ role: 'user', texte: q });
+
             let reponse = "";
             const qLower = q.toLowerCase();
-            if (qLower.includes('bonjour') || qLower.includes('salut')) {
-                reponse = `Bonjour ${utilisateurActif.nom} ! ELAWS est à vos côtés en tant qu'assistant souverain pour votre activité de ${utilisateurActif.metierUnique}. Comment puis-je vous aider aujourd'hui ?`;
-            } else if (qLower.includes('client') || qLower.includes('facture')) {
-                reponse = `En tant que ${utilisateurActif.metierUnique}, vous pouvez utiliser l'onglet 'Factures' pour générer instantanément vos reçus professionnels.`;
-            } else if (qLower.includes('argent') || qLower.includes('solde') || qLower.includes('caisse')) {
-                reponse = `Votre solde actuel dans E.V.A.T. est de ${utilisateurActif.solde.toLocaleString()} FCFA. Vous pouvez suivre vos entrées et sorties dans l'onglet 'Finances & Caisse'.`;
+            const metier = utilisateurActif.metierUnique.toLowerCase();
+
+            if (qLower.includes('bonjour') || qLower.includes('salut') || qLower.includes('coucou')) {
+                reponse = `Bonjour ${utilisateurActif.nom} ! Je suis ELAWS AI, votre intelligence artificielle souveraine. Je fonctionne entièrement hors-ligne pour vous assister dans votre métier de ${metier}. Que puis-je faire pour vous ?`;
+            } else if (metier.includes('coutur') || metier.includes('tailleur') || metier.includes('hab')) {
+                if (qLower.includes('mesure') || qLower.includes('client') || qLower.includes('modele') || qLower.includes('tissu')) {
+                    reponse = `En tant que couturier, pour enregistrer les mensurations (poitrine, longueur, manches) de vos clients et vos modèles d'habits, allez directement dans l'onglet 'Atelier' (via le menu ✂️). Toutes vos données sont enregistrées en local sur votre mobile, même sans connexion Internet !`;
+                } else {
+                    reponse = `En tant qu'intelligence artificielle ELAWS AI, je vous conseille de bien vérifier les longueurs et largeurs de vos clients dans votre carnet de mesures. Vous pouvez aussi éditer vos factures et suivre votre caisse à tout moment hors-ligne.`;
+                }
+            } else if (qLower.includes('facture') || qLower.includes('recu') || qLower.includes('argent')) {
+                reponse = `Vous pouvez gérer votre trésorerie dans l'onglet 'Caisse' et éditer des reçus professionnels dans l'onglet 'Factures'. Tout est 100% fonctionnel hors-ligne !`;
             } else {
-                reponse = `ELAWS a analysé votre requête concernant "${q}" dans le cadre de votre métier de ${utilisateurActif.metierUnique}. Vos données restent sécurisées sur votre appareil. Souhaitez-vous enregistrer cette note ou créer un objectif lié ?`;
+                reponse = `ELAWS AI a bien enregistré votre consigne : "${q}". En tant qu'intelligence artificielle souveraine, je suis configurée pour vous aider dans votre activité de ${utilisateurActif.metierUnique} sans jamais nécessiter de connexion internet.`;
             }
-            document.getElementById('reponseElawsAI').innerHTML = `<div style="background:var(--bg-color); padding:12px; border-radius:8px; border-left:4px solid var(--accent); margin-top:10px;"><strong>🤖 ELAWS :</strong> ${reponse}</div>`;
-            showToast("Réponse ELAWS générée !");
+
+            utilisateurActif.discussionsElaws.push({ role: 'ai', texte: reponse });
+            sauvegarderProfilActif();
+            input.value = '';
+            render();
         }
 
         function render() {
@@ -621,21 +681,21 @@
                 content.innerHTML = `
                     <div class="card" style="border-color:var(--accent); max-width:500px; margin: 20px auto; text-align:center;">
                         <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo" style="width:72px; height:72px; margin-bottom:10px; border-radius:16px; border:2px solid var(--accent); box-shadow:0 0 20px rgba(5,150,105,0.4);">
-                        <h2 style="color:var(--accent); margin-top:0;">✨ E.V.A.T. & ELAWS</h2>
-                        <p class="text" style="text-align:center;">Écosystème Souverain Universel. Indiquez votre métier unique pour configurer instantanément votre espace de travail intelligent.</p>
+                        <h2 style="color:var(--accent); margin-top:0;">✨ E.V.A.T. & ELAWS AI</h2>
+                        <p class="text" style="text-align:center;">Écosystème Souverain 100% Hors-Ligne. Indiquez votre métier (ex: <em>Couturier</em>, <em>Chauffeur</em>, <em>Coiffeur</em>) pour que l'application et l'intelligence artificielle ELAWS AI génèrent vos outils de travail instantanément.</p>
                         
                         ${profilsExistantsHtml}
 
                         <div style="text-align:left;">
-                            <h4 style="margin-bottom:10px; border-top:1px solid var(--border-color); padding-top:15px;">📝 Inscription & Votre Métier Unique :</h4>
+                            <h4 style="margin-bottom:10px; border-top:1px solid var(--border-color); padding-top:15px;">📝 Inscription & Votre Métier :</h4>
                             <label style="font-size:11px; color:var(--text-secondary);">Nom complet ou Pseudonyme * :</label>
                             <input type="text" id="regNom" class="input" placeholder="Ex: Eric Lawson">
                             
-                            <label style="font-size:11px; color:var(--text-secondary);">Adresse E-mail * :</label>
+                            <label style="font-size:11px; color:var(--text-secondary);">Adresse E-mail :</label>
                             <input type="email" id="regEmail" class="input" placeholder="Ex: monemail@domaine.com">
 
-                            <label style="font-size:11px; color:var(--text-secondary);">Votre Métier / Activité unique * :</label>
-                            <input type="text" id="regMetierCustom" class="input" placeholder="Ex: Chauffeur, Développeur, Menuisier, Commerçant...">
+                            <label style="font-size:11px; color:var(--text-secondary);">Votre Métier / Corps de métier * :</label>
+                            <input type="text" id="regMetierCustom" class="input" placeholder="Ex: Couturier, Menuisier, Chauffeur...">
 
                             <label style="font-size:11px; color:var(--text-secondary);">Téléphone :</label>
                             <input type="text" id="regTel" class="input" placeholder="Ex: +228 98231402">
@@ -661,7 +721,7 @@
                                 </div>
                             </div>
 
-                            <button class="btn-action" style="margin-top:10px;" onclick="creerNouveauProfil()">🚀 Ouvrir mon Espace Souverain</button>
+                            <button class="btn-action" style="margin-top:10px;" onclick="creerNouveauProfil()">🚀 Ouvrir mon Espace & ELAWS AI (Hors-Ligne)</button>
                         </div>
                     </div>
                 `;
@@ -670,34 +730,56 @@
 
             document.getElementById('appHeader').style.display = 'block';
             document.getElementById('bottomBar').style.display = 'flex';
-            document.getElementById('badgeDomaineActif').innerHTML = `💼 Espace Dédié : ${utilisateurActif.metierUnique}`;
+            document.getElementById('badgeDomaineActif').innerHTML = `💼 Espace : ${utilisateurActif.metierUnique}`;
+
+            // Personnalisation de l'icône de la barre du bas selon le métier
+            const metierLower = utilisateurActif.metierUnique.toLowerCase();
+            if (metierLower.includes('coutur') || metierLower.includes('tailleur') || metierLower.includes('hab')) {
+                document.getElementById('iconBarMetier').innerText = '✂️';
+                document.getElementById('labelBarMetier').innerText = 'Mesures';
+            } else if (metierLower.includes('chauff') || metierLower.includes('transport')) {
+                document.getElementById('iconBarMetier').innerText = '🚗';
+                document.getElementById('labelBarMetier').innerText = 'Courses';
+            } else {
+                document.getElementById('iconBarMetier').innerText = '⚡';
+                document.getElementById('labelBarMetier').innerText = 'Atelier';
+            }
 
             document.querySelectorAll('.bar-item').forEach(el => el.classList.remove('active'));
             if(activeTab === 'accueil') document.getElementById('barAccueil')?.classList.add('active');
-            if(activeTab === 'objectifs') document.getElementById('barObj')?.classList.add('active');
-            if(activeTab === 'notes') document.getElementById('barNotes')?.classList.add('active');
+            if(activeTab === 'ia') document.getElementById('barIa')?.classList.add('active');
+            if(activeTab === 'atelier_specifique') document.getElementById('barAtelier')?.classList.add('active');
             if(activeTab === 'factures') document.getElementById('barFactures')?.classList.add('active');
-            if(activeTab === 'sauvegarde') document.getElementById('barSauv')?.classList.add('active');
+            if(activeTab === 'economie') document.getElementById('barEco')?.classList.add('active');
 
             if (activeTab === 'accueil') {
                 content.innerHTML = `
                     <div class="card" style="border-color: var(--accent);">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                             <div>
-                                <span style="font-size:11px; color:var(--accent); font-weight:700;">💼 MON PROFIL & ACTIVITÉ UNIQUE</span>
+                                <span style="font-size:11px; color:var(--accent); font-weight:700;">💼 PROFIL & CORPS DE MÉTIER HORS-LIGNE</span>
                                 <div style="font-size:17px; font-weight:800;">${utilisateurActif.nom}</div>
                             </div>
                             <button class="btn-top" onclick="changerProfilSession()">🔄 Changer</button>
                         </div>
-                        <p class="text" style="margin-bottom:12px;">Votre application est entièrement configurée pour votre métier : <strong style="color:var(--accent);">${utilisateurActif.metierUnique}</strong>.</p>
+                        <p class="text" style="margin-bottom:12px;">Écosystème configuré pour : <strong style="color:var(--accent);">${utilisateurActif.metierUnique}</strong>. Vous travaillez en toute autonomie, avec ou sans connexion Internet.</p>
                         
+                        <!-- ACCÈS DIRECT À L'INTELLIGENCE ARTIFICIELLE ELAWS AI -->
+                        <div style="background:rgba(5,150,105,0.15); border:2px solid var(--accent); padding:16px; border-radius:12px; margin-bottom:15px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 4px 15px rgba(5,150,105,0.2);">
+                            <div>
+                                <h4 style="margin:0 0 4px 0; color:var(--accent); font-size:16px;">🤖 Discuter avec ELAWS AI</h4>
+                                <p style="font-size:12px; margin:0; color:var(--text-secondary);">Votre intelligence artificielle personnelle pour vous guider dans votre métier.</p>
+                            </div>
+                            <button class="btn-action" style="width:auto; padding:12px 18px; font-size:14px;" onclick="switchTab('ia')">Ouvrir le Chat 💬</button>
+                        </div>
+
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; display:flex; flex-direction:column; gap:10px;">
                             <div>
                                 <label style="font-size:11px; color:var(--text-secondary);">Nom ou Pseudonyme :</label>
                                 <input type="text" id="inputNomUtilisateur" class="input" value="${utilisateurActif.nom}" style="margin-top:4px;">
                             </div>
                             <div>
-                                <label style="font-size:11px; color:var(--text-secondary);">Mon Métier / Activité Unique :</label>
+                                <label style="font-size:11px; color:var(--text-secondary);">Mon Corps de Métier :</label>
                                 <input type="text" id="inputMetierUnique" class="input" value="${utilisateurActif.metierUnique}" style="margin-top:4px; border-color:var(--accent);">
                             </div>
                             <div style="display:flex; gap:8px;">
@@ -730,63 +812,106 @@
                                     <input type="text" id="inputTelUtilisateur" class="input" value="${utilisateurActif.telephone}" style="margin-top:4px;">
                                 </div>
                             </div>
-                            <button class="btn-action" style="padding:12px; font-size:14px; margin-top:4px;" onclick="mettreAJourIdentiteEtMetier()">💾 Enregistrer mon Profil & Métier</button>
+                            <button class="btn-action" style="padding:12px; font-size:14px; margin-top:4px;" onclick="mettreAJourIdentiteEtMetier()">💾 Enregistrer mon Profil</button>
                         </div>
                     </div>
                 `;
-            } else if (activeTab === 'objectifs') {
-                let objHtml = '';
-                utilisateurActif.objectifs.forEach(o => {
-                    objHtml += `
-                        <div style="margin-bottom:10px; background:var(--bg-color); padding:12px; border-radius:8px; border-left:4px solid var(--accent);">
-                            <span style="font-size:11px; color:var(--accent); font-weight:700;">📌 ${o.categorie}</span><br>
-                            <strong style="font-size:14px;">${o.titre}</strong><br>
-                            <small style="color:var(--text-secondary);">Statut : ${o.statut}</small>
-                        </div>
-                    `;
-                });
+            } else if (activeTab === 'ia') {
+                // CHAT INTERACTIF AVEC L'INTELLIGENCE ARTIFICIELLE ELAWS AI
+                let chatHtml = '';
+                if (utilisateurActif.discussionsElaws) {
+                    utilisateurActif.discussionsElaws.forEach(msg => {
+                        const isAi = msg.role === 'ai';
+                        const bg = isAi ? 'rgba(5,150,105,0.15)' : 'var(--bg-color)';
+                        const border = isAi ? '4px solid var(--accent)' : '4px solid var(--border-color)';
+                        const auteur = isAi ? '🤖 ELAWS AI (Intelligence Artificielle)' : `👤 ${utilisateurActif.nom}`;
+                        chatHtml += `
+                            <div style="background:${bg}; border-left:${border}; padding:14px; border-radius:10px; margin-bottom:12px;">
+                                <strong style="font-size:12px; color:${isAi ? 'var(--accent)' : 'var(--text-secondary)'};">${auteur}</strong>
+                                <p style="margin:8px 0 0 0; font-size:14px; line-height:1.6;">${msg.texte}</p>
+                            </div>
+                        `;
+                    });
+                }
+
                 content.innerHTML = `
                     <div class="card" style="border-color:var(--accent);">
-                        <h3 class="card-title">🎯 Objectifs & Projets de ${utilisateurActif.metierUnique}</h3>
-                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                            <label style="font-size:11px; color:var(--text-secondary);">Catégorie :</label>
-                            <select id="objCategorie" class="input" style="margin-top:4px; margin-bottom:8px;">
-                                <option value="Finances & Business">🪙 Finances & Business</option>
-                                <option value="Mobilité & Papiers">📁 Mobilité & Papiers</option>
-                                <option value="Développement Personnel">🧠 Développement Personnel</option>
-                                <option value="Famille & Proches">👨‍👩‍👧 Famille & Proches</option>
-                            </select>
-                            <input type="text" id="objTitre" class="input" placeholder="Intitulé de l'objectif..." style="margin-bottom:10px;">
-                            <button class="btn-action" onclick="ajouterObjectifVie()">➕ Ajouter l'Objectif</button>
+                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; border-bottom:2px solid var(--border-color); padding-bottom:10px;">
+                            <span style="font-size:28px;">🤖</span>
+                            <div>
+                                <h3 class="card-title" style="margin:0; color:var(--accent);">ELAWS AI — Intelligence Artificielle Souveraine</h3>
+                                <p style="font-size:12px; margin:0; color:var(--text-secondary);">Fonctionne à 100% hors-ligne pour votre corps de métier : <strong>${utilisateurActif.metierUnique}</strong></p>
+                            </div>
                         </div>
-                        ${objHtml}
+                        <p class="text">Posez vos questions, demandez des conseils ou discutez avec votre IA pour organiser votre travail, vos clients ou vos tarifs.</p>
+                        
+                        <div style="background:var(--bg-color); padding:15px; border-radius:12px; max-height:420px; overflow-y:auto; margin-bottom:15px; border:1px solid var(--border-color);">
+                            ${chatHtml}
+                        </div>
+
+                        <div style="display:flex; gap:8px;">
+                            <input type="text" id="inputElawsChat" class="input" placeholder="Écrivez votre message à ELAWS AI ici..." style="margin-bottom:0; font-size:14px; padding:12px;" onkeypress="if(event.key === 'Enter') envoyerMessageElawsAI()">
+                            <button class="btn-action" style="width:auto; padding:0 22px;" onclick="envoyerMessageElawsAI()">Envoyer 🚀</button>
+                        </div>
                     </div>
                 `;
-            } else if (activeTab === 'notes') {
-                let notesHtml = '';
-                utilisateurActif.notes.forEach(n => {
-                    notesHtml += `
-                        <div style="margin-bottom:10px; background:var(--bg-color); padding:12px; border-radius:8px;">
-                            <strong>📌 ${n.titre}</strong> <small style="float:right; color:var(--text-secondary);">${n.date}</small><br>
-                            <p style="margin:6px 0 0 0; font-size:13px; color:var(--text-secondary);">${n.texte}</p>
+            } else if (activeTab === 'atelier_specifique') {
+                if (metierLower.includes('coutur') || metierLower.includes('tailleur') || metierLower.includes('hab')) {
+                    let mesuresHtml = '';
+                    if (utilisateurActif.mesuresClients && utilisateurActif.mesuresClients.length > 0) {
+                        utilisateurActif.mesuresClients.forEach(m => {
+                            mesuresHtml += `
+                                <div style="background:var(--bg-color); padding:14px; border-radius:10px; margin-bottom:10px; border-left:4px solid var(--accent); position:relative;">
+                                    <button onclick="supprimerMesure(${m.id})" style="position:absolute; top:10px; right:10px; background:none; border:none; cursor:pointer; font-size:14px;" title="Supprimer">❌</button>
+                                    <strong style="font-size:15px; color:var(--accent);">👤 Client : ${m.client}</strong> <small style="color:var(--text-secondary);">(${m.date})</small><br>
+                                    <div style="margin-top:6px; font-size:13px; display:grid; grid-template-columns: repeat(2, 1fr); gap:4px;">
+                                        <div><strong>Modèle / Habit :</strong> ${m.typeHabit}</div>
+                                        <div><strong>Poitrine :</strong> ${m.poitrine} cm</div>
+                                        <div><strong>Longueur :</strong> ${m.longueur} cm</div>
+                                        <div><strong>Manches :</strong> ${m.manches} cm</div>
+                                    </div>
+                                    <div style="margin-top:6px; font-size:12px; color:var(--text-secondary);"><strong>Consignes / Modèle :</strong> ${m.details}</div>
+                                </div>
+                            `;
+                        });
+                    } else {
+                        mesuresHtml = `<p style="text-align:center; color:var(--text-secondary);">Aucune fiche de mesure enregistrée hors-ligne.</p>`;
+                    }
+
+                    content.innerHTML = `
+                        <div class="card" style="border-color:var(--accent);">
+                            <h3 class="card-title">✂️ Atelier Couturier : Carnet de Mesures & Modèles d'Habits</h3>
+                            <p class="text">Enregistrez et consultez les mensurations de vos clients et vos modèles d'habits sans connexion Internet.</p>
+                            
+                            <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:20px;">
+                                <h4 style="margin:0 0 10px 0; color:var(--accent);">➕ Nouvelle Fiche de Mesures :</h4>
+                                <input type="text" id="mesureClientNom" class="input" placeholder="Nom et Prénom du client *" style="margin-bottom:8px;">
+                                <input type="text" id="mesureTypeHabit" class="input" placeholder="Modèle / Type d'habit (ex: Boubou, Costume, Robe) *" style="margin-bottom:8px;">
+                                <div style="display:flex; gap:8px; margin-bottom:8px;">
+                                    <input type="text" id="mesurePoitrine" class="input" placeholder="Poitrine (cm)">
+                                    <input type="text" id="mesureLongueur" class="input" placeholder="Longueur (cm)">
+                                    <input type="text" id="mesureManches" class="input" placeholder="Manches (cm)">
+                                </div>
+                                <textarea id="mesureDetails" class="input" placeholder="Détails du modèle, tissu fourni, style de col..." style="margin-bottom:10px;"></textarea>
+                                <button class="btn-action" onclick="ajouterMesureClient()">Enregistrer la Fiche Client</button>
+                            </div>
+
+                            <h4 style="margin-bottom:10px;">📋 Fiches Enregistrées (${utilisateurActif.mesuresClients ? utilisateurActif.mesuresClients.length : 0}) :</h4>
+                            ${mesuresHtml}
                         </div>
                     `;
-                });
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">📓 Journal de Bord ELAWS (${utilisateurActif.metierUnique})</h3>
-                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                            <input type="text" id="noteTitre" class="input" placeholder="Titre de la note" style="margin-bottom:8px;">
-                            <textarea id="noteTexte" class="input" placeholder="Contenu..." style="margin-bottom:10px;"></textarea>
-                            <button class="btn-action" onclick="ajouterNoteJournal()">➕ Ajouter la Note</button>
+                } else {
+                    content.innerHTML = `
+                        <div class="card" style="border-color:var(--accent);">
+                            <h3 class="card-title">⚡ Espace Professionnel : ${utilisateurActif.metierUnique}</h3>
+                            <p class="text">Votre espace de travail est prêt et fonctionne entièrement hors-ligne.</p>
                         </div>
-                        ${notesHtml}
-                    </div>
-                `;
+                    `;
+                }
             } else if (activeTab === 'factures') {
                 content.innerHTML = `
                     <div class="card">
-                        <h3 class="card-title">🧾 Générateur de Reçus (${utilisateurActif.metierUnique})</h3>
+                        <h3 class="card-title">🧾 Générateur de Reçus & Factures (${utilisateurActif.metierUnique})</h3>
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
                             <input type="text" id="factureClient" class="input" placeholder="Nom du client" style="margin-bottom:8px;">
                             <input type="text" id="factureService" class="input" placeholder="Prestation / Service réalisé" style="margin-bottom:8px;">
@@ -796,95 +921,21 @@
                             </div>
                             <button class="btn-action" onclick="genererRecuFacture()">Générer le Reçu</button>
                         </div>
-                        <div id="resultatFacture">Remplissez les champs ci-dessus pour générer un reçu professionnel.</div>
-                    </div>
-                `;
-            } else if (activeTab === 'sauvegarde') {
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">💾 Sauvegarde & Restauration (JSON)</h3>
-                        <button class="btn-action" onclick="exporterDonneesJSON()" style="margin-bottom:12px;">📥 Exporter mon Profil JSON</button>
-                        <p class="text">Sauvegardez l'intégralité de vos données, incluant votre métier unique, vos notes et vos finances, dans un fichier JSON souverain.</p>
-                    </div>
-                `;
-            } else if (activeTab === 'dossiers') {
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">📁 Assistant Visas, Papiers & Séjour</h3>
-                        <p class="text">Gérez vos documents administratifs et justificatifs pour vos déplacements ou formalités professionnelles.</p>
-                        <div style="background:var(--bg-color); padding:12px; border-radius:8px; margin-bottom:10px;">
-                            <strong>🛂 Pièce d'identité / Passeport</strong><br><small style="color:var(--accent);">Statut : Validé</small>
-                        </div>
-                        <div style="background:var(--bg-color); padding:12px; border-radius:8px;">
-                            <strong>📄 Numéro d'Identification Fiscale (NIF)</strong><br><small style="color:var(--text-secondary);">En cours d'enregistrement pour ${utilisateurActif.metierUnique}</small>
-                        </div>
-                    </div>
-                `;
-            } else if (activeTab === 'convertisseur') {
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">💱 Convertisseur de Devises Intégré</h3>
-                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                            <input type="number" id="montantDevise" class="input" placeholder="Montant à convertir" style="margin-bottom:8px;">
-                            <select id="paireDevise" class="input" style="margin-bottom:8px;">
-                                <option value="eur_xof">EUR ➡️ XOF (FCFA)</option>
-                                <option value="xof_eur">XOF (FCFA) ➡️ EUR</option>
-                                <option value="usd_xof">USD ➡️ XOF (FCFA)</option>
-                                <option value="xof_usd">XOF (FCFA) ➡️ USD</option>
-                            </select>
-                            <button class="btn-action" onclick="convertirDeviseAction()">Calculer</button>
-                        </div>
-                        <div id="resultatConversion" style="font-weight:800; color:var(--accent); text-align:center; font-size:16px;"></div>
-                    </div>
-                `;
-            } else if (activeTab === 'traduction') {
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">🗣️ Pont de Traduction (ELAWS)</h3>
-                        <p class="text">Communiquez et traduisez vos documents ou messages instantanément.</p>
-                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                            <textarea id="texteATraduire" class="input" placeholder="Texte à traduire..." style="margin-bottom:8px;"></textarea>
-                            <select id="langueCible" class="input" style="margin-bottom:8px;">
-                                <option value="allemand">Allemand (Deutsch)</option>
-                                <option value="anglais">Anglais (English)</option>
-                                <option value="francais">Français</option>
-                            </select>
-                            <button class="btn-action" onclick="traduireElawsAction()">Traduire avec ELAWS</button>
-                        </div>
-                        <div id="resultatTraduction" style="font-size:14px; color:var(--text-secondary); background:var(--bg-color); padding:12px; border-radius:8px;"></div>
-                    </div>
-                `;
-            } else if (activeTab === 'carnet') {
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">📝 Carnet de Commandes & Prestations</h3>
-                        <p class="text">Suivez vos clients et vos prestations en cours pour votre activité de ${utilisateurActif.metierUnique}.</p>
-                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; text-align:center;">
-                            <p style="color:var(--text-secondary); margin:0;">Aucune commande en attente. Votre carnet est prêt à recevoir vos nouveaux clients.</p>
-                        </div>
-                    </div>
-                `;
-            } else if (activeTab === 'gps') {
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">🧭 Géolocalisation & GPS Souverain</h3>
-                        <p class="text">Zone d'évolution actuelle : <strong>${utilisateurActif.paysActuel}</strong>.</p>
-                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; text-align:center;">
-                            <p style="color:var(--accent); font-weight:700; margin-bottom:8px;">📍 Coordonnées Locales Prêtes</p>
-                            <p style="font-size:13px; color:var(--text-secondary); margin:0;">Quartier Kodjoviakopé, Lomé, Togo / Navigation hors-ligne activée.</p>
-                        </div>
+                        <div id="resultatFacture">Remplissez les champs ci-dessus pour générer un reçu professionnel hors-ligne.</div>
                     </div>
                 `;
             } else if (activeTab === 'economie') {
                 let transHtml = '';
-                utilisateurActif.historiqueFinancier.forEach(t => {
-                    const color = t.type === 'entree' ? '#34d399' : '#f87171';
-                    const signe = t.type === 'entree' ? '+' : '-';
-                    transHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;"><span>${t.date} - ${t.desc}</span><strong style="color:${color};">${signe}${t.montant.toLocaleString()} FCFA</strong></div>`;
-                });
+                if(utilisateurActif.historiqueFinancier) {
+                    utilisateurActif.historiqueFinancier.forEach(t => {
+                        const color = t.type === 'entree' ? '#34d399' : '#f87171';
+                        const signe = t.type === 'entree' ? '+' : '-';
+                        transHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;"><span>${t.date} - ${t.desc}</span><strong style="color:${color};">${signe}${t.montant.toLocaleString()} FCFA</strong></div>`;
+                    });
+                }
                 content.innerHTML = `
                     <div class="card">
-                        <h3 class="card-title">🪙 Finances, Trésorerie & Caisse</h3>
+                        <h3 class="card-title">🪙 Caisse & Trésorerie (${utilisateurActif.metierUnique})</h3>
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; text-align:center;">
                             <span style="font-size:12px; color:var(--text-secondary);">Solde Actuel :</span>
                             <div style="font-size:24px; font-weight:800; color:var(--accent);">${utilisateurActif.solde.toLocaleString()} FCFA</div>
@@ -903,38 +954,116 @@
                         ${transHtml}
                     </div>
                 `;
+            } else if (activeTab === 'objectifs') {
+                let objHtml = '';
+                utilisateurActif.objectifs.forEach(o => {
+                    objHtml += `
+                        <div style="margin-bottom:10px; background:var(--bg-color); padding:12px; border-radius:8px; border-left:4px solid var(--accent);">
+                            <span style="font-size:11px; color:var(--accent); font-weight:700;">📌 ${o.categorie}</span><br>
+                            <strong style="font-size:14px;">${o.titre}</strong><br>
+                            <small style="color:var(--text-secondary);">Statut : ${o.statut}</small>
+                        </div>
+                    `;
+                });
+                content.innerHTML = `
+                    <div class="card" style="border-color:var(--accent);">
+                        <h3 class="card-title">🎯 Objectifs & Projets</h3>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
+                            <label style="font-size:11px; color:var(--text-secondary);">Catégorie :</label>
+                            <select id="objCategorie" class="input" style="margin-top:4px; margin-bottom:8px;">
+                                <option value="Finances & Business">🪙 Finances & Business</option>
+                                <option value="Mobilité & Papiers">📁 Mobilité & Papiers</option>
+                                <option value="Développement Personnel">🧠 Développement Personnel</option>
+                            </select>
+                            <input type="text" id="objTitre" class="input" placeholder="Intitulé de l'objectif..." style="margin-bottom:10px;">
+                            <button class="btn-action" onclick="ajouterObjectifVie()">➕ Ajouter l'Objectif</button>
+                        </div>
+                        ${objHtml}
+                    </div>
+                `;
+            } else if (activeTab === 'notes') {
+                let notesHtml = '';
+                if(utilisateurActif.notes) {
+                    utilisateurActif.notes.forEach(n => {
+                        notesHtml += `
+                            <div style="margin-bottom:10px; background:var(--bg-color); padding:12px; border-radius:8px;">
+                                <strong>📌 ${n.titre}</strong> <small style="float:right; color:var(--text-secondary);">${n.date}</small><br>
+                                <p style="margin:6px 0 0 0; font-size:13px; color:var(--text-secondary);">${n.texte}</p>
+                            </div>
+                        `;
+                    });
+                }
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">📓 Journal de Bord ELAWS</h3>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
+                            <input type="text" id="noteTitre" class="input" placeholder="Titre de la note" style="margin-bottom:8px;">
+                            <textarea id="noteTexte" class="input" placeholder="Contenu..." style="margin-bottom:10px;"></textarea>
+                            <button class="btn-action" onclick="ajouterNoteJournal()">➕ Ajouter la Note</button>
+                        </div>
+                        ${notesHtml}
+                    </div>
+                `;
+            } else if (activeTab === 'sauvegarde') {
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">💾 Sauvegarde & Restauration (JSON)</h3>
+                        <button class="btn-action" onclick="exporterDonneesJSON()" style="margin-bottom:12px;">📥 Exporter mon Profil JSON</button>
+                        <p class="text">Sauvegardez l'intégralité de vos données, fiches de mesures, discussions ELAWS AI et finances dans un fichier souverain.</p>
+                    </div>
+                `;
+            } else if (activeTab === 'convertisseur') {
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">💱 Convertisseur de Devises</h3>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
+                            <input type="number" id="montantDevise" class="input" placeholder="Montant à convertir" style="margin-bottom:8px;">
+                            <select id="paireDevise" class="input" style="margin-bottom:8px;">
+                                <option value="eur_xof">EUR ➡️ XOF (FCFA)</option>
+                                <option value="xof_eur">XOF (FCFA) ➡️ EUR</option>
+                                <option value="usd_xof">USD ➡️ XOF (FCFA)</option>
+                                <option value="xof_usd">XOF (FCFA) ➡️ USD</option>
+                            </select>
+                            <button class="btn-action" onclick="convertirDeviseAction()">Calculer</button>
+                        </div>
+                        <div id="resultatConversion" style="font-weight:800; color:var(--accent); text-align:center; font-size:16px;"></div>
+                    </div>
+                `;
+            } else if (activeTab === 'traduction') {
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">🗣️ Pont de Traduction</h3>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
+                            <textarea id="texteATraduire" class="input" placeholder="Texte à traduire..." style="margin-bottom:8px;"></textarea>
+                            <select id="langueCible" class="input" style="margin-bottom:8px;">
+                                <option value="allemand">Allemand (Deutsch)</option>
+                                <option value="anglais">Anglais (English)</option>
+                                <option value="francais">Français</option>
+                            </select>
+                            <button class="btn-action" onclick="traduireElawsAction()">Traduire avec ELAWS</button>
+                        </div>
+                        <div id="resultatTraduction" style="font-size:14px; color:var(--text-secondary); background:var(--bg-color); padding:12px; border-radius:8px;"></div>
+                    </div>
+                `;
+            } else if (activeTab === 'gps') {
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">🧭 Géolocalisation & GPS Souverain</h3>
+                        <p class="text">Zone d'évolution actuelle : <strong>${utilisateurActif.paysActuel}</strong> (Mode Hors-Ligne).</p>
+                    </div>
+                `;
             } else if (activeTab === 'camera') {
                 content.innerHTML = `
                     <div class="card">
-                        <h3 class="card-title">📸 Caméra & Numérisation de Documents</h3>
-                        <p class="text">Capturez vos reçus, factures ou pièces d'identité directement depuis votre appareil mobile.</p>
-                        <div style="background:var(--bg-color); padding:25px; border-radius:10px; text-align:center; border:2px dashed var(--border-color);">
-                            <span style="font-size:32px;">📷</span>
-                            <p style="margin:10px 0 0 0; font-size:13px; color:var(--text-secondary);">Fonction caméra prête pour l'archivage de documents.</p>
-                        </div>
+                        <h3 class="card-title">📸 Caméra & Numérisation</h3>
+                        <p class="text">Capturez vos reçus et documents hors-ligne.</p>
                     </div>
                 `;
             } else if (activeTab === 'securite') {
                 content.innerHTML = `
                     <div class="card">
-                        <h3 class="card-title">🛡️ Sécurité, Chiffrement & Vie Privée</h3>
-                        <p class="text">Vos données sont stockées de manière souveraine sur votre appareil, sans dépendre de serveurs tiers.</p>
-                        <div style="background:var(--bg-color); padding:15px; border-radius:10px;">
-                            <strong style="color:var(--accent);">🔒 Chiffrement local actif</strong>
-                            <p style="font-size:13px; color:var(--text-secondary); margin:6px 0 0 0;">Protection des informations personnelles, notes et identifiants de ${utilisateurActif.nom}.</p>
-                        </div>
-                    </div>
-                `;
-            } else if (activeTab === 'ia') {
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">🤖 Assistant ELAWS AI</h3>
-                        <p class="text">Posez vos questions à l'intelligence artificielle ELAWS, conçue pour vous accompagner dans votre métier de <strong>${utilisateurActif.metierUnique}</strong>.</p>
-                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                            <input type="text" id="inputElawsQuestion" class="input" placeholder="Ex: Comment développer mon activité..." style="margin-bottom:8px;">
-                            <button class="btn-action" onclick="interrogerElawsAI()">Interroger ELAWS</button>
-                        </div>
-                        <div id="reponseElawsAI"></div>
+                        <h3 class="card-title">🛡️ Sécurité & Chiffrement Local</h3>
+                        <p class="text">Toutes vos informations personnelles sont stockées localement et chiffrées sur votre appareil.</p>
                     </div>
                 `;
             } else {
