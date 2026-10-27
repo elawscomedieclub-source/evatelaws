@@ -3,7 +3,7 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 
-let activeTab = 'accueil';
+let activeTab = 'dashboard';
 let currentThemeIndex = 0;
 const themes = ['dark', 'light', 'eco'];
 
@@ -58,9 +58,8 @@ function toggleMenu() { document.getElementById('sideMenu').classList.toggle('op
 function creerNouveauProfil() {
     const nom = document.getElementById('regNom').value.trim();
     const contact = document.getElementById('regContact').value.trim();
-    const selectMetier = document.getElementById('selectMetierBase').value;
     const metierCustom = document.getElementById('regMetierCustom').value.trim();
-    const metierUnique = metierCustom || selectMetier;
+    const metierUnique = metierCustom || "Professionnel";
     const niveauEtude = document.getElementById('regNiveauEtude')?.value || '';
 
     if (!nom) { showToast("Veuillez renseigner votre nom."); return; }
@@ -357,17 +356,22 @@ function render() {
                     <input type="text" id="regNom" class="input" placeholder="Votre Nom ou Prénom *" style="margin-bottom:8px;">
                     <input type="tel" id="regContact" class="input" placeholder="Votre Numéro de Téléphone (ex: +228 98231402) *" style="margin-bottom:8px;">
                     
-                    <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;">Choisissez votre Profil / Métier :</label>
-                    <select id="selectMetierBase" class="input" style="margin-bottom:8px;" onchange="document.getElementById('regMetierCustom').value = this.value; document.getElementById('blocNiveauEleve').style.display = (this.value.includes('Élève')) ? 'block' : 'none';">
-                        <option value="Élève / Étudiant">🎒 Élève / Étudiant (Aide aux devoirs)</option>
-                        <option value="Couturier / Tailleur">✂️ Couturier / Tailleur</option>
-                        <option value="Pasteur / Guide Spirituel">📖 Pasteur / Guide Spirituel</option>
-                        <option value="Médecin / Soignant">🩺 Médecin / Soignant</option>
-                        <option value="Commerçant / Boutique">🛍️ Commerçant / Boutique</option>
-                        <option value="Mécanicien / Artisan">🔧 Mécanicien / Artisan</option>
-                    </select>
+                    <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;">Votre Métier ou Activité (Libre & Personnalisable) :</label>
+                    <input type="text" id="regMetierCustom" class="input" placeholder="Ex: Informaticien, Enseignant, Agriculteur, Commerçant..." style="margin-bottom:8px;" oninput="document.getElementById('blocNiveauEleve').style.display = (this.value.toLowerCase().includes('élève') || this.value.toLowerCase().includes('étudiant')) ? 'block' : 'none';">
+                    
+                    <details style="margin-bottom:10px; font-size:12px; color:var(--text-secondary);">
+                        <summary style="cursor:pointer; color:var(--accent); font-weight:700;">💡 Suggestions rapides (cliquez pour insérer)</summary>
+                        <div style="display:flex; flex-wrap:wrap; gap:5px; margin-top:8px;">
+                            <button type="button" class="btn-top" onclick="document.getElementById('regMetierCustom').value='Élève / Étudiant'; document.getElementById('blocNiveauEleve').style.display='block';">🎒 Élève / Étudiant</button>
+                            <button type="button" class="btn-top" onclick="document.getElementById('regMetierCustom').value='Couturier / Tailleur'; document.getElementById('blocNiveauEleve').style.display='none';">✂️ Couturier</button>
+                            <button type="button" class="btn-top" onclick="document.getElementById('regMetierCustom').value='Commerçant / Boutique'; document.getElementById('blocNiveauEleve').style.display='none';">🛍️ Commerçant</button>
+                            <button type="button" class="btn-top" onclick="document.getElementById('regMetierCustom').value='Agriculteur / Éleveur'; document.getElementById('blocNiveauEleve').style.display='none';">🌾 Agriculteur</button>
+                            <button type="button" class="btn-top" onclick="document.getElementById('regMetierCustom').value='Artisan / Mécanicien'; document.getElementById('blocNiveauEleve').style.display='none';">🔧 Artisan</button>
+                            <button type="button" class="btn-top" onclick="document.getElementById('regMetierCustom').value='Entrepreneur / Freelance'; document.getElementById('blocNiveauEleve').style.display='none';">💻 Freelance</button>
+                        </div>
+                    </details>
 
-                    <div id="blocNiveauEleve" style="margin-bottom:8px;">
+                    <div id="blocNiveauEleve" style="margin-bottom:8px; display:none;">
                         <label style="font-size:12px; color:var(--accent); display:block; margin-bottom:4px;">Niveau d'Études :</label>
                         <select id="regNiveauEtude" class="input">
                             <option value="CP / CE1 / CE2">📚 Primaire (CP - CE2)</option>
@@ -378,8 +382,6 @@ function render() {
                             <option value="Université / Supérieur">🎓 Université / Supérieur</option>
                         </select>
                     </div>
-
-                    <input type="text" id="regMetierCustom" class="input" value="Élève / Étudiant" placeholder="Ou personnalisez..." style="margin-bottom:12px;">
                     
                     <button class="btn-action" onclick="creerNouveauProfil()">🚀 Démarrer avec ELAWS (v29.1)</button>
                 </div>
@@ -717,16 +719,41 @@ function render() {
                 </div>
             </div>
         `;
-    } else if (activeTab === 'dashboard') {
+        } else if (activeTab === 'dashboard') {
         content.innerHTML = `
-            <div class="card" style="border-color:#3b82f6;">
-                <h3 class="card-title" style="color:#3b82f6;">📊 Tableau de Bord</h3>
-                <div class="stat-grid">
+            <div class="card" style="border-color:var(--accent); background: linear-gradient(135deg, var(--card-bg) 0%, rgba(5,150,105,0.08) 100%);">
+                <div class="badge-gamified">✨ Tableau de Bord Universel (v29.5)</div>
+                <h2 style="margin-top:0; color:var(--accent); font-size:18px;">Bienvenue, ${utilisateurActif.nom} ! 🌟</h2>
+                <p class="text">Rôle actif : <strong style="color:var(--accent);">${utilisateurActif.metierUnique} ${utilisateurActif.niveauEtude ? '(' + utilisateurActif.niveauEtude + ')' : ''}</strong>. ELAWS est à tes côtés pour t'accompagner, gérer tes projets et te guider pas à pas dans toutes tes actions.</p>
+                
+                <div class="stat-grid" style="margin-top:15px;">
                     <div class="stat-box">
                         <div style="font-size:12px; color:var(--text-secondary);">Trésorerie / Caisse</div>
                         <div class="stat-num" style="color:var(--accent);">${utilisateurActif.solde.toLocaleString()} FCFA</div>
                     </div>
+                    <div class="stat-box">
+                        <div style="font-size:12px; color:var(--text-secondary);">Contact Actif</div>
+                        <div style="font-size:13px; font-weight:800; color:var(--text-main); margin-top:6px;">📱 ${utilisateurActif.contact}</div>
+                    </div>
                 </div>
+            </div>
+
+            <div class="card" style="border-color:#0ea5e9;">
+                <h3 class="card-title" style="color:#0ea5e9;">🚀 Guide d'Action & Navigation Rapide</h3>
+                <p class="text">Que souhaitez-vous faire aujourd'hui ? Choisissez une action ci-dessous :</p>
+                <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:10px;">
+                    <button class="btn-action" style="background:#059669; padding:12px; font-size:13px;" onclick="switchTab('elaws_compagnon')">🤖 Parler à ELAWS</button>
+                    <button class="btn-action" style="background:#0ea5e9; padding:12px; font-size:13px;" onclick="switchTab('outils_metier')">🛠️ Outils Métier</button>
+                    <button class="btn-action" style="background:#f59e0b; padding:12px; font-size:13px;" onclick="switchTab('voyages_papiers')">✈️ Visas & Papiers</button>
+                    <button class="btn-action" style="background:#3b82f6; padding:12px; font-size:13px;" onclick="switchTab('appels_traduction')">📞 Appels & Traduction</button>
+                </div>
+            </div>
+
+            <div class="card" style="border-color:#f59e0b;">
+                <h3 class="card-title" style="color:#f59e0b;">💡 Conseil du Jour par ELAWS</h3>
+                <p style="font-size:13px; color:var(--text-main); line-height:1.6; margin:0;">
+                    "Bonjour ${utilisateurActif.nom} ! Pour réussir tes projets de ${utilisateurActif.metierUnique}, commence par vérifier tes priorités du jour dans ton espace métier ou discute directement avec moi pour structurer tes démarches. On est ensemble pour réussir !" 🌟
+                </p>
             </div>
         `;
     } else if (activeTab === 'agenda') {

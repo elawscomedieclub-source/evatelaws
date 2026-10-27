@@ -1,5 +1,5 @@
 
-const CACHE_NAME = 'evat-elaws-v29.3-cache';
+const CACHE_NAME = 'evat-elaws-v29.6-cache';
 const urlsToCache = [
   'index.html',
   'style.css',

@@ -1,44 +1,28 @@
 
-/* ==========================================================================
-   CERVEAU AUTONOME D'ELAWS (elaws.js) — Ton Ami, Ton Assistant & Pédagogue
-   ========================================================================== */
 const ELAWS_BRAIN = {
-    nom: "ELAWS",
-    createur: "Eric Lawson",
-    version: "29.1",
+    repondre: function(profil, texte) {
+        if (!texte) return "Je t'écoute, mon ami ! Dis-moi tout ce dont tu as besoin.";
+        const t = texte.toLowerCase();
+        const nom = profil ? profil.nom : "mon ami";
+        const metier = profil ? (profil.metierUnique || "professionnel") : "entrepreneur";
+        const niveau = profil ? (profil.niveauEtude || "") : "";
 
-    repondre(utilisateur, messageUtilisateur) {
-        const msg = messageUtilisateur.toLowerCase();
-        const nom = utilisateur.nom || "mon ami";
-        const metier = utilisateur.metierUnique || "Professionnel";
-        const niveauEtude = utilisateur.niveauEtude || "";
-        const contact = utilisateur.contact || "Non renseigné";
-        const solde = utilisateur.solde || 0;
-
-        if (metier.toLowerCase().includes('élève') || metier.toLowerCase().includes('étudiant') || metier.toLowerCase().includes('enfant') || msg.includes('devoir') || msg.includes('leçon') || msg.includes('exercice') || msg.includes('apprendre') || msg.includes('cours')) {
-            return `[Copain ELAWS - École & Devoirs] Bravo ${nom} (${niveauEtude || 'Élève'}) ! C'est super de t'y mettre avec autant de sérieux. Je suis fier de toi ! Dis-moi quelle matière te pose un souci ou pose-moi une question sur ta leçon. Je vais t'expliquer tout ça calmement comme un grand frère ! 📚✨🚀`;
+        // Greetings
+        if (t.includes('bonjour') || t.includes('salut') || t.includes('hello') || t.includes('cc')) {
+            return `Bonjour ${nom} ! C'est ELAWS, ton fidèle compagnon. Je suis ravi de te retrouver. Comment se passe ta journée ? Je suis là pour t'accompagner dans tes projets en tant que ${metier} et répondre à toutes tes questions avec précision ! 🌟`;
         }
 
-        if (msg.includes('bonjour') || msg.includes('salut') || msg.includes('coucou') || msg.includes('ça va')) {
-            return `Salut mon frère ${nom} ! Ça va super bien et je suis ravi de bosser à tes côtés aujourd'hui à Lomé. En tant que ${metier}, comment je peux t'aider à cartonner dans tes projets ? Dis-moi tout !`;
-        }
-        
-        if (msg.includes('fatigué') || msg.includes('dur') || msg.includes('découragé') || msg.includes('aide-moi') || msg.includes('conseil')) {
-            return `Accroche-toi ${nom} ! Je sais que ce n'est pas tous les jours facile, mais avec ton talent de ${metier} et ton numéro (${contact}), tu vas y arriver. Je suis là pour t'épauler !`;
+        // How are you / comment ça va
+        if (t.includes('ca va') || t.includes('comment va') || t.includes('tu vas bien')) {
+            return `Tout va parfaitement bien de mon côté, ${nom} ! Je tourne à plein régime dans ton écosystème EVAT pour veiller sur tes projets, tes dossiers et ton travail. Et toi, comment te sens-tu aujourd'hui ?`;
         }
 
-        if (msg.includes('passeport') || msg.includes('cni') || msg.includes('carte') || msg.includes('voyage') || msg.includes('visa')) {
-            return `[Expert Voyages ELAWS] ${nom}, pour tes démarches de passeport (biométrique ou simple) ou de CNI, n'oublie pas de vérifier ton acte de naissance sécurisé. Va vite dans l'onglet "Voyages" !`;
+        // Help with profession / work
+        if (t.includes('travail') || t.includes('métier') || t.includes('projet') || t.includes('aide')) {
+            return `En tant qu'assistant et ami dévoué, je suis à tes côtés pour ton activité de ${metier}. Que ce soit pour organiser tes tâches, structurer tes démarches (voyages, banques, administration) ou résoudre un problème technique, dis-moi précisément ce dont tu as besoin et nous allons avancer ensemble pas à pas ! 🚀`;
         }
 
-        if (msg.includes('appel') || msg.includes('traduction') || msg.includes('dialecte') || msg.includes('parler')) {
-            return `[Appels & Traduction] Depuis l'onglet "Appels", tu peux passer un appel GSM direct ou un appel Internet avec traduction instantanée en Éoué, Kabyè, Yoruba ou Haoussa !`;
-        }
-
-        if (msg.includes('argent') || msg.includes('caisse') || msg.includes('solde') || msg.includes('fcfa')) {
-            return `[Trésorerie EVAT] ${nom}, ton solde actuel est de ${solde.toLocaleString()} FCFA.`;
-        }
-
-        return `J'ai bien écouté ta remarque, ${nom} : "${messageUtilisateur}". En tant qu'ami et assistant, je suis là pour t'aider dans ton activité de ${metier}. Qu'est-ce qu'on fait maintenant ?`;
+        // General intelligent fallback with rich contextual reasoning
+        return `J'ai bien analysé ta remarque, ${nom} : "${texte}". En tant qu'intelligence artificielle de ton écosystème EVAT, je te suggère d'aborder cela avec méthode. Pour ton activité de ${metier}${niveau ? ' (' + niveau + ')' : ''}, veillons à structurer chaque étape (planification, vérification des pièces ou des finances) pour garantir un résultat impeccable. Je reste à ton entière disposition pour approfondir ce sujet ! 💡`;
     }
 };
