@@ -5,7 +5,7 @@
 const ELAWS_BRAIN = {
     nom: "ELAWS",
     createur: "Eric Lawson",
-    version: "29.0",
+    version: "29.1",
 
     repondre(utilisateur, messageUtilisateur) {
         const msg = messageUtilisateur.toLowerCase();
@@ -28,7 +28,7 @@ const ELAWS_BRAIN = {
         }
 
         if (msg.includes('passeport') || msg.includes('cni') || msg.includes('carte') || msg.includes('voyage') || msg.includes('visa')) {
-            return `[Expert Voyages ELAWS] ${nom}, pour tes démarches de passeport ou de CNI, n'oublie pas de vérifier ton acte de naissance sécurisé et ton certificat de nationalité. Va vite dans l'onglet "Voyages" !`;
+            return `[Expert Voyages ELAWS] ${nom}, pour tes démarches de passeport (biométrique ou simple) ou de CNI, n'oublie pas de vérifier ton acte de naissance sécurisé. Va vite dans l'onglet "Voyages" !`;
         }
 
         if (msg.includes('appel') || msg.includes('traduction') || msg.includes('dialecte') || msg.includes('parler')) {

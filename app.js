@@ -85,7 +85,7 @@ function creerNouveauProfil() {
         dossiersVoyagePapiers: [],
         carnetContacts: [],
         discussionsElaws: [
-            { role: 'ai', texte: `Salut ${nom} ! C'est ELAWS. Je suis ton ami et ton assistant personnel (v29.0). On est ensemble pour réussir !` }
+            { role: 'ai', texte: `Salut ${nom} ! C'est ELAWS. Je suis ton ami et ton assistant personnel (v29.1). On est ensemble pour réussir !` }
         ]
     };
 
@@ -156,7 +156,7 @@ function lancerAppelInternetAvecTraduction(nomDest, dialecteDest) {
     jouerSonSucces();
     showToast(`🌐 Appel Internet & Traduction ELAWS vers ${nomDest} (${dialecteDest})...`);
     setTimeout(() => {
-        alert(`[Appel Intelligent ELAWS v29.0] 
+        alert(`[Appel Intelligent ELAWS v29.1] 
 Connexion établie avec ${nomDest} !
 🗣️ Langue source : Votre voix.
 🔄 Traduction instantanée active vers : ${dialecteDest}.`);
@@ -266,13 +266,17 @@ function verifierDossierPapier() {
         "Justificatif de domicile"
     ];
 
+    let titreDocAffiche = "Passeport Biométrique";
+    if (typeDoc === 'passeport_simple') titreDocAffiche = "Passeport Simple";
+    if (typeDoc === 'cni') titreDocAffiche = "Carte Nationale d'Identité (CNI)";
+
     let listeHtml = `<ul style="margin:10px 0; padding-left:20px; line-height:1.6;">`;
     pieces.forEach(p => { listeHtml += `<li>${p}</li>`; });
     listeHtml += `</ul>`;
 
     resultatDiv.innerHTML = `
         <div style="background:var(--bg-color); padding:15px; border-radius:10px; border:1px solid var(--accent); margin-top:10px;">
-            <strong style="color:var(--accent);">📋 Dossier Requis (${typeDoc.toUpperCase()} — ${paysDestination}) :</strong>
+            <strong style="color:var(--accent);">📋 Dossier Requis (${titreDocAffiche} — ${paysDestination}) :</strong>
             ${listeHtml}
             <p style="margin-top:10px; font-size:13px; color:var(--text-secondary);">💡 <em>Conseil ELAWS :</em> Vérifiez que tous vos documents portent exactement le même nom.</p>
         </div>
@@ -344,7 +348,7 @@ function render() {
             <div class="card" style="border-color:var(--accent); max-width:500px; margin: 10px auto; text-align:center;">
                 <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo" style="width:72px; height:72px; margin-bottom:10px; border-radius:16px; border:2px solid var(--accent);">
                 <h2 style="color:var(--accent); margin-top:0;">✨ E.V.A.T. & ELAWS</h2>
-                <p class="text" style="text-align:center;">Écosystème Universel & Scolaire (v29.0)</p>
+                <p class="text" style="text-align:center;">Écosystème Universel & Scolaire (v29.1)</p>
                 
                 ${profilsExistantsHtml}
 
@@ -377,7 +381,7 @@ function render() {
 
                     <input type="text" id="regMetierCustom" class="input" value="Élève / Étudiant" placeholder="Ou personnalisez..." style="margin-bottom:12px;">
                     
-                    <button class="btn-action" onclick="creerNouveauProfil()">🚀 Démarrer avec ELAWS (v29.0)</button>
+                    <button class="btn-action" onclick="creerNouveauProfil()">🚀 Démarrer avec ELAWS (v29.1)</button>
                 </div>
             </div>
         `;
@@ -473,7 +477,7 @@ function render() {
         }
         content.innerHTML = `
             <div class="card" style="border-color:var(--accent);">
-                <h3 class="card-title" style="color:var(--accent);">🤖 ELAWS v29.0 — Ton Ami Bienveillant</h3>
+                <h3 class="card-title" style="color:var(--accent);">🤖 ELAWS v29.1 — Ton Ami Bienveillant</h3>
                 <p class="text">Discute avec ELAWS pour tes révisions, tes projets ou pour trouver du soutien :</p>
                 <div style="text-align:center; margin-bottom:15px;">
                     <button class="btn-action" onclick="demarrerMicroElaws()" style="background:linear-gradient(135deg, #ec4899 0%, #db2777 100%); font-size:16px; padding:14px; border-radius:30px;">
@@ -650,16 +654,67 @@ function render() {
     } else if (activeTab === 'voyages_papiers') {
         content.innerHTML = `
             <div class="card" style="border-color:#0ea5e9;">
-                <h3 class="card-title" style="color:#0ea5e9;">✈️ Assistant Voyages & Papiers d'Identité</h3>
+                <h3 class="card-title" style="color:#0ea5e9;">✈️ Assistant Voyages, Papiers & Guide des Visas</h3>
                 <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                    <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;">Type de Document d'Identité :</label>
                     <select id="typeDocAdministratif" class="input" style="margin-bottom:8px;">
                         <option value="passeport">📘 Passeport Biométrique</option>
+                        <option value="passeport_simple">📗 Passeport Simple</option>
                         <option value="cni">🪪 Carte Nationale d'Identité (CNI)</option>
                     </select>
-                    <input type="text" id="paysDestinationVoyage" class="input" placeholder="Pays de destination..." style="margin-bottom:10px;">
-                    <button class="btn-action" style="background:#0ea5e9;" onclick="verifierDossierPapier()">🔍 Afficher les Dossiers</button>
+                    <input type="text" id="paysDestinationVoyage" class="input" placeholder="Pays de destination (ex: France, Ghana, USA, Côte d'Ivoire)..." style="margin-bottom:10px;">
+                    <button class="btn-action" style="background:#0ea5e9; margin-bottom:12px;" onclick="verifierDossierPapier()">🔍 Vérifier les Pièces du Dossier</button>
                 </div>
                 <div id="resultatAnalyseDossier"></div>
+
+                <div style="margin-top:20px; background:var(--bg-color); padding:15px; border-radius:12px; border:1px solid #10b981;">
+                    <h4 style="color:#10b981; margin-top:0; margin-bottom:10px;">💳 Guide des Comptes Bancaires & Cartes Visa / Mastercard</h4>
+                    <p style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;">Comment ouvrir un compte et obtenir une carte bancaire internationale :</p>
+                    
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <div style="background:var(--card-bg); padding:10px; border-radius:8px; border-left:3px solid #10b981;">
+                            <strong>🌍 1. Comptes Bancaires Locaux & Mobile Money (UEMOA / Togo)</strong>
+                            <p style="margin:5px 0 0 0; font-size:12px; color:var(--text-secondary);">Requis : Pièce d'identité (CNI ou passeport), justificatif de domicile ou attestation de résidence, photos d'identité. Pour Mobile Money (TMoney / Flooz) : Numéro de téléphone enregistré à votre nom.</p>
+                        </div>
+                        <div style="background:var(--card-bg); padding:10px; border-radius:8px; border-left:3px solid #0ea5e9;">
+                            <strong>💳 2. Obtention de Cartes Visa / Mastercard (Prépayées & Débit)</strong>
+                            <p style="margin:5px 0 0 0; font-size:12px; color:var(--text-secondary);">Disponibles via les banques traditionnelles locales ou des solutions prépayées (cartes Visa/Mastercard adossées à un compte ou virtuelles). Idéal pour les achats en ligne, abonnements et voyages internationaux.</p>
+                        </div>
+                        <div style="background:var(--card-bg); padding:10px; border-radius:8px; border-left:34d399; border-left:3px solid #f59e0b;">
+                            <strong>🌐 3. Comptes & Fintechs Internationaux (Wise, Payoneer, Revolut)</strong>
+                            <p style="margin:5px 0 0 0; font-size:12px; color:var(--text-secondary);">Permettent de détenir des comptes en devises (USD, EUR, GBP) et de commander des cartes bancaires virtuelles ou physiques acceptées mondialement. Nécessite un passeport valide et un justificatif d'adresse.</p>
+                        </div>
+                        <div style="background:var(--card-bg); padding:10px; border-radius:8px; border-left:3px solid #3b82f6;">
+                            <strong>🏦 4. Ouverture de Compte à l'Étranger (Non-résidents)</strong>
+                            <p style="margin:5px 0 0 0; font-size:12px; color:var(--text-secondary);">Possibilité d'ouvrir des comptes dans certaines banques internationales en ligne ou en présentant un contrat de travail, une inscription universitaire ou un justificatif de revenus selon le pays visé.</p>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div style="margin-top:20px; background:var(--bg-color); padding:15px; border-radius:12px; border:1px solid #0ea5e9;">
+                    <h4 style="color:#0ea5e9; margin-top:0; margin-bottom:10px;">🌍 Guide d'Obtention des Visas par Région</h4>
+                    <p style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;">Démarches indispensables pour voyager sereinement :</p>
+                    
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <div style="background:var(--card-bg); padding:10px; border-radius:8px; border-left:3px solid #0ea5e9;">
+                            <strong>🇹🇬 Espace CEDEAO (Afrique de l'Ouest)</strong>
+                            <p style="margin:5px 0 0 0; font-size:12px; color:var(--text-secondary);">Dispense de visa pour les ressortissants de la CEDEAO avec un passeport ou une CNI biométrique valide. Carnet de vaccination contre la fièvre jaune obligatoire.</p>
+                        </div>
+                        <div style="background:var(--card-bg); padding:10px; border-radius:8px; border-left:3px solid #f59e0b;">
+                            <strong>🌍 Autres Pays d'Afrique & Régions</strong>
+                            <p style="margin:5px 0 0 0; font-size:12px; color:var(--text-secondary);">Visa consulaire ou visa à l'arrivée selon la destination. Documents requis : passeport (simple ou biométrique), billet aller-retour, réservation d'hôtel ou lettre d'invitation.</p>
+                        </div>
+                        <div style="background:var(--card-bg); padding:10px; border-radius:8px; border-left:3px solid #34d399;">
+                            <strong>🇪🇺 Espace Schengen & Europe</strong>
+                            <p style="margin:5px 0 0 0; font-size:12px; color:var(--text-secondary);">Visa obligatoire. Constitution d'un dossier complet : formulaire de demande, assurance voyage (min. 30 000 €), justificatifs financiers et hébergement validé.</p>
+                        </div>
+                        <div style="background:var(--card-bg); padding:10px; border-radius:8px; border-left:3px solid #3b82f6;">
+                            <strong>🇺🇸 Amérique du Nord & Autres pays</strong>
+                            <p style="margin:5px 0 0 0; font-size:12px; color:var(--text-secondary);">Procédure en ligne (ex: formulaire DS-160 pour les États-Unis), paiement des frais de visa et entretien obligatoire auprès de l'ambassade ou du consulat compétent.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         `;
     } else if (activeTab === 'dashboard') {
