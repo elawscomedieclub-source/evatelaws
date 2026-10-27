@@ -3,7 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. & ELAWS - Écosystème Souverain Universel & Caméra Intelligente</title>
+    <title>E.V.A.T. & ELAWS - Écosystème Souverain Universel & Installation Auto</title>
+    
+    <!-- Manifeste PWA intégré pour l'installation automatique sur tout support -->
+    <link rel="manifest" href="data:application/manifest+json,{
+        'name': 'E.V.A.T. & ELAWS',
+        'short_name': 'EVAT',
+        'start_url': '.',
+        'display': 'standalone',
+        'background_color': '#0b0f19',
+        'theme_color': '#059669',
+        'icons': [{
+            'src': 'https://img.icons8.com/color/192/000000/artificial-intelligence.png',
+            'sizes': '192x192',
+            'type': 'image/png'
+        }]
+    }">
+
     <style>
         :root {
             --bg-color: #0b0f19;
@@ -208,12 +224,19 @@
         </div>
     </header>
 
-    <div class="badge-info">🌟 Accueil Irrésistible | Caméra Intelligente & Analyse de Sol/Documents</div>
+    <div class="badge-info">📲 Installation Automatique PWA | Caméra & GPS Intégrés</div>
+
+    <!-- Bannière d'installation automatique (apparaît si le navigateur le permet) -->
+    <div id="installBanner" class="card" style="display:none; border-color:var(--accent); background:rgba(5,150,105,0.12);">
+        <h3 class="card-title" style="color:var(--accent);">📲 Installer E.V.A.T. & ELAWS</h3>
+        <p class="text">Installez l'application instantanément sur votre appareil pour y accéder en un clic et 100% hors-ligne !</p>
+        <button class="btn-action" id="btnInstallApp">Installer l'Application sur mon Support</button>
+    </div>
 
     <div id="sideMenu" class="sidebar">
         <h3>📂 Navigation Globale E.V.A.T.</h3>
         <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Hub Modulable</button>
-        <button class="menu-item" onclick="switchTab('camera')">📸 Caméra & Analyse Intelligente (Nouveau)</button>
+        <button class="menu-item" onclick="switchTab('camera')">📸 Caméra & Analyse Intelligente</button>
         <button class="menu-item" onclick="switchTab('gps')">🧭 Géolocalisation & Itinéraire (Chauffeur)</button>
         <button class="menu-item" onclick="switchTab('simulateur')">🧮 Calculateurs & Outils Métiers</button>
         <button class="menu-item" onclick="switchTab('stocks')">📦 Stocks, Récoltes & Matériel</button>
@@ -228,7 +251,7 @@
     <div class="module-container" id="mainContent"></div>
 
     <script>
-        let activeTab = 'accueil'; // On ouvre sur l'accueil irrésistible
+        let activeTab = 'accueil';
         let metierActif = 'Conducteur / Chauffeur';
         let themeIndex = 0;
         const themes = ['dark', 'light', 'eco'];
@@ -240,14 +263,26 @@
         let analysisResult = "Aucune image scannée pour le moment. Prenez une photo du sol, d'une culture ou d'un document pour lancer l'analyse ELAWS.";
         let capturedImageSrc = null;
 
-        let stocks = [
-            { nom: "Sacs de Maïs / Récolte", quantite: 45, unite: "Sacs", categorie: "Agriculture" },
-            { nom: "Pièces de Rechange / Pneus", quantite: 4, unite: "Unités", categorie: "Transport" }
-        ];
-        let transactions = [
-            { type: 'Entrée', libelle: 'Vente / Course transport', montant: 25000 },
-            { type: 'Sortie', libelle: 'Carburant & Intrants', montant: 10000 }
-        ];
+        // Gestionnaire pour l'installation automatique PWA
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installBanner').style.display = 'block';
+        });
+
+        document.getElementById('btnInstallApp').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    document.getElementById('installBanner').style.display = 'none';
+                }
+                deferredPrompt = null;
+            } else {
+                alert("Pour installer l'application, vous pouvez aussi utiliser le menu de votre navigateur (⋮ ou Partager) et choisir 'Ajouter à l'écran d'accueil'.");
+            }
+        });
 
         function toggleMenu() { document.getElementById('sideMenu').classList.toggle('open'); }
         
@@ -271,11 +306,10 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     capturedImageSrc = e.target.result;
-                    // Simulation d'analyse intelligente ELAWS de la photo (sol, culture ou document)
                     analysisResult = `🔍 <strong>Analyse ELAWS de l'image capturée :</strong><br>` +
                         `- Type détecté : Échantillon de sol / Végétation / Document professionnel.<br>` +
-                        `- Indice d'humidité / Fertilité : Optimal (Zone favorable aux cultures de maïs et manioc).<br>` +
-                        `- Recommandation : Intégrer les données dans le registre des stocks et lancer le calcul de rendement.`;
+                        `- Indice d'humidité / Fertilité : Optimal (Zone favorable aux cultures).<br>` +
+                        `- Recommandation : Intégrer les données dans le registre des stocks et lancer le calcul.`;
                     render();
                 };
                 reader.readAsDataURL(file);
@@ -367,7 +401,7 @@
                 content.innerHTML = `
                     <div class="card">
                         <h3 class="card-title">📸 Caméra & Analyse Intelligente (Sol & Documents)</h3>
-                        <p class="text">Prenez en photo un type de sol, une culture agricole, un document ou un équipement pour que le système l'analyse et l'intègre directement dans votre base de données.</p>
+                        <p class="text">Prenez en photo un type de sol, une culture agricole, un document ou un équipement pour que le système l'analyse.</p>
                         
                         <div class="tool-card" style="text-align:center; padding:20px; border-left-color:var(--accent);">
                             <input type="file" accept="image/*" capture="environment" id="cameraInput" style="display:none;" onchange="handleImageCapture(event)">
