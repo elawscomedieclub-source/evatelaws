@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. & ELAWS - Écosystème Souverain & Domaine Unique</title>
+    <title>E.V.A.T. & ELAWS - Écosystème Souverain Universel</title>
     
     <link rel="manifest" href="data:application/manifest+json,{
         'name': 'E.V.A.T. & ELAWS',
@@ -60,7 +60,7 @@
             flex-direction: column;
             min-height: 100vh;
             padding: 15px;
-            padding-bottom: 80px;
+            padding-bottom: 90px;
             transition: background 0.4s ease, color 0.4s ease;
         }
         header {
@@ -150,7 +150,7 @@
 
         #toastNotification {
             position: fixed;
-            bottom: 70px;
+            bottom: 80px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
             background: var(--card-bg);
@@ -183,19 +183,21 @@
             margin-bottom: 15px;
             box-shadow: var(--shadow);
             animation: fadeIn 0.3s ease;
+            max-height: 70vh;
+            overflow-y: auto;
         }
         .sidebar.open { display: block; }
         .sidebar h3 { font-size: 0.95rem; color: var(--accent); margin-top: 0; border-bottom: 2px solid var(--border-color); padding-bottom: 8px; }
         .menu-item {
             background: rgba(16, 185, 129, 0.08);
             color: var(--text-main);
-            padding: 12px 14px;
+            padding: 10px 14px;
             border-radius: 8px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             border: none;
             width: 100%;
             text-align: left;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.2s;
@@ -264,7 +266,7 @@
                 <button class="btn-top" onclick="changerProfilSession()">👤 Profils</button>
             </div>
         </header>
-        <div class="badge-info" id="badgeDomaineActif">🌍 Écosystème Dédié</div>
+        <div class="badge-info" id="badgeDomaineActif">🌍 Écosystème Souverain Universel</div>
     </div>
 
     <!-- BANDEAU D'INSTALLATION AUTOMATIQUE -->
@@ -276,10 +278,10 @@
     </div>
 
     <div id="sideMenu" class="sidebar">
-        <h3>📂 Navigation E.V.A.T.</h3>
+        <h3>📂 Navigation Complète E.V.A.T.</h3>
         <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Mon Métier</button>
         <button class="menu-item" onclick="switchTab('objectifs')">🎯 Objectifs & Projets</button>
-        <button class="menu-item" onclick="switchTab('notes')">📓 Journal de Bord & Notes</button>
+        <button class="menu-item" onclick="switchTab('notes')">📓 Journal de Bord (ELAWS)</button>
         <button class="menu-item" onclick="switchTab('factures')">🧾 Reçus & Factures</button>
         <button class="menu-item" onclick="switchTab('sauvegarde')">💾 Sauvegarde & Restauration (JSON)</button>
         <button class="menu-item" onclick="switchTab('dossiers')">📁 Assistant Visas & Séjour</button>
@@ -297,7 +299,7 @@
 
     <div id="bottomBar" class="bottom-action-bar" style="display:none;">
         <button class="bar-item active" onclick="switchTab('accueil')" id="barAccueil">
-            <span class="icon">💼</span><span>Mon Métier</span>
+            <span class="icon">💼</span><span>Métier</span>
         </button>
         <button class="bar-item" onclick="switchTab('objectifs')" id="barObj">
             <span class="icon">🎯</span><span>Objectifs</span>
@@ -315,6 +317,15 @@
 
     <script>
         let activeTab = 'accueil';
+        let currentThemeIndex = 0;
+        const themes = ['dark', 'light', 'eco'];
+
+        function changerTheme() {
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+            const t = themes[currentThemeIndex];
+            document.body.setAttribute('data-theme', t);
+            showToast(`Thème : ${t.toUpperCase()}`);
+        }
         
         let listeProfils = JSON.parse(localStorage.getItem('evat_tous_profils')) || [];
         let idProfilActif = localStorage.getItem('evat_profil_actif_id') || null;
@@ -363,7 +374,6 @@
         });
 
         function toggleMenu() { document.getElementById('sideMenu').classList.toggle('open'); }
-        function changerTheme() { showToast("Thème basculé."); }
 
         function creerNouveauProfil() {
             const nom = document.getElementById('regNom').value.trim();
@@ -383,18 +393,25 @@
                 id: nouveauId,
                 nom: nom,
                 email: email,
-                telephone: tel || '+228 00000000',
+                telephone: tel || '+228 98231402',
                 nationalite: nat,
                 paysActuel: pays,
-                metierUnique: metierUnique, // LE MÉTIER UNIQUE ET EXCLUSIF DE L'UTILISATEUR
+                metierUnique: metierUnique,
                 objectifs: [
                     { id: 1, categorie: "Finances & Business", titre: `Faire prospérer mon activité de ${metierUnique}`, statut: "En cours" }
                 ],
                 notes: [
-                    { id: 1, titre: "Bienvenue dans E.V.A.T.", texte: `Espace souverain configuré exclusivement pour le métier : ${metierUnique}.`, date: new Date().toLocaleDateString() }
+                    { id: 1, titre: "Bienvenue dans E.V.A.T.", texte: `Espace souverain configuré exclusivement pour : ${metierUnique}.`, date: new Date().toLocaleDateString() }
                 ],
                 solde: 50000,
-                carnet: []
+                carnet: [],
+                historiqueFinancier: [
+                    { date: new Date().toLocaleDateString(), desc: "Capital initial", montant: 50000, type: "entree" }
+                ],
+                dossiersVoyage: [
+                    { id: 1, titre: "Passeport / Pièce d'identité", statut: "Validé" },
+                    { id: 2, titre: "Justificatif de domicile", statut: "En attente" }
+                ]
             };
 
             listeProfils.push(nouveauProfil);
@@ -443,7 +460,7 @@
             utilisateurActif.telephone = document.getElementById('inputTelUtilisateur').value.trim() || utilisateurActif.telephone;
             
             sauvegarderProfilActif();
-            showToast("Profil et métier mis à jour avec succès !");
+            showToast("Profil et métier mis à jour !");
             render();
         }
 
@@ -484,7 +501,7 @@
 
             if (client && service && montant) {
                 const recuHtml = `
-                    <div style="background:#ffffff; color:#0f172a; padding:20px; border-radius:10px; border:2px dashed var(--accent);">
+                    <div style="background:#ffffff; color:#0f172a; padding:20px; border-radius:10px; border:2px dashed var(--accent); margin-top:10px;">
                         <div style="text-align:center; border-bottom:2px solid #cbd5e1; padding-bottom:10px; margin-bottom:10px;">
                             <img src="https://img.icons8.com/color/48/000000/artificial-intelligence.png" style="width:32px; height:32px; vertical-align:middle; margin-right:8px;">
                             <h3 style="margin:0; display:inline-block; color:#059669;">🧾 REÇU DE PRESTATION</h3>
@@ -515,6 +532,75 @@
             showToast("Sauvegarde JSON exportée !");
         }
 
+        function convertirDeviseAction() {
+            const montant = parseFloat(document.getElementById('montantDevise').value) || 0;
+            const type = document.getElementById('paireDevise').value;
+            let resultat = 0;
+            let texteRes = '';
+            if (type === 'eur_xof') {
+                resultat = montant * 655.957;
+                texteRes = `${montant} EUR = ${resultat.toFixed(2)} XOF (FCFA)`;
+            } else if (type === 'xof_eur') {
+                resultat = montant / 655.957;
+                texteRes = `${montant} XOF = ${resultat.toFixed(2)} EUR`;
+            } else if (type === 'usd_xof') {
+                resultat = montant * 600;
+                texteRes = `${montant} USD = ${resultat.toFixed(2)} XOF (FCFA)`;
+            } else {
+                resultat = montant / 600;
+                texteRes = `${montant} XOF = ${resultat.toFixed(2)} USD`;
+            }
+            document.getElementById('resultatConversion').innerText = texteRes;
+            showToast("Conversion effectuée !");
+        }
+
+        function traduireElawsAction() {
+            const texte = document.getElementById('texteATraduire').value.trim();
+            const lang = document.getElementById('langueCible').value;
+            if (!texte) { showToast("Entrez un texte à traduire."); return; }
+            let traduit = `[Traduction ELAWS vers ${lang.toUpperCase()}] : ${texte} (Version souveraine optimisée pour ${utilisateurActif.metierUnique}).`;
+            document.getElementById('resultatTraduction').innerText = traduit;
+            showToast("Traduction ELAWS prête !");
+        }
+
+        function ajouterTransactionCaisse() {
+            const desc = document.getElementById('descCaisse').value.trim();
+            const montant = parseFloat(document.getElementById('montantCaisse').value);
+            const type = document.getElementById('typeCaisse').value;
+            if (desc && !isNaN(montant)) {
+                if (type === 'entree') {
+                    utilisateurActif.solde += montant;
+                    utilisateurActif.historiqueFinancier.unshift({ date: new Date().toLocaleDateString(), desc, montant, type: 'entree' });
+                } else {
+                    utilisateurActif.solde -= montant;
+                    utilisateurActif.historiqueFinancier.unshift({ date: new Date().toLocaleDateString(), desc, montant, type: 'sortie' });
+                }
+                sauvegarderProfilActif();
+                showToast("Caisse mise à jour !");
+                render();
+            } else {
+                showToast("Veuillez remplir les champs de caisse.");
+            }
+        }
+
+        function interrogerElawsAI() {
+            const q = document.getElementById('inputElawsQuestion').value.trim();
+            if (!q) { showToast("Posez une question à ELAWS."); return; }
+            let reponse = "";
+            const qLower = q.toLowerCase();
+            if (qLower.includes('bonjour') || qLower.includes('salut')) {
+                reponse = `Bonjour ${utilisateurActif.nom} ! ELAWS est à vos côtés en tant qu'assistant souverain pour votre activité de ${utilisateurActif.metierUnique}. Comment puis-je vous aider aujourd'hui ?`;
+            } else if (qLower.includes('client') || qLower.includes('facture')) {
+                reponse = `En tant que ${utilisateurActif.metierUnique}, vous pouvez utiliser l'onglet 'Factures' pour générer instantanément vos reçus professionnels.`;
+            } else if (qLower.includes('argent') || qLower.includes('solde') || qLower.includes('caisse')) {
+                reponse = `Votre solde actuel dans E.V.A.T. est de ${utilisateurActif.solde.toLocaleString()} FCFA. Vous pouvez suivre vos entrées et sorties dans l'onglet 'Finances & Caisse'.`;
+            } else {
+                reponse = `ELAWS a analysé votre requête concernant "${q}" dans le cadre de votre métier de ${utilisateurActif.metierUnique}. Vos données restent sécurisées sur votre appareil. Souhaitez-vous enregistrer cette note ou créer un objectif lié ?`;
+            }
+            document.getElementById('reponseElawsAI').innerHTML = `<div style="background:var(--bg-color); padding:12px; border-radius:8px; border-left:4px solid var(--accent); margin-top:10px;"><strong>🤖 ELAWS :</strong> ${reponse}</div>`;
+            showToast("Réponse ELAWS générée !");
+        }
+
         function render() {
             const content = document.getElementById('mainContent');
             content.innerHTML = '';
@@ -536,23 +622,23 @@
                     <div class="card" style="border-color:var(--accent); max-width:500px; margin: 20px auto; text-align:center;">
                         <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo" style="width:72px; height:72px; margin-bottom:10px; border-radius:16px; border:2px solid var(--accent); box-shadow:0 0 20px rgba(5,150,105,0.4);">
                         <h2 style="color:var(--accent); margin-top:0;">✨ E.V.A.T. & ELAWS</h2>
-                        <p class="text" style="text-align:center;">Écosystème Souverain. Créez votre profil en indiquant votre métier unique pour configurer automatiquement votre espace de travail.</p>
+                        <p class="text" style="text-align:center;">Écosystème Souverain Universel. Indiquez votre métier unique pour configurer instantanément votre espace de travail intelligent.</p>
                         
                         ${profilsExistantsHtml}
 
                         <div style="text-align:left;">
                             <h4 style="margin-bottom:10px; border-top:1px solid var(--border-color); padding-top:15px;">📝 Inscription & Votre Métier Unique :</h4>
                             <label style="font-size:11px; color:var(--text-secondary);">Nom complet ou Pseudonyme * :</label>
-                            <input type="text" id="regNom" class="input" placeholder="Ex: Jean Dupont">
+                            <input type="text" id="regNom" class="input" placeholder="Ex: Eric Lawson">
                             
                             <label style="font-size:11px; color:var(--text-secondary);">Adresse E-mail * :</label>
                             <input type="email" id="regEmail" class="input" placeholder="Ex: monemail@domaine.com">
 
-                            <label style="font-size:11px; color:var(--text-secondary);">Votre Métier unique / Activité principale * :</label>
-                            <input type="text" id="regMetierCustom" class="input" placeholder="Ex: Chauffeur VTC, Menuisier, Web Designer...">
+                            <label style="font-size:11px; color:var(--text-secondary);">Votre Métier / Activité unique * :</label>
+                            <input type="text" id="regMetierCustom" class="input" placeholder="Ex: Chauffeur, Développeur, Menuisier, Commerçant...">
 
                             <label style="font-size:11px; color:var(--text-secondary);">Téléphone :</label>
-                            <input type="text" id="regTel" class="input" placeholder="Ex: +228 98000000">
+                            <input type="text" id="regTel" class="input" placeholder="Ex: +228 98231402">
 
                             <div style="display:flex; gap:8px;">
                                 <div style="flex:1;">
@@ -568,14 +654,14 @@
                                 <div style="flex:1;">
                                     <label style="font-size:11px; color:var(--text-secondary);">Zone d'Évolution :</label>
                                     <select id="regPaysActuel" class="input">
-                                        <option value="Togo / Afrique">Togo / Afrique</option>
+                                        <option value="Togo / Lomé">Togo / Lomé</option>
                                         <option value="Amazonie / Sud">Amazonie / Sud</option>
                                         <option value="Europe / Allemagne">Europe / Allemagne</option>
                                     </select>
                                 </div>
                             </div>
 
-                            <button class="btn-action" style="margin-top:10px;" onclick="creerNouveauProfil()">🚀 Ouvrir mon Espace de Travail</button>
+                            <button class="btn-action" style="margin-top:10px;" onclick="creerNouveauProfil()">🚀 Ouvrir mon Espace Souverain</button>
                         </div>
                     </div>
                 `;
@@ -603,7 +689,7 @@
                             </div>
                             <button class="btn-top" onclick="changerProfilSession()">🔄 Changer</button>
                         </div>
-                        <p class="text" style="margin-bottom:12px;">Votre application est entièrement configurée pour votre métier unique : <strong style="color:var(--accent);">${utilisateurActif.metierUnique}</strong>.</p>
+                        <p class="text" style="margin-bottom:12px;">Votre application est entièrement configurée pour votre métier : <strong style="color:var(--accent);">${utilisateurActif.metierUnique}</strong>.</p>
                         
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; display:flex; flex-direction:column; gap:10px;">
                             <div>
@@ -628,7 +714,7 @@
                                 <div style="flex:1;">
                                     <label style="font-size:11px; color:var(--text-secondary);">Zone d'Évolution :</label>
                                     <select id="selectPaysActuel" class="input" style="margin-top:4px;">
-                                        <option value="Togo / Afrique" ${utilisateurActif.paysActuel.includes('Togo') ? 'selected' : ''}>Togo / Afrique</option>
+                                        <option value="Togo / Lomé" ${utilisateurActif.paysActuel.includes('Togo') ? 'selected' : ''}>Togo / Lomé</option>
                                         <option value="Amazonie / Sud" ${utilisateurActif.paysActuel.includes('Amazonie') ? 'selected' : ''}>Amazonie / Sud</option>
                                         <option value="Europe / Allemagne" ${utilisateurActif.paysActuel.includes('Europe') ? 'selected' : ''}>Europe / Allemagne</option>
                                     </select>
@@ -652,7 +738,7 @@
                 let objHtml = '';
                 utilisateurActif.objectifs.forEach(o => {
                     objHtml += `
-                        <div class="tool-card" style="margin-bottom:10px; background:var(--bg-color); padding:12px; border-radius:8px; border-left:4px solid var(--accent);">
+                        <div style="margin-bottom:10px; background:var(--bg-color); padding:12px; border-radius:8px; border-left:4px solid var(--accent);">
                             <span style="font-size:11px; color:var(--accent); font-weight:700;">📌 ${o.categorie}</span><br>
                             <strong style="font-size:14px;">${o.titre}</strong><br>
                             <small style="color:var(--text-secondary);">Statut : ${o.statut}</small>
@@ -680,7 +766,7 @@
                 let notesHtml = '';
                 utilisateurActif.notes.forEach(n => {
                     notesHtml += `
-                        <div class="tool-card" style="margin-bottom:10px; background:var(--bg-color); padding:12px; border-radius:8px;">
+                        <div style="margin-bottom:10px; background:var(--bg-color); padding:12px; border-radius:8px;">
                             <strong>📌 ${n.titre}</strong> <small style="float:right; color:var(--text-secondary);">${n.date}</small><br>
                             <p style="margin:6px 0 0 0; font-size:13px; color:var(--text-secondary);">${n.texte}</p>
                         </div>
@@ -688,11 +774,11 @@
                 });
                 content.innerHTML = `
                     <div class="card">
-                        <h3 class="card-title">📓 Journal de Bord (${utilisateurActif.metierUnique})</h3>
+                        <h3 class="card-title">📓 Journal de Bord ELAWS (${utilisateurActif.metierUnique})</h3>
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
                             <input type="text" id="noteTitre" class="input" placeholder="Titre de la note" style="margin-bottom:8px;">
                             <textarea id="noteTexte" class="input" placeholder="Contenu..." style="margin-bottom:10px;"></textarea>
-                            <button class="btn-action" onclick="ajouterNoteJournal()">➕ Ajouter</button>
+                            <button class="btn-action" onclick="ajouterNoteJournal()">➕ Ajouter la Note</button>
                         </div>
                         ${notesHtml}
                     </div>
@@ -710,7 +796,7 @@
                             </div>
                             <button class="btn-action" onclick="genererRecuFacture()">Générer le Reçu</button>
                         </div>
-                        <div id="resultatFacture">Remplissez les champs ci-dessus.</div>
+                        <div id="resultatFacture">Remplissez les champs ci-dessus pour générer un reçu professionnel.</div>
                     </div>
                 `;
             } else if (activeTab === 'sauvegarde') {
@@ -718,7 +804,137 @@
                     <div class="card">
                         <h3 class="card-title">💾 Sauvegarde & Restauration (JSON)</h3>
                         <button class="btn-action" onclick="exporterDonneesJSON()" style="margin-bottom:12px;">📥 Exporter mon Profil JSON</button>
-                        <p class="text">Sauvegardez l'intégralité de vos données, incluant votre métier unique et vos projets.</p>
+                        <p class="text">Sauvegardez l'intégralité de vos données, incluant votre métier unique, vos notes et vos finances, dans un fichier JSON souverain.</p>
+                    </div>
+                `;
+            } else if (activeTab === 'dossiers') {
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">📁 Assistant Visas, Papiers & Séjour</h3>
+                        <p class="text">Gérez vos documents administratifs et justificatifs pour vos déplacements ou formalités professionnelles.</p>
+                        <div style="background:var(--bg-color); padding:12px; border-radius:8px; margin-bottom:10px;">
+                            <strong>🛂 Pièce d'identité / Passeport</strong><br><small style="color:var(--accent);">Statut : Validé</small>
+                        </div>
+                        <div style="background:var(--bg-color); padding:12px; border-radius:8px;">
+                            <strong>📄 Numéro d'Identification Fiscale (NIF)</strong><br><small style="color:var(--text-secondary);">En cours d'enregistrement pour ${utilisateurActif.metierUnique}</small>
+                        </div>
+                    </div>
+                `;
+            } else if (activeTab === 'convertisseur') {
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">💱 Convertisseur de Devises Intégré</h3>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
+                            <input type="number" id="montantDevise" class="input" placeholder="Montant à convertir" style="margin-bottom:8px;">
+                            <select id="paireDevise" class="input" style="margin-bottom:8px;">
+                                <option value="eur_xof">EUR ➡️ XOF (FCFA)</option>
+                                <option value="xof_eur">XOF (FCFA) ➡️ EUR</option>
+                                <option value="usd_xof">USD ➡️ XOF (FCFA)</option>
+                                <option value="xof_usd">XOF (FCFA) ➡️ USD</option>
+                            </select>
+                            <button class="btn-action" onclick="convertirDeviseAction()">Calculer</button>
+                        </div>
+                        <div id="resultatConversion" style="font-weight:800; color:var(--accent); text-align:center; font-size:16px;"></div>
+                    </div>
+                `;
+            } else if (activeTab === 'traduction') {
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">🗣️ Pont de Traduction (ELAWS)</h3>
+                        <p class="text">Communiquez et traduisez vos documents ou messages instantanément.</p>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
+                            <textarea id="texteATraduire" class="input" placeholder="Texte à traduire..." style="margin-bottom:8px;"></textarea>
+                            <select id="langueCible" class="input" style="margin-bottom:8px;">
+                                <option value="allemand">Allemand (Deutsch)</option>
+                                <option value="anglais">Anglais (English)</option>
+                                <option value="francais">Français</option>
+                            </select>
+                            <button class="btn-action" onclick="traduireElawsAction()">Traduire avec ELAWS</button>
+                        </div>
+                        <div id="resultatTraduction" style="font-size:14px; color:var(--text-secondary); background:var(--bg-color); padding:12px; border-radius:8px;"></div>
+                    </div>
+                `;
+            } else if (activeTab === 'carnet') {
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">📝 Carnet de Commandes & Prestations</h3>
+                        <p class="text">Suivez vos clients et vos prestations en cours pour votre activité de ${utilisateurActif.metierUnique}.</p>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; text-align:center;">
+                            <p style="color:var(--text-secondary); margin:0;">Aucune commande en attente. Votre carnet est prêt à recevoir vos nouveaux clients.</p>
+                        </div>
+                    </div>
+                `;
+            } else if (activeTab === 'gps') {
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">🧭 Géolocalisation & GPS Souverain</h3>
+                        <p class="text">Zone d'évolution actuelle : <strong>${utilisateurActif.paysActuel}</strong>.</p>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; text-align:center;">
+                            <p style="color:var(--accent); font-weight:700; margin-bottom:8px;">📍 Coordonnées Locales Prêtes</p>
+                            <p style="font-size:13px; color:var(--text-secondary); margin:0;">Quartier Kodjoviakopé, Lomé, Togo / Navigation hors-ligne activée.</p>
+                        </div>
+                    </div>
+                `;
+            } else if (activeTab === 'economie') {
+                let transHtml = '';
+                utilisateurActif.historiqueFinancier.forEach(t => {
+                    const color = t.type === 'entree' ? '#34d399' : '#f87171';
+                    const signe = t.type === 'entree' ? '+' : '-';
+                    transHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;"><span>${t.date} - ${t.desc}</span><strong style="color:${color};">${signe}${t.montant.toLocaleString()} FCFA</strong></div>`;
+                });
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">🪙 Finances, Trésorerie & Caisse</h3>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; text-align:center;">
+                            <span style="font-size:12px; color:var(--text-secondary);">Solde Actuel :</span>
+                            <div style="font-size:24px; font-weight:800; color:var(--accent);">${utilisateurActif.solde.toLocaleString()} FCFA</div>
+                        </div>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
+                            <h4 style="margin:0 0 8px 0; color:var(--accent);">Ajouter une entrée / sortie :</h4>
+                            <input type="text" id="descCaisse" class="input" placeholder="Libellé (ex: Vente de prestation)" style="margin-bottom:8px;">
+                            <input type="number" id="montantCaisse" class="input" placeholder="Montant en FCFA" style="margin-bottom:8px;">
+                            <select id="typeCaisse" class="input" style="margin-bottom:8px;">
+                                <option value="entree">Entrée d'argent (+)</option>
+                                <option value="sortie">Sortie d'argent (-)</option>
+                            </select>
+                            <button class="btn-action" onclick="ajouterTransactionCaisse()">Enregistrer dans la Caisse</button>
+                        </div>
+                        <h4 style="margin-bottom:8px;">Historique des Transactions :</h4>
+                        ${transHtml}
+                    </div>
+                `;
+            } else if (activeTab === 'camera') {
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">📸 Caméra & Numérisation de Documents</h3>
+                        <p class="text">Capturez vos reçus, factures ou pièces d'identité directement depuis votre appareil mobile.</p>
+                        <div style="background:var(--bg-color); padding:25px; border-radius:10px; text-align:center; border:2px dashed var(--border-color);">
+                            <span style="font-size:32px;">📷</span>
+                            <p style="margin:10px 0 0 0; font-size:13px; color:var(--text-secondary);">Fonction caméra prête pour l'archivage de documents.</p>
+                        </div>
+                    </div>
+                `;
+            } else if (activeTab === 'securite') {
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">🛡️ Sécurité, Chiffrement & Vie Privée</h3>
+                        <p class="text">Vos données sont stockées de manière souveraine sur votre appareil, sans dépendre de serveurs tiers.</p>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px;">
+                            <strong style="color:var(--accent);">🔒 Chiffrement local actif</strong>
+                            <p style="font-size:13px; color:var(--text-secondary); margin:6px 0 0 0;">Protection des informations personnelles, notes et identifiants de ${utilisateurActif.nom}.</p>
+                        </div>
+                    </div>
+                `;
+            } else if (activeTab === 'ia') {
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">🤖 Assistant ELAWS AI</h3>
+                        <p class="text">Posez vos questions à l'intelligence artificielle ELAWS, conçue pour vous accompagner dans votre métier de <strong>${utilisateurActif.metierUnique}</strong>.</p>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
+                            <input type="text" id="inputElawsQuestion" class="input" placeholder="Ex: Comment développer mon activité..." style="margin-bottom:8px;">
+                            <button class="btn-action" onclick="interrogerElawsAI()">Interroger ELAWS</button>
+                        </div>
+                        <div id="reponseElawsAI"></div>
                     </div>
                 `;
             } else {
