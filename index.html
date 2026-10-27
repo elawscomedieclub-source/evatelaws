@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. & ELAWS - Écosystème Universel Modulaire (v25.0)</title>
-    
+    <title>E.V.A.T. & ELAWS - Écosystème Universel & Scolaire (v28.0)</title>
     <link rel="manifest" href="manifest.webmanifest">
     <meta name="theme-color" content="#059669">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
     <link rel="stylesheet" href="style.css">
 </head>
 <body data-theme="dark">
@@ -30,17 +28,17 @@
             </div>
         </header>
         <div class="badge-info">
-            <span id="badgeDomaineActif">🌍 Écosystème Modulaire Sécurisé (v25.0)</span>
+            <span id="badgeDomaineActif">🌍 Écosystème Famille, Métiers & Élèves (v28.0)</span>
             <span class="offline-status" id="reseauStatusIndicator">⚡ 100% Hors-Ligne</span>
         </div>
     </div>
 
     <div id="sideMenu" class="sidebar">
-        <h3>📂 Navigation Modulaire (v25.0)</h3>
+        <h3>📂 Navigation Universelle (v28.0)</h3>
         <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Profil Actif</button>
         <button class="menu-item" onclick="switchTab('appels_traduction')" style="background:rgba(14,165,233,0.2); border:1px solid #0ea5e9; color:#0ea5e9;">📞 <strong>Appels & Traduction de Dialecte</strong></button>
-        <button class="menu-item" onclick="switchTab('elaws_compagnon')" style="background:rgba(5,150,105,0.2); border:1px solid var(--accent);">🤖 <strong>Parler à ELAWS (Micro & Vocal 🎤)</strong></button>
-        <button class="menu-item" onclick="switchTab('outils_metier')" style="background:rgba(245,158,11,0.15); border:1px solid #f59e0b; color:#f59e0b;">✂️ <strong>Outils Spécifiques Métier</strong></button>
+        <button class="menu-item" onclick="switchTab('elaws_compagnon')" style="background:rgba(5,150,105,0.2); border:1px solid var(--accent);">🤖 <strong>Parler à ELAWS (Ton Ami 🎤)</strong></button>
+        <button class="menu-item" onclick="switchTab('outils_metier')" style="background:rgba(245,158,11,0.15); border:1px solid #f59e0b; color:#f59e0b;">✂️ <strong>Outils Métier & 🎒 Espace Élèves</strong></button>
         <button class="menu-item" onclick="switchTab('voyages_papiers')" style="background:rgba(14,165,233,0.15); border:1px solid #0ea5e9; color:#0ea5e9;">✈️ <strong>Voyages, Passeport & CNI</strong></button>
         <button class="menu-item" onclick="switchTab('dashboard')" style="background:rgba(59,130,246,0.15); border:1px solid #3b82f6; color:#3b82f6;">📊 <strong>Tableau de Bord & Score</strong></button>
         <button class="menu-item" onclick="switchTab('agenda')">📅 Agenda & Rendez-vous</button>
@@ -54,10 +52,11 @@
         <button class="bar-item active" onclick="switchTab('accueil')" id="barAccueil"><span class="icon">💼</span><span>Profil</span></button>
         <button class="bar-item" onclick="switchTab('appels_traduction')" id="barAppel" style="color:#0ea5e9;"><span class="icon">📞</span><span>Appels</span></button>
         <button class="bar-item" onclick="switchTab('elaws_compagnon')" id="barElaws" style="color:var(--accent);"><span class="icon">🤖</span><span>ELAWS</span></button>
-        <button class="bar-item" onclick="switchTab('outils_metier')" id="barOutil" style="color:#f59e0b;"><span class="icon">✂️</span><span>Métier</span></button>
+        <button class="bar-item" onclick="switchTab('outils_metier')" id="barOutil" style="color:#f59e0b;"><span class="icon">🎒</span><span>Scolaire</span></button>
         <button class="bar-item" onclick="switchTab('voyages_papiers')" id="barVoyage" style="color:#0ea5e9;"><span class="icon">✈️</span><span>Voyages</span></button>
     </div>
 
+    <script src="elaws.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

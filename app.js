@@ -61,6 +61,7 @@ function creerNouveauProfil() {
     const selectMetier = document.getElementById('selectMetierBase').value;
     const metierCustom = document.getElementById('regMetierCustom').value.trim();
     const metierUnique = metierCustom || selectMetier;
+    const niveauEtude = document.getElementById('regNiveauEtude')?.value || '';
 
     if (!nom) { showToast("Veuillez renseigner votre nom."); return; }
 
@@ -70,22 +71,21 @@ function creerNouveauProfil() {
         nom: nom,
         contact: contact || "Non renseigné",
         metierUnique: metierUnique,
+        niveauEtude: niveauEtude,
         solde: 50000,
         journalCaisse: [
             { id: 1, type: 'entree', libelle: 'Capital initial', montant: 50000, date: new Date().toLocaleDateString() }
         ],
-        factures: [],
-        agendaRdv: [],
         mesuresCouture: [],
         consultationsMedicales: [],
         stocksBoutique: [],
         notesPastorales: [],
         ateliersMecanique: [],
-        coursEnseignant: [],
+        devoirsEleve: [],
         dossiersVoyagePapiers: [],
         carnetContacts: [],
         discussionsElaws: [
-            { role: 'ai', texte: `Bonjour ${nom} ! Bienvenue dans EVAT & ELAWS (v25.0 Modulaire). Ton numéro (${contact || 'Non défini'}) est enregistré. Tous les modules (Appels GSM/Internet avec traduction, Outils Métiers, Micro) sont prêts.` }
+            { role: 'ai', texte: `Salut ${nom} ! C'est ELAWS. Je suis ton ami et ton assistant personnel (v28.0). Que tu sois professionnel ou élève (${niveauEtude || metierUnique}), on est ensemble pour réussir !` }
         ]
     };
 
@@ -120,7 +120,6 @@ function sauvegarderProfilActif() {
     if (index !== -1) { listeProfils[index] = utilisateurActif; localStorage.setItem('evat_tous_profils', JSON.stringify(listeProfils)); }
 }
 
-// --- GESTION DES CONTACTS & APPELS (GSM & INTERNET) AVEC TRADUCTION ---
 function mettreAJourMonContact() {
     const nouveauNum = document.getElementById('monNumeroContact')?.value.trim();
     if(nouveauNum) {
@@ -155,9 +154,9 @@ function lancerAppelGSM(numero) {
 
 function lancerAppelInternetAvecTraduction(nomDest, dialecteDest) {
     jouerSonSucces();
-    showToast(`🌐 Appel Internet VoIP chiffré & Traduction ELAWS vers ${nomDest} (${dialecteDest})...`);
+    showToast(`🌐 Appel Internet & Traduction ELAWS vers ${nomDest} (${dialecteDest})...`);
     setTimeout(() => {
-        alert(`[Appel Intelligent ELAWS v25.0] 
+        alert(`[Appel Intelligent ELAWS v28.0] 
 Connexion établie avec ${nomDest} !
 🗣️ Langue source : Votre voix.
 🔄 Traduction instantanée active vers : ${dialecteDest}.
@@ -165,80 +164,18 @@ L'interlocuteur vous comprend parfaitement dans son dialecte !`);
     }, 600);
 }
 
-// --- OUTILS MÉTIERS & PAPIERS ---
-function enregistrerMesureCouture() {
-    const client = document.getElementById('coutureClient')?.value.trim();
-    const epaule = document.getElementById('coutureEpaule')?.value || '';
-    const poitrine = document.getElementById('couturePoitrine')?.value || '';
-    const longueur = document.getElementById('coutureLongueur')?.value || '';
-    const details = document.getElementById('coutureDetails')?.value.trim() || '';
-
-    if(client) {
-        if(!utilisateurActif.mesuresCouture) utilisateurActif.mesuresCouture = [];
-        utilisateurActif.mesuresCouture.unshift({ id: Date.now(), client, epaule, poitrine, longueur, details, date: new Date().toLocaleDateString() });
+function enregistrerDevoirEleve() {
+    const matiere = document.getElementById('devoirMatiere')?.value.trim();
+    const question = document.getElementById('devoirQuestion')?.value.trim();
+    if(matiere && question) {
+        if(!utilisateurActif.devoirsEleve) utilisateurActif.devoirsEleve = [];
+        const explicationElaws = `[Explication ELAWS] Bonjour ${utilisateurActif.nom} ! Pour ta question en ${matiere} ("${question}"), voici comment comprendre la leçon : Prends le temps de relire ton cours calmement. Si c'est un exercice, décompose-le étape par étape. Tu as tout ce qu'il faut pour réussir ! 🌟`;
+        utilisateurActif.devoirsEleve.unshift({ id: Date.now(), matiere, question, reponse: explicationElaws, date: new Date().toLocaleDateString() });
         sauvegarderProfilActif();
         jouerSonSucces();
-        showToast("Mesures enregistrées !");
+        showToast("Devoir enregistré et expliqué par ELAWS !");
         render();
-    } else { showToast("Veuillez indiquer le nom du client."); }
-}
-
-function ajouterNotePastorale() {
-    const titre = document.getElementById('pasteurTitre')?.value.trim();
-    const contenu = document.getElementById('pasteurContenu')?.value.trim();
-    if(titre) {
-        if(!utilisateurActif.notesPastorales) utilisateurActif.notesPastorales = [];
-        utilisateurActif.notesPastorales.unshift({ id: Date.now(), titre, contenu, date: new Date().toLocaleDateString() });
-        sauvegarderProfilActif();
-        jouerSonSucces();
-        showToast("Prédication enregistrée !");
-        render();
-    } else { showToast("Indiquez le titre du message."); }
-}
-
-function ajouterConsultationMedicale() {
-    const patient = document.getElementById('medPatient')?.value.trim();
-    const diagnostic = document.getElementById('medDiagnostic')?.value.trim();
-    const prescription = document.getElementById('medPrescription')?.value.trim();
-
-    if(patient && diagnostic) {
-        if(!utilisateurActif.consultationsMedicales) utilisateurActif.consultationsMedicales = [];
-        utilisateurActif.consultationsMedicales.unshift({ id: Date.now(), patient, diagnostic, prescription, date: new Date().toLocaleDateString() });
-        sauvegarderProfilActif();
-        jouerSonSucces();
-        showToast("Consultation enregistrée !");
-        render();
-    } else { showToast("Remplissez le patient et le diagnostic."); }
-}
-
-function ajouterStockBoutique() {
-    const article = document.getElementById('boutiqueArticle')?.value.trim();
-    const qte = parseInt(document.getElementById('boutiqueQte')?.value);
-    const prix = parseFloat(document.getElementById('boutiquePrix')?.value);
-
-    if(article && !isNaN(qte) && !isNaN(prix)) {
-        if(!utilisateurActif.stocksBoutique) utilisateurActif.stocksBoutique = [];
-        utilisateurActif.stocksBoutique.unshift({ id: Date.now(), article, qte, prix });
-        sauvegarderProfilActif();
-        jouerSonSucces();
-        showToast("Article ajouté au stock !");
-        render();
-    } else { showToast("Remplissez correctement les champs."); }
-}
-
-function ajouterAtelierMecanique() {
-    const vehicule = document.getElementById('mecaVehicule')?.value.trim();
-    const panne = document.getElementById('mecaPanne')?.value.trim();
-    const cout = parseFloat(document.getElementById('mecaCout')?.value) || 0;
-
-    if(vehicule && panne) {
-        if(!utilisateurActif.ateliersMecanique) utilisateurActif.ateliersMecanique = [];
-        utilisateurActif.ateliersMecanique.unshift({ id: Date.now(), vehicule, panne, cout, date: new Date().toLocaleDateString() });
-        sauvegarderProfilActif();
-        jouerSonSucces();
-        showToast("Réparation enregistrée !");
-        render();
-    } else { showToast("Remplissez le véhicule et la panne."); }
+    } else { showToast("Remplissez la matière et la question."); }
 }
 
 function verifierDossierPapier() {
@@ -247,48 +184,13 @@ function verifierDossierPapier() {
     const resultatDiv = document.getElementById('resultatAnalyseDossier');
     if(!resultatDiv) return;
 
-    let pieces = [];
-    let conseils = "";
-
-    if (typeDoc === 'passeport') {
-        pieces = [
-            "Acte de naissance sécurisé (original ou copie certifiée)",
-            "Carte nationale d'identité biométrique valide",
-            "Certificat de nationalité",
-            "Photos d'identité aux normes (fond blanc)",
-            "Quittance / Reçu de paiement des frais de timbre passeport",
-            "Justificatif de domicile ou attestation de résidence"
-        ];
-        conseils = `Pour l'obtention de votre passeport pour ${paysDestination}, assurez-vous que tous vos documents d'état civil portent les mêmes noms exacts.`;
-    } else if (typeDoc === 'cni') {
-        pieces = [
-            "Ancienne carte d'identité ou Déclaration de perte",
-            "Acte de naissance original sécurisé",
-            "Certificat de nationalité",
-            "Justificatif de résidence",
-            "Timbres fiscaux ou reçu de quittance"
-        ];
-        conseils = `Le dépôt pour la carte d'identité (CNI) se fait auprès des services compétents de votre localité.`;
-    } else if (typeDoc === 'sejour') {
-        pieces = [
-            "Passeport en cours de validité",
-            "Visa d'établissement ou d'entrée",
-            "Contrat de travail ou attestation",
-            "Justificatif de logement",
-            "Visite médicale / Carnet de vaccination"
-        ];
-        conseils = `Constituez votre dossier de titre de séjour au moins 2 mois avant l'expiration de votre visa.`;
-    } else {
-        pieces = [
-            "Formulaire de demande de visa complété",
-            "Passeport valide (6 mois min. après retour)",
-            "Photos d'identité récentes",
-            "Billets d'avion aller-retour",
-            "Réservation d'hôtel ou certificat d'hébergement",
-            "Attestation d'assurance voyage"
-        ];
-        conseils = `Vérifiez si une vaccination spécifique (ex: Fièvre jaune) est exigée pour ${paysDestination}.`;
-    }
+    let pieces = [
+        "Acte de naissance sécurisé",
+        "Carte d'identité biométrique ou récépissé",
+        "Certificat de nationalité",
+        "Photos d'identité (fond blanc)",
+        "Justificatif de domicile"
+    ];
 
     let listeHtml = `<ul style="margin:10px 0; padding-left:20px; line-height:1.6;">`;
     pieces.forEach(p => { listeHtml += `<li>${p}</li>`; });
@@ -298,22 +200,12 @@ function verifierDossierPapier() {
         <div style="background:var(--bg-color); padding:15px; border-radius:10px; border:1px solid var(--accent); margin-top:10px;">
             <strong style="color:var(--accent);">📋 Dossier Requis (${typeDoc.toUpperCase()} — ${paysDestination}) :</strong>
             ${listeHtml}
-            <p style="margin-top:10px; font-size:13px; color:var(--text-secondary);">💡 <em>Conseil ELAWS :</em> ${conseils}</p>
-            <button class="btn-action" style="margin-top:10px; background:#0ea5e9;" onclick="sauvegarderDossierActif('${typeDoc}', '${paysDestination}')">💾 Sauvegarder ce dossier</button>
+            <p style="margin-top:10px; font-size:13px; color:var(--text-secondary);">💡 <em>Conseil ELAWS :</em> Vérifiez que tous vos documents portent exactement le même nom.</p>
         </div>
     `;
     jouerSonSucces();
 }
 
-function sauvegarderDossierActif(doc, pays) {
-    if(!utilisateurActif.dossiersVoyagePapiers) utilisateurActif.dossiersVoyagePapiers = [];
-    utilisateurActif.dossiersVoyagePapiers.unshift({ id: Date.now(), doc, pays, date: new Date().toLocaleDateString() });
-    sauvegarderProfilActif();
-    showToast("Dossier administratif sauvegardé !");
-    render();
-}
-
-// --- DISCUSSION ELAWS + MICRO ---
 function envoyerMessageElawsAI(texteForce) {
     const input = document.getElementById('inputElawsChat');
     const q = texteForce || (input ? input.value.trim() : '');
@@ -322,20 +214,9 @@ function envoyerMessageElawsAI(texteForce) {
     if (!utilisateurActif.discussionsElaws) utilisateurActif.discussionsElaws = [];
     utilisateurActif.discussionsElaws.push({ role: 'user', texte: q });
 
-    const lowerQ = q.toLowerCase();
-    let reponse = "";
+    const reponseElaws = ELAWS_BRAIN.repondre(utilisateurActif, q);
 
-    if (lowerQ.includes('bonjour') || lowerQ.includes('salut') || lowerQ.includes('coucou')) {
-        reponse = `Salut ${utilisateurActif.nom} ! Ton contact (${utilisateurActif.contact}) est bien enregistré. En tant que ${utilisateurActif.metierUnique}, je t'assiste sur tous tes outils.`;
-    } else if (lowerQ.includes('passeport') || lowerQ.includes('carte') || lowerQ.includes('voyage')) {
-        reponse = `[Expert Voyages ELAWS] Pour tes démarches de passeport ou CNI, consulte l'onglet "Voyages".`;
-    } else if (lowerQ.includes('appel') || lowerQ.includes('traduction')) {
-        reponse = `[Appels & Traduction] Passe tes appels GSM ou Internet avec traduction en direct depuis l'onglet "Appels".`;
-    } else {
-        reponse = `J'ai bien noté : "${q}". Tout est sécurisé dans ton écosystème modulaire v25.0.`;
-    }
-
-    utilisateurActif.discussionsElaws.push({ role: 'ai', texte: reponse });
+    utilisateurActif.discussionsElaws.push({ role: 'ai', texte: reponseElaws });
     sauvegarderProfilActif();
     jouerSonSucces();
     
@@ -344,7 +225,7 @@ function envoyerMessageElawsAI(texteForce) {
 
     if('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
-        window.speechSynthesis.speak(new SpeechSynthesisUtterance(reponse));
+        window.speechSynthesis.speak(new SpeechSynthesisUtterance(reponseElaws));
     }
 }
 
@@ -356,7 +237,7 @@ function demarrerMicroElaws() {
     }
     const recognition = new SpeechRecognition();
     recognition.lang = 'fr-FR';
-    showToast("🎤 Parle à ELAWS, j'écoute...");
+    showToast("🎤 Parle à ton ami ELAWS, j'écoute...");
     recognition.onresult = (event) => {
         const texteRecu = event.results[0][0].transcript;
         const input = document.getElementById('inputElawsChat');
@@ -380,7 +261,7 @@ function render() {
         if (listeProfils.length > 0) {
             profilsExistantsHtml = `<div style="margin-bottom:20px;"><h4 style="margin-bottom:8px;">👥 Profils enregistrés :</h4><div style="display:flex; flex-direction:column; gap:8px;">`;
             listeProfils.forEach(p => {
-                profilsExistantsHtml += `<button class="btn-action" style="background:var(--card-bg); border:1px solid var(--accent); color:var(--text-main); text-align:left; padding:12px;" onclick="selectionnerProfilExistant('${p.id}')">👤 <strong>${p.nom}</strong> (${p.contact}) <small style="float:right; color:var(--accent);">[${p.metierUnique}]</small></button>`;
+                profilsExistantsHtml += `<button class="btn-action" style="background:var(--card-bg); border:1px solid var(--accent); color:var(--text-main); text-align:left; padding:12px;" onclick="selectionnerProfilExistant('${p.id}')">👤 <strong>${p.nom}</strong> (${p.contact}) <small style="float:right; color:var(--accent);">[${p.metierUnique} ${p.niveauEtude ? '• ' + p.niveauEtude : ''}]</small></button>`;
             });
             profilsExistantsHtml += `</div></div>`;
         }
@@ -389,28 +270,40 @@ function render() {
             <div class="card" style="border-color:var(--accent); max-width:500px; margin: 10px auto; text-align:center;">
                 <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo" style="width:72px; height:72px; margin-bottom:10px; border-radius:16px; border:2px solid var(--accent);">
                 <h2 style="color:var(--accent); margin-top:0;">✨ E.V.A.T. & ELAWS</h2>
-                <p class="text" style="text-align:center;">Architecture Modulaire (v25.0 — Zéro Écran Noir)</p>
+                <p class="text" style="text-align:center;">Écosystème Universel & Scolaire (v28.0)</p>
                 
                 ${profilsExistantsHtml}
 
                 <div style="text-align:left;">
-                    <h4 style="margin-bottom:10px; border-top:1px solid var(--border-color); padding-top:15px;">📝 Créer mon Profil & Contact :</h4>
+                    <h4 style="margin-bottom:10px; border-top:1px solid var(--border-color); padding-top:15px;">📝 Créer mon Profil & Rôle :</h4>
                     <input type="text" id="regNom" class="input" placeholder="Votre Nom ou Prénom *" style="margin-bottom:8px;">
                     <input type="tel" id="regContact" class="input" placeholder="Votre Numéro de Téléphone (ex: +228 98231402) *" style="margin-bottom:8px;">
                     
-                    <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;">Choisissez votre Corps de Métier :</label>
-                    <select id="selectMetierBase" class="input" style="margin-bottom:8px;" onchange="document.getElementById('regMetierCustom').value = this.value;">
+                    <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;">Choisissez votre Profil / Métier :</label>
+                    <select id="selectMetierBase" class="input" style="margin-bottom:8px;" onchange="document.getElementById('regMetierCustom').value = this.value; document.getElementById('blocNiveauEleve').style.display = (this.value.includes('Élève')) ? 'block' : 'none';">
+                        <option value="Élève / Étudiant">🎒 Élève / Étudiant (Aide aux devoirs)</option>
                         <option value="Couturier / Tailleur">✂️ Couturier / Tailleur</option>
                         <option value="Pasteur / Guide Spirituel">📖 Pasteur / Guide Spirituel</option>
                         <option value="Médecin / Soignant">🩺 Médecin / Soignant</option>
                         <option value="Commerçant / Boutique">🛍️ Commerçant / Boutique</option>
                         <option value="Mécanicien / Artisan">🔧 Mécanicien / Artisan</option>
-                        <option value="Enseignant / Formateur">📚 Enseignant / Formateur</option>
                     </select>
 
-                    <input type="text" id="regMetierCustom" class="input" value="Couturier / Tailleur" placeholder="Ou personnalisez votre métier..." style="margin-bottom:12px;">
+                    <div id="blocNiveauEleve" style="margin-bottom:8px;">
+                        <label style="font-size:12px; color:var(--accent); display:block; margin-bottom:4px;">Niveau d'Études :</label>
+                        <select id="regNiveauEtude" class="input">
+                            <option value="CP / CE1 / CE2">📚 Primaire (CP - CE2)</option>
+                            <option value="CM1 / CM2">📚 Primaire (CM1 - CM2)</option>
+                            <option value="6ème / 5ème / 4ème">🎒 Collège (6ème - 4ème)</option>
+                            <option value="3ème (Brevet)">🎒 Collège (3ème / Brevet)</option>
+                            <option value="Seconde / Première / Terminale">🎓 Lycée (Seconde - Terminale)</option>
+                            <option value="Université / Supérieur">🎓 Université / Supérieur</option>
+                        </select>
+                    </div>
+
+                    <input type="text" id="regMetierCustom" class="input" value="Élève / Étudiant" placeholder="Ou personnalisez..." style="margin-bottom:12px;">
                     
-                    <button class="btn-action" onclick="creerNouveauProfil()">🚀 Démarrer (v25.0 Modulaire)</button>
+                    <button class="btn-action" onclick="creerNouveauProfil()">🚀 Démarrer avec ELAWS (v28.0)</button>
                 </div>
             </div>
         `;
@@ -420,7 +313,7 @@ function render() {
     document.getElementById('appHeader').style.display = 'block';
     document.getElementById('bottomBar').style.display = 'flex';
     const badge = document.getElementById('badgeDomaineActif');
-    if(badge) badge.innerHTML = `💼 ${utilisateurActif.nom} (${utilisateurActif.contact}) — [${utilisateurActif.metierUnique}]`;
+    if(badge) badge.innerHTML = `💼 ${utilisateurActif.nom} (${utilisateurActif.contact}) — [${utilisateurActif.metierUnique} ${utilisateurActif.niveauEtude ? '• ' + utilisateurActif.niveauEtude : ''}]`;
 
     document.querySelectorAll('.bar-item').forEach(el => el.classList.remove('active'));
     if(activeTab === 'accueil') document.getElementById('barAccueil')?.classList.add('active');
@@ -432,7 +325,7 @@ function render() {
     if (activeTab === 'accueil') {
         content.innerHTML = `
             <div class="card" style="border-color: var(--accent);">
-                <div class="badge-gamified">🌟 Architecture Modulaire v25.0 Active</div>
+                <div class="badge-gamified">🌟 Cerveau ELAWS (elaws.js) Connecté</div>
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                     <div>
                         <span style="font-size:11px; color:var(--accent); font-weight:700;">👤 PROFIL ACTIF & CONTACT</span>
@@ -441,7 +334,7 @@ function render() {
                     </div>
                     <button class="btn-top" onclick="changerProfilSession()">🔄 Changer</button>
                 </div>
-                <p class="text">Métier : <strong style="color:var(--accent);">${utilisateurActif.metierUnique}</strong>. Le code est désormais séparé en plusieurs fichiers (HTML, CSS, JS), éliminant tout risque d'écran noir ou de perte de code lors des mises à jour.</p>
+                <p class="text">Rôle : <strong style="color:var(--accent);">${utilisateurActif.metierUnique} ${utilisateurActif.niveauEtude ? '(' + utilisateurActif.niveauEtude + ')' : ''}</strong>. ELAWS est ton compagnon et ton ami pour t'aider dans ton travail ou tes révisions scolaires.</p>
             </div>
         `;
     } else if (activeTab === 'appels_traduction') {
@@ -466,9 +359,8 @@ function render() {
 
         content.innerHTML = `
             <div class="card" style="border-color:#0ea5e9;">
-                <h3 class="card-title" style="color:#0ea5e9;">📞 Appels (GSM & Internet) & Traduction de Dialecte</h3>
-                <p class="text">Communiquez sans barrière : ELAWS traduit en temps réel les dialectes lors des appels Internet.</p>
-                
+                <h3 class="card-title" style="color:#0ea5e9;">📞 Appels & Traduction de Dialecte</h3>
+                <p class="text">Communiquez sans barrière en Éoué, Kabyè, Yoruba ou Haoussa.</p>
                 <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
                     <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;">Mon Numéro de Contact :</label>
                     <div style="display:flex; gap:8px; margin-bottom:10px;">
@@ -476,27 +368,19 @@ function render() {
                         <button class="btn-action" style="background:#059669; width:auto; padding:0 15px;" onclick="mettreAJourMonContact()">Mettre à jour</button>
                     </div>
                 </div>
-
-                <h4 style="margin-top:15px; margin-bottom:8px;">➕ Ajouter un Contact & Dialecte :</h4>
+                <h4 style="margin-top:15px; margin-bottom:8px;">➕ Ajouter un Contact :</h4>
                 <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
                     <input type="text" id="nomContactRepertoire" class="input" placeholder="Nom du contact *" style="margin-bottom:8px;">
                     <input type="tel" id="numContactRepertoire" class="input" placeholder="Numéro de téléphone *" style="margin-bottom:8px;">
-                    <input type="email" id="emailContactRepertoire" class="input" placeholder="Email (optionnel)" style="margin-bottom:8px;">
-                    
-                    <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;">Langue ou Dialecte :</label>
                     <select id="dialecteContactRepertoire" class="input" style="margin-bottom:10px;">
                         <option value="Français">🇫🇷 Français</option>
-                        <option value="Éoué / Mina">🇹🇬 Éoué / Mina (Togo)</option>
-                        <option value="Kabyè">🇹🇬 Kabyè (Togo)</option>
-                        <option value="Yoruba / Nago">🇳🇬 Yoruba / Nago</option>
+                        <option value="Éoué / Mina">🇹🇬 Éoué / Mina</option>
+                        <option value="Kabyè">🇹🇬 Kabyè</option>
+                        <option value="Yoruba">🇳🇬 Yoruba</option>
                         <option value="Haoussa">🌍 Haoussa</option>
-                        <option value="Anglais">🇬🇧 Anglais</option>
                     </select>
-
-                    <button class="btn-action" style="background:#0ea5e9;" onclick="ajouterRepertoireContact()">💾 Enregistrer le Contact</button>
+                    <button class="btn-action" style="background:#0ea5e9;" onclick="ajouterRepertoireContact()">💾 Enregistrer</button>
                 </div>
-
-                <h4 style="margin-bottom:8px;">📖 Répertoire & Appels :</h4>
                 ${carnetHtml}
             </div>
         `;
@@ -507,198 +391,75 @@ function render() {
                 const isAi = msg.role === 'ai';
                 chatHtml += `
                     <div style="background:${isAi ? 'rgba(5,150,105,0.15)' : 'var(--bg-color)'}; border-left:4px solid ${isAi ? 'var(--accent)' : 'var(--border-color)'}; padding:14px; border-radius:10px; margin-bottom:12px; position:relative;">
-                        <strong style="font-size:12px; color:${isAi ? 'var(--accent)' : 'var(--text-secondary)'};">${isAi ? '🤖 ELAWS (Expert ' + utilisateurActif.metierUnique + ')' : utilisateurActif.nom}</strong>
+                        <strong style="font-size:12px; color:${isAi ? 'var(--accent)' : 'var(--text-secondary)'};">${isAi ? '🤖 ELAWS (Ton Ami & Pédagogue)' : utilisateurActif.nom}</strong>
                         <p style="margin:8px 0 0 0; font-size:14px; white-space: pre-line;">${msg.texte}</p>
-                        ${isAi ? `<button onclick="window.speechSynthesis.speak(new SpeechSynthesisUtterance('${msg.texte.replace(/'/g, "'").replace(/\n/g, " ")}'))" style="position:absolute; top:10px; right:10px; background:var(--accent); color:#000; border:none; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;">🔊 Écouter</button>` : ''}
                     </div>
                 `;
             });
         }
         content.innerHTML = `
             <div class="card" style="border-color:var(--accent);">
-                <h3 class="card-title" style="color:var(--accent);">🤖 ELAWS v25.0 — Assistant Vocal & Discussion</h3>
-                <p class="text">Parle avec ELAWS en écrivant ou en activant le micro :</p>
-                
+                <h3 class="card-title" style="color:var(--accent);">🤖 ELAWS v28.0 — Ton Ami Bienveillant</h3>
+                <p class="text">Discute avec ELAWS pour tes révisions, tes projets ou pour trouver du soutien :</p>
                 <div style="text-align:center; margin-bottom:15px;">
                     <button class="btn-action" onclick="demarrerMicroElaws()" style="background:linear-gradient(135deg, #ec4899 0%, #db2777 100%); font-size:16px; padding:14px; border-radius:30px;">
                         🎤 Parler à ELAWS (Micro)
                     </button>
                 </div>
-
-                <div style="background:var(--bg-color); padding:15px; border-radius:12px; max-height:350px; overflow-y:auto; margin-bottom:15px; border:1px solid var(--border-color);" id="boiteDiscussionElaws">
+                <div style="background:var(--bg-color); padding:15px; border-radius:12px; max-height:350px; overflow-y:auto; margin-bottom:15px; border:1px solid var(--border-color);">
                     ${chatHtml}
                 </div>
                 <div style="display:flex; gap:8px;">
-                    <input type="text" id="inputElawsChat" class="input" placeholder="Écris ton message à ELAWS..." style="margin-bottom:0;" onkeypress="if(event.key === 'Enter') envoyerMessageElawsAI()">
+                    <input type="text" id="inputElawsChat" class="input" placeholder="Parle à ton ami ELAWS..." style="margin-bottom:0;" onkeypress="if(event.key === 'Enter') envoyerMessageElawsAI()">
                     <button class="btn-action" style="width:auto; padding:0 22px;" onclick="envoyerMessageElawsAI()">Envoyer 🚀</button>
                 </div>
             </div>
         `;
     } else if (activeTab === 'outils_metier') {
-        const metier = utilisateurActif.metierUnique.toLowerCase();
-        let outilsHtml = '';
-
-        if (metier.includes('couturier') || metier.includes('tailleur')) {
-            let mesuresHtml = '';
-            if(utilisateurActif.mesuresCouture && utilisateurActif.mesuresCouture.length > 0) {
-                utilisateurActif.mesuresCouture.forEach(m => {
-                    mesuresHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #f59e0b;"><strong>✂️ Client : ${m.client}</strong> (${m.date})<br><small>Épaule: ${m.epaule} cm | Poitrine: ${m.poitrine} cm | Longueur: ${m.longueur} cm</small><br><em>Détails : ${m.details || 'Aucun'}</em></div>`;
+        const isEleve = utilisateurActif.metierUnique.toLowerCase().includes('élève') || utilisateurActif.metierUnique.toLowerCase().includes('étudiant');
+        
+        if (isEleve) {
+            let devoirsHtml = '';
+            if (utilisateurActif.devoirsEleve && utilisateurActif.devoirsEleve.length > 0) {
+                utilisateurActif.devoirsEleve.forEach(d => {
+                    devoirsHtml += `<div style="background:var(--bg-color); padding:12px; border-radius:8px; margin-bottom:10px; border-left:4px solid #34d399;"><strong>🎒 Matière : ${d.matiere}</strong> (${d.date})<br>❓ <em>Question :</em> ${d.question}<br><p style="margin:8px 0 0 0; color:var(--accent); white-space:pre-line;">${d.reponse}</p></div>`;
                 });
-            } else { mesuresHtml = '<p style="color:var(--text-secondary);">Aucune mesure enregistrée.</p>'; }
+            } else { devoirsHtml = '<p style="color:var(--text-secondary);">Aucune question de cours enregistrée pour l’instant.</p>'; }
 
-            outilsHtml += `
-                <div class="card" style="border-color:#f59e0b;">
-                    <h3 class="card-title" style="color:#f59e0b;">✂️ Carnet de Mesures & Commandes (Couture)</h3>
+            content.innerHTML = `
+                <div class="card" style="border-color:#34d399;">
+                    <h3 class="card-title" style="color:#34d399;">🎒 Espace Élève & Aide aux Devoirs (Niveau : ${utilisateurActif.niveauEtude || 'Général'})</h3>
+                    <p class="text">Pose une question sur ton cours ou ton exercice. ELAWS t'expliquera la leçon avec des mots simples pour t'aider à réussir !</p>
                     <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
-                        <input type="text" id="coutureClient" class="input" placeholder="Nom du Client *" style="margin-bottom:8px;">
-                        <div style="display:flex; gap:8px; margin-bottom:8px;">
-                            <input type="text" id="coutureEpaule" class="input" placeholder="Épaule (cm)" style="margin-bottom:0;">
-                            <input type="text" id="couturePoitrine" class="input" placeholder="Poitrine (cm)" style="margin-bottom:0;">
-                            <input type="text" id="coutureLongueur" class="input" placeholder="Longueur (cm)" style="margin-bottom:0;">
-                        </div>
-                        <input type="text" id="coutureDetails" class="input" placeholder="Modèle ou remarques..." style="margin-bottom:10px;">
-                        <button class="btn-action" style="background:#f59e0b;" onclick="enregistrerMesureCouture()">💾 Enregistrer les Mesures</button>
+                        <input type="text" id="devoirMatiere" class="input" placeholder="Matière (ex: Mathématiques, Français, Histoire) *" style="margin-bottom:8px;">
+                        <textarea id="devoirQuestion" class="input" rows="3" placeholder="Écris ta question ou l'énoncé de ton exercice ici..." style="resize:none; margin-bottom:10px;"></textarea>
+                        <button class="btn-action" onclick="enregistrerDevoirEleve()">💡 Demander l'explication à ELAWS</button>
                     </div>
-                    <h4 style="margin-bottom:8px;">Historique des Clients :</h4>
-                    ${mesuresHtml}
+                    <h4 style="margin-bottom:8px;">📚 Mes Leçons & Explications ELAWS :</h4>
+                    ${devoirsHtml}
                 </div>
             `;
-        }
-
-        if (metier.includes('pasteur') || metier.includes('guide') || metier.includes('culte')) {
-            let notesHtml = '';
-            if(utilisateurActif.notesPastorales && utilisateurActif.notesPastorales.length > 0) {
-                utilisateurActif.notesPastorales.forEach(n => {
-                    notesHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #f59e0b;"><strong>📖 ${n.titre}</strong> (${n.date})<br><p style="margin:5px 0 0 0; white-space:pre-line;">${n.contenu}</p></div>`;
-                });
-            } else { notesHtml = '<p style="color:var(--text-secondary);">Aucune prédication enregistrée.</p>'; }
-
-            outilsHtml += `
-                <div class="card" style="border-color:#f59e0b;">
-                    <h3 class="card-title" style="color:#f59e0b;">📖 Notes de Prédication & Pastorale</h3>
-                    <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
-                        <input type="text" id="pasteurTitre" class="input" placeholder="Thème du culte *" style="margin-bottom:8px;">
-                        <textarea id="pasteurContenu" class="input" rows="4" placeholder="Saisissez vos notes bibliques..." style="resize:none; margin-bottom:10px;"></textarea>
-                        <button class="btn-action" style="background:#f59e0b;" onclick="ajouterNotePastorale()">💾 Sauvegarder la Prédication</button>
-                    </div>
-                    <h4 style="margin-bottom:8px;">Mes Prédications :</h4>
-                    ${notesHtml}
-                </div>
-            `;
-        }
-
-        if (metier.includes('medecin') || metier.includes('soignant')) {
-            let medHtml = '';
-            if(utilisateurActif.consultationsMedicales && utilisateurActif.consultationsMedicales.length > 0) {
-                utilisateurActif.consultationsMedicales.forEach(c => {
-                    medHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #3b82f6;"><strong>🩺 Patient : ${c.patient}</strong> (${c.date})<br>Diagnostic : ${c.diagnostic}<br>Prescription : ${c.prescription}</div>`;
-                });
-            } else { medHtml = '<p style="color:var(--text-secondary);">Aucune consultation enregistrée.</p>'; }
-
-            outilsHtml += `
-                <div class="card" style="border-color:#3b82f6;">
-                    <h3 class="card-title" style="color:#3b82f6;">🩺 Registre de Consultations Médicales</h3>
-                    <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
-                        <input type="text" id="medPatient" class="input" placeholder="Nom du Patient *" style="margin-bottom:8px;">
-                        <input type="text" id="medDiagnostic" class="input" placeholder="Diagnostic / Symptômes *" style="margin-bottom:8px;">
-                        <input type="text" id="medPrescription" class="input" placeholder="Prescription / Traitement *" style="margin-bottom:10px;">
-                        <button class="btn-action" style="background:#3b82f6;" onclick="ajouterConsultationMedicale()">💾 Enregistrer la Consultation</button>
-                    </div>
-                    <h4 style="margin-bottom:8px;">Derniers Patients :</h4>
-                    ${medHtml}
-                </div>
-            `;
-        }
-
-        if (metier.includes('commercant') || metier.includes('boutique')) {
-            let stockHtml = '';
-            if(utilisateurActif.stocksBoutique && utilisateurActif.stocksBoutique.length > 0) {
-                utilisateurActif.stocksBoutique.forEach(s => {
-                    stockHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #10b981;"><strong>🛍️ ${s.article}</strong> — Stock : ${s.qte} | Prix : ${s.prix.toLocaleString()} FCFA</div>`;
-                });
-            } else { stockHtml = '<p style="color:var(--text-secondary);">Aucun article en stock.</p>'; }
-
-            outilsHtml += `
-                <div class="card" style="border-color:#10b981;">
-                    <h3 class="card-title" style="color:#10b981;">🛍️ Gestion de Stock & Boutique</h3>
-                    <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
-                        <input type="text" id="boutiqueArticle" class="input" placeholder="Nom de l'article *" style="margin-bottom:8px;">
-                        <div style="display:flex; gap:8px; margin-bottom:8px;">
-                            <input type="number" id="boutiqueQte" class="input" placeholder="Quantité" style="margin-bottom:0;">
-                            <input type="number" id="boutiquePrix" class="input" placeholder="Prix unitaire (FCFA)" style="margin-bottom:0;">
-                        </div>
-                        <button class="btn-action" style="background:#10b981;" onclick="ajouterStockBoutique()">➕ Ajouter au Stock</button>
-                    </div>
-                    <h4 style="margin-bottom:8px;">Inventaire Actuel :</h4>
-                    ${stockHtml}
-                </div>
-            `;
-        }
-
-        if (metier.includes('mecanicien') || metier.includes('artisan')) {
-            let mecaHtml = '';
-            if(utilisateurActif.ateliersMecanique && utilisateurActif.ateliersMecanique.length > 0) {
-                utilisateurActif.ateliersMecanique.forEach(m => {
-                    mecaHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #f59e0b;"><strong>🔧 Véhicule : ${m.vehicule}</strong> (${m.date})<br>Panne : ${m.panne}<br>Coût : ${m.cout.toLocaleString()} FCFA</div>`;
-                });
-            } else { mecaHtml = '<p style="color:var(--text-secondary);">Aucun véhicule enregistré.</p>'; }
-
-            outilsHtml += `
-                <div class="card" style="border-color:#f59e0b;">
-                    <h3 class="card-title" style="color:#f59e0b;">🔧 Suivi Atelier Mécanique</h3>
-                    <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
-                        <input type="text" id="mecaVehicule" class="input" placeholder="Véhicule / Client *" style="margin-bottom:8px;">
-                        <input type="text" id="mecaPanne" class="input" placeholder="Description de la panne *" style="margin-bottom:8px;">
-                        <input type="number" id="mecaCout" class="input" placeholder="Coût estimé (FCFA)" style="margin-bottom:10px;">
-                        <button class="btn-action" style="background:#f59e0b;" onclick="ajouterAtelierMecanique()">💾 Enregistrer la Réparation</button>
-                    </div>
-                    <h4 style="margin-bottom:8px;">Véhicules en Atelier :</h4>
-                    ${mecaHtml}
-                </div>
-            `;
-        }
-
-        if (!outilsHtml) {
-            outilsHtml = `
+        } else {
+            content.innerHTML = `
                 <div class="card" style="border-color:#f59e0b;">
                     <h3 class="card-title" style="color:#f59e0b;">🛠️ Espace Professionnel — ${utilisateurActif.metierUnique}</h3>
-                    <p class="text">Votre profil et vos contacts sont pleinement actifs.</p>
+                    <p class="text">Votre profil est actif. Vous pouvez gérer vos clients et vos projets en toute autonomie.</p>
                 </div>
             `;
         }
-
-        content.innerHTML = outilsHtml;
     } else if (activeTab === 'voyages_papiers') {
-        let savedDossiersHtml = '';
-        if(utilisateurActif.dossiersVoyagePapiers && utilisateurActif.dossiersVoyagePapiers.length > 0) {
-            utilisateurActif.dossiersVoyagePapiers.forEach(d => {
-                savedDossiersHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #0ea5e9;"><strong>✈️ Document : ${d.doc.toUpperCase()}</strong> — Destination : ${d.pays} <small>(${d.date})</small></div>`;
-            });
-        } else { savedDossiersHtml = '<p style="color:var(--text-secondary);">Aucun dossier sauvegardé.</p>'; }
-
         content.innerHTML = `
             <div class="card" style="border-color:#0ea5e9;">
-                <h3 class="card-title" style="color:#0ea5e9;">✈️ Assistant Voyages, Passeport & Papiers d'Identité</h3>
-                <p class="text">Sélectionnez le document ou la démarche souhaitée pour obtenir instantanément la liste complète des pièces à fournir :</p>
-                
+                <h3 class="card-title" style="color:#0ea5e9;">✈️ Assistant Voyages & Papiers d'Identité</h3>
                 <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
-                    <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;">Type de Document :</label>
                     <select id="typeDocAdministratif" class="input" style="margin-bottom:8px;">
                         <option value="passeport">📘 Passeport Biométrique</option>
                         <option value="cni">🪪 Carte Nationale d'Identité (CNI)</option>
-                        <option value="sejour">📄 Carte de Séjour / Résidence</option>
-                        <option value="visa">✈️ Visa de Voyage / Tourisme</option>
                     </select>
-
-                    <input type="text" id="paysDestinationVoyage" class="input" placeholder="Pays de destination ou d'émission..." style="margin-bottom:10px;">
-                    
-                    <button class="btn-action" style="background:#0ea5e9;" onclick="verifierDossierPapier()">🔍 Afficher les Dossiers à Fournir</button>
+                    <input type="text" id="paysDestinationVoyage" class="input" placeholder="Pays de destination..." style="margin-bottom:10px;">
+                    <button class="btn-action" style="background:#0ea5e9;" onclick="verifierDossierPapier()">🔍 Afficher les Dossiers</button>
                 </div>
-
                 <div id="resultatAnalyseDossier"></div>
-
-                <h4 style="margin-top:20px; margin-bottom:8px;">📁 Mes Dossiers Archivés :</h4>
-                ${savedDossiersHtml}
             </div>
         `;
     } else if (activeTab === 'dashboard') {
@@ -707,33 +468,18 @@ function render() {
                 <h3 class="card-title" style="color:#3b82f6;">📊 Tableau de Bord</h3>
                 <div class="stat-grid">
                     <div class="stat-box">
-                        <div style="font-size:12px; color:var(--text-secondary);">Trésorerie Caisse</div>
+                        <div style="font-size:12px; color:var(--text-secondary);">Trésorerie / Caisse</div>
                         <div class="stat-num" style="color:var(--accent);">${utilisateurActif.solde.toLocaleString()} FCFA</div>
                     </div>
                 </div>
             </div>
         `;
     } else if (activeTab === 'agenda') {
-        content.innerHTML = `
-            <div class="card" style="border-color:#f59e0b;">
-                <h3 class="card-title" style="color:#f59e0b;">📅 Agenda & Rendez-vous</h3>
-                <p class="text">Planifiez vos rendez-vous professionnels.</p>
-            </div>
-        `;
+        content.innerHTML = `<div class="card"><h3 class="card-title">📅 Agenda</h3><p class="text">Planifiez vos rendez-vous.</p></div>`;
     } else if (activeTab === 'economie') {
-        content.innerHTML = `
-            <div class="card" style="border-color:var(--accent);">
-                <h3 class="card-title">🪙 Journal de Caisse</h3>
-                <div style="font-size:24px; font-weight:800; color:var(--accent); text-align:center; padding:10px; background:var(--bg-color); border-radius:10px; margin-bottom:15px;">${utilisateurActif.solde.toLocaleString()} FCFA</div>
-            </div>
-        `;
+        content.innerHTML = `<div class="card"><h3 class="card-title">🪙 Caisse</h3><div style="font-size:24px; font-weight:800; color:var(--accent); text-align:center;">${utilisateurActif.solde.toLocaleString()} FCFA</div></div>`;
     } else if (activeTab === 'sauvegarde') {
-        content.innerHTML = `
-            <div class="card" style="border-color:var(--accent);">
-                <h3 class="card-title">💾 Sauvegarde & Sécurité</h3>
-                <p class="text">Toutes vos données (profils, contacts, caisse, mesures) sont automatiquement sauvegardées en local sur votre appareil.</p>
-            </div>
-        `;
+        content.innerHTML = `<div class="card"><h3 class="card-title">💾 Sécurité</h3><p class="text">Sauvegarde locale active.</p></div>`;
     }
 }
 
