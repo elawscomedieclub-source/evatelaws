@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. & ELAWS AI - Écosystème Souverain & Outils Métiers</title>
+    <title>E.V.A.T. & ELAWS AI - Écosystème Souverain & Environnements Métiers</title>
     
     <link rel="manifest" href="data:application/manifest+json,{
         'name': 'E.V.A.T. & ELAWS AI',
@@ -275,7 +275,7 @@
             </div>
         </header>
         <div class="badge-info">
-            <span id="badgeDomaineActif">🌍 Écosystème Souverain & Outils Métiers</span>
+            <span id="badgeDomaineActif">🌍 Écosystème Souverain & Compagnon ELAWS AI</span>
             <span class="offline-status">⚡ 100% Hors-Ligne</span>
         </div>
     </div>
@@ -289,10 +289,10 @@
     </div>
 
     <div id="sideMenu" class="sidebar">
-        <h3>📂 Navigation & Outils Métiers</h3>
-        <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Mon Profil</button>
-        <button class="menu-item" onclick="switchTab('ia')" style="background:rgba(5,150,105,0.2); border:1px solid var(--accent);">🤖 <strong>Parler à ELAWS AI (Discussion IA)</strong></button>
-        <button class="menu-item" onclick="switchTab('atelier_specifique')" id="menuItemAtelier">⚡ Outils & Atelier Métier</button>
+        <h3>📂 Navigation & Environnement</h3>
+        <button class="menu-item" onclick="switchTab('accueil')">🏠 Mon Profil & Environnement</button>
+        <button class="menu-item" onclick="switchTab('elaws_compagnon')" style="background:rgba(5,150,105,0.2); border:1px solid var(--accent);">🤖 <strong>Compagnon ELAWS AI (Assistant)</strong></button>
+        <button class="menu-item" onclick="switchTab('atelier_specifique')" id="menuItemAtelier">⚡ Outils & Logiciels Métier</button>
         <button class="menu-item" onclick="switchTab('factures')">🧾 Reçus & Factures</button>
         <button class="menu-item" onclick="switchTab('economie')">🪙 Caisse & Trésorerie</button>
         <button class="menu-item" onclick="switchTab('objectifs')">🎯 Objectifs & Projets</button>
@@ -311,11 +311,11 @@
         <button class="bar-item active" onclick="switchTab('accueil')" id="barAccueil">
             <span class="icon">💼</span><span>Profil</span>
         </button>
-        <button class="bar-item" onclick="switchTab('ia')" id="barIa" style="color:var(--accent);">
+        <button class="bar-item" onclick="switchTab('elaws_compagnon')" id="barElaws" style="color:var(--accent);">
             <span class="icon">🤖</span><span>ELAWS AI</span>
         </button>
         <button class="bar-item" onclick="switchTab('atelier_specifique')" id="barAtelier">
-            <span class="icon" id="iconBarMetier">⚡</span><span id="labelBarMetier">Atelier</span>
+            <span class="icon" id="iconBarMetier">⚡</span><span id="labelBarMetier">Outils</span>
         </button>
         <button class="bar-item" onclick="switchTab('factures')" id="barFactures">
             <span class="icon">🧾</span><span>Factures</span>
@@ -411,21 +411,18 @@
                     { id: 1, categorie: "Finances & Business", titre: `Faire prospérer mon activité de ${metierUnique}`, statut: "En cours" }
                 ],
                 notes: [
-                    { id: 1, titre: "Bienvenue dans E.V.A.T.", texte: `Espace souverain configuré hors-ligne pour : ${metierUnique}.`, date: new Date().toLocaleDateString() }
+                    { id: 1, titre: "Bienvenue dans E.V.A.T.", texte: `Environnement souverain généré pour : ${metierUnique}.`, date: new Date().toLocaleDateString() }
                 ],
                 solde: 50000,
                 donneesMetierSpecifique: {
-                    // Outils architecte
                     plans: [],
                     analysesSol: [],
-                    // Outils cultivateur / agriculteur
                     cultures: [],
-                    intrants: [],
-                    // Outils couturier
-                    mesuresClients: []
+                    mesuresClients: [],
+                    commandesAtelier: []
                 },
                 discussionsElaws: [
-                    { role: 'ai', texte: `Bonjour ${nom} ! Je suis ELAWS AI, votre intelligence artificielle souveraine. J'ai généré automatiquement vos outils de travail spécialisés pour votre métier de ${metierUnique}. Tout fonctionne à 100% hors-ligne. Que souhaitez-vous faire ?` }
+                    { role: 'ai', texte: `Bonjour ${nom} ! Je suis **ELAWS AI**, votre compagnon intelligent. J'ai généré automatiquement votre profil complet et votre environnement de travail dédié au métier de **${metierUnique}** (logiciels de dessin, outils de calcul, registres). Tout fonctionne 100% hors-ligne. Comment puis-je vous accompagner aujourd'hui ?` }
                 ],
                 historiqueFinancier: [
                     { date: new Date().toLocaleDateString(), desc: "Capital initial", montant: 50000, type: "entree" }
@@ -478,17 +475,17 @@
             utilisateurActif.telephone = document.getElementById('inputTelUtilisateur').value.trim() || utilisateurActif.telephone;
             
             if(!utilisateurActif.donneesMetierSpecifique) {
-                utilisateurActif.donneesMetierSpecifique = { plans: [], analysesSol: [], cultures: [], intrants: [], mesuresClients: [] };
+                utilisateurActif.donneesMetierSpecifique = { plans: [], analysesSol: [], cultures: [], mesuresClients: [], commandesAtelier: [] };
             }
 
             sauvegarderProfilActif();
-            showToast("Profil et outils mis à jour !");
+            showToast("Profil et environnement mis à jour !");
             render();
         }
 
-        // --- OUTILS ARCHITECTE ---
+        // --- GESTION DES OUTILS METIERS ---
         function ajouterPlanArchitecte() {
-            const nomPlan = document.getElementById(' archiNomPlan').value.trim();
+            const nomPlan = document.getElementById('archiNomPlan').value.trim();
             const surface = document.getElementById('archiSurface').value;
             const pieces = document.getElementById('archiPieces').value.trim();
             if (nomPlan && surface) {
@@ -497,11 +494,9 @@
                     id: Date.now(), nomPlan, surface: surface || '0', pieces: pieces || 'Standard', date: new Date().toLocaleDateString()
                 });
                 sauvegarderProfilActif();
-                showToast("Plan et métré enregistrés !");
+                showToast("Plan DAO / Métré enregistré !");
                 render();
-            } else {
-                showToast("Remplissez le nom du plan et la surface.");
-            }
+            } else { showToast("Remplissez le nom du plan et la surface."); }
         }
 
         function ajouterAnalyseSol() {
@@ -516,14 +511,11 @@
                 sauvegarderProfilActif();
                 showToast("Analyse géotechnique enregistrée !");
                 render();
-            } else {
-                showToast("Indiquez la zone ou le chantier.");
-            }
+            } else { showToast("Indiquez la zone ou le chantier."); }
         }
 
-        // --- OUTILS CULTIVATEUR / AGRICULTEUR ---
         function ajouterCultureChamp() {
-            const culture = document.getElementById(' agriCulture').value.trim();
+            const culture = document.getElementById('agriCulture').value.trim();
             const superficie = document.getElementById('agriSuperficie').value;
             const sol = document.getElementById('agriSol').value.trim();
             if (culture && superficie) {
@@ -532,14 +524,11 @@
                     id: Date.now(), culture, superficie, sol: sol || 'Argilo-limoneux', date: new Date().toLocaleDateString()
                 });
                 sauvegarderProfilActif();
-                showToast("Champ et culture enregistrés !");
+                showToast("Parcelle agricole enregistrée !");
                 render();
-            } else {
-                showToast("Indiquez la culture et la superficie.");
-            }
+            } else { showToast("Indiquez la culture et la superficie."); }
         }
 
-        // --- OUTILS COUTURIER / TAILLEUR ---
         function ajouterMesureClient() {
             const client = document.getElementById('mesureClientNom').value.trim();
             const typeHabit = document.getElementById('mesureTypeHabit').value.trim();
@@ -556,21 +545,14 @@
                 sauvegarderProfilActif();
                 showToast("Fiche de mesures enregistrée !");
                 render();
-            } else {
-                showToast("Remplissez le nom du client et l'habit.");
-            }
+            } else { showToast("Remplissez le nom du client et l'habit."); }
         }
 
         function supprimerDonneesMetier(type, id) {
-            if(type === 'plan') {
-                utilisateurActif.donneesMetierSpecifique.plans = utilisateurActif.donneesMetierSpecifique.plans.filter(p => p.id !== id);
-            } else if(type === 'sol') {
-                utilisateurActif.donneesMetierSpecifique.analysesSol = utilisateurActif.donneesMetierSpecifique.analysesSol.filter(s => s.id !== id);
-            } else if(type === 'culture') {
-                utilisateurActif.donneesMetierSpecifique.cultures = utilisateurActif.donneesMetierSpecifique.cultures.filter(c => c.id !== id);
-            } else if(type === 'mesure') {
-                utilisateurActif.donneesMetierSpecifique.mesuresClients = utilisateurActif.donneesMetierSpecifique.mesuresClients.filter(m => m.id !== id);
-            }
+            if(type === 'plan') utilisateurActif.donneesMetierSpecifique.plans = utilisateurActif.donneesMetierSpecifique.plans.filter(p => p.id !== id);
+            else if(type === 'sol') utilisateurActif.donneesMetierSpecifique.analysesSol = utilisateurActif.donneesMetierSpecifique.analysesSol.filter(s => s.id !== id);
+            else if(type === 'culture') utilisateurActif.donneesMetierSpecifique.cultures = utilisateurActif.donneesMetierSpecifique.cultures.filter(c => c.id !== id);
+            else if(type === 'mesure') utilisateurActif.donneesMetierSpecifique.mesuresClients = utilisateurActif.donneesMetierSpecifique.mesuresClients.filter(m => m.id !== id);
             sauvegarderProfilActif();
             showToast("Élément supprimé.");
             render();
@@ -585,9 +567,7 @@
                 document.getElementById('objTitre').value = '';
                 showToast("Objectif ajouté !");
                 render();
-            } else {
-                showToast("Veuillez saisir l'intitulé.");
-            }
+            } else { showToast("Veuillez saisir l'intitulé."); }
         }
 
         function ajouterNoteJournal() {
@@ -600,9 +580,7 @@
                 document.getElementById('noteTexte').value = '';
                 showToast("Note enregistrée !");
                 render();
-            } else {
-                showToast("Remplissez tous les champs.");
-            }
+            } else { showToast("Remplissez tous les champs."); }
         }
 
         function genererRecuFacture() {
@@ -628,9 +606,7 @@
                 `;
                 document.getElementById('resultatFacture').innerHTML = recuHtml;
                 showToast("Facture générée !");
-            } else {
-                showToast("Remplissez tous les champs.");
-            }
+            } else { showToast("Remplissez tous les champs."); }
         }
 
         function exporterDonneesJSON() {
@@ -649,19 +625,10 @@
             const type = document.getElementById('paireDevise').value;
             let resultat = 0;
             let texteRes = '';
-            if (type === 'eur_xof') {
-                resultat = montant * 655.957;
-                texteRes = `${montant} EUR = ${resultat.toFixed(2)} XOF (FCFA)`;
-            } else if (type === 'xof_eur') {
-                resultat = montant / 655.957;
-                texteRes = `${montant} XOF = ${resultat.toFixed(2)} EUR`;
-            } else if (type === 'usd_xof') {
-                resultat = montant * 600;
-                texteRes = `${montant} USD = ${resultat.toFixed(2)} XOF (FCFA)`;
-            } else {
-                resultat = montant / 600;
-                texteRes = `${montant} XOF = ${resultat.toFixed(2)} USD`;
-            }
+            if (type === 'eur_xof') { resultat = montant * 655.957; texteRes = `${montant} EUR = ${resultat.toFixed(2)} XOF (FCFA)`; }
+            else if (type === 'xof_eur') { resultat = montant / 655.957; texteRes = `${montant} XOF = ${resultat.toFixed(2)} EUR`; }
+            else if (type === 'usd_xof') { resultat = montant * 600; texteRes = `${montant} USD = ${resultat.toFixed(2)} XOF (FCFA)`; }
+            else { resultat = montant / 600; texteRes = `${montant} XOF = ${resultat.toFixed(2)} USD`; }
             document.getElementById('resultatConversion').innerText = texteRes;
             showToast("Conversion effectuée !");
         }
@@ -690,9 +657,7 @@
                 sauvegarderProfilActif();
                 showToast("Caisse mise à jour !");
                 render();
-            } else {
-                showToast("Veuillez remplir les champs de caisse.");
-            }
+            } else { showToast("Veuillez remplir les champs de caisse."); }
         }
 
         function envoyerMessageElawsAI() {
@@ -708,15 +673,13 @@
             const metier = utilisateurActif.metierUnique.toLowerCase();
 
             if (qLower.includes('bonjour') || qLower.includes('salut') || qLower.includes('coucou')) {
-                reponse = `Bonjour ${utilisateurActif.nom} ! Je suis ELAWS AI, votre intelligence artificielle souveraine. Je fonctionne entièrement hors-ligne pour vous assister dans votre métier de ${metier}. Que puis-je faire pour vous ?`;
-            } else if (metier.includes('architecte') || metier.includes('batiment') || metier.includes('genie civil')) {
-                reponse = `En tant qu'architecte, vos outils de travail intégraux sont dans l'onglet 'Outils & Atelier Métier' : vous pouvez y enregistrer vos plans de coupe, surfaces, et analyser la résistance des sols (géotechnique) directement hors-ligne !`;
-            } else if (metier.includes('cultivateur') || metier.includes('agriculteur') || metier.includes('champ') || metier.includes('elevage')) {
-                reponse = `En tant qu'agriculteur/cultivateur, vos outils sont prêts dans l'onglet 'Outils & Atelier Métier' : gestion de vos cultures, superficies, types de sols et rotation des parcelles en mode 100% hors-ligne.`;
-            } else if (metier.includes('coutur') || metier.includes('tailleur') || metier.includes('hab')) {
-                reponse = `Votre carnet de mesures et de modèles d'habits est disponible dans l'onglet 'Outils & Atelier Métier'. Enregistrez toutes vos mensurations clients hors-ligne !`;
+                reponse = `Bonjour ${utilisateurActif.nom} ! C'est ELAWS AI, votre compagnon intelligent. Je suis à vos côtés pour vous assister, vous conseiller et répondre à vos questions sur votre métier de ${metier}. Que puis-je faire pour vous ?`;
+            } else if (metier.includes('architecte') || metier.includes('batiment')) {
+                reponse = `En tant qu'architecte, n'oubliez pas d'utiliser l'onglet 'Outils & Logiciels' pour enregistrer vos plans DAO et vos études géotechniques de sols. Je peux vous aider à rédiger vos devis ou estimer vos métrés si vous le souhaitez !`;
+            } else if (metier.includes('cultivateur') || metier.includes('agriculteur')) {
+                reponse = `En tant qu'agriculteur, suivez vos parcelles dans l'onglet 'Outils & Logiciels'. Je suis là pour vous conseiller sur les rotations de cultures et la gestion de votre trésorerie hors-ligne.`;
             } else {
-                reponse = `ELAWS AI a bien enregistré votre consigne : "${q}". En tant qu'intelligence artificielle souveraine, j'ai configuré tous les outils de production pour votre corps de métier : ${utilisateurActif.metierUnique}.`;
+                reponse = `ELAWS AI (votre compagnon) a bien pris en compte votre demande : "${q}". Je reste à vos côtés pour vous accompagner pas à pas dans votre activité de ${utilisateurActif.metierUnique} !`;
             }
 
             utilisateurActif.discussionsElaws.push({ role: 'ai', texte: reponse });
@@ -746,7 +709,7 @@
                     <div class="card" style="border-color:var(--accent); max-width:500px; margin: 20px auto; text-align:center;">
                         <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo" style="width:72px; height:72px; margin-bottom:10px; border-radius:16px; border:2px solid var(--accent); box-shadow:0 0 20px rgba(5,150,105,0.4);">
                         <h2 style="color:var(--accent); margin-top:0;">✨ E.V.A.T. & ELAWS AI</h2>
-                        <p class="text" style="text-align:center;">Écosystème Souverain 100% Hors-Ligne. Saisissez votre métier (ex: <em>Architecte</em>, <em>Cultivateur</em>, <em>Couturier</em>, <em>Chauffeur</em>) pour que l'application génère instantanément vos <strong>vrais outils de travail spécialisés</strong>.</p>
+                        <p class="text" style="text-align:center;">Écosystème Souverain 100% Hors-Ligne. Saisissez votre métier (ex: <em>Architecte</em>, <em>Cultivateur</em>, <em>Couturier</em>, <em>Chauffeur</em>) pour que l'application génère <strong>instantanément votre profil, votre environnement de travail complet et votre compagnon ELAWS AI</strong>.</p>
                         
                         ${profilsExistantsHtml}
 
@@ -785,7 +748,7 @@
                                 </div>
                             </div>
 
-                            <button class="btn-action" style="margin-top:10px;" onclick="creerNouveauProfil()">🚀 Générer mes Outils Métiers (Hors-Ligne)</button>
+                            <button class="btn-action" style="margin-top:10px;" onclick="creerNouveauProfil()">🚀 Générer mon Profil & Mon Environnement (Hors-Ligne)</button>
                         </div>
                     </div>
                 `;
@@ -794,12 +757,12 @@
 
             document.getElementById('appHeader').style.display = 'block';
             document.getElementById('bottomBar').style.display = 'flex';
-            document.getElementById('badgeDomaineActif').innerHTML = `💼 Espace : ${utilisateurActif.metierUnique}`;
+            document.getElementById('badgeDomaineActif').innerHTML = `💼 Profil : ${utilisateurActif.metierUnique}`;
 
             // Personnalisation des icônes selon le métier
             const metierLower = utilisateurActif.metierUnique.toLowerCase();
             let iconeMetier = '⚡';
-            let labelMetierNav = 'Atelier';
+            let labelMetierNav = 'Outils';
             if (metierLower.includes('architecte') || metierLower.includes('batiment')) {
                 iconeMetier = '📐'; labelMetierNav = 'Plans & Sols';
             } else if (metierLower.includes('cultivateur') || metierLower.includes('agriculteur') || metierLower.includes('champ')) {
@@ -812,11 +775,11 @@
 
             document.getElementById('iconBarMetier').innerText = iconeMetier;
             document.getElementById('labelBarMetier').innerText = labelMetierNav;
-            document.getElementById('menuItemAtelier').innerText = `${iconeMetier} Outils de Travail (${utilisateurActif.metierUnique})`;
+            document.getElementById('menuItemAtelier').innerText = `${iconeMetier} Outils & Logiciels (${utilisateurActif.metierUnique})`;
 
             document.querySelectorAll('.bar-item').forEach(el => el.classList.remove('active'));
             if(activeTab === 'accueil') document.getElementById('barAccueil')?.classList.add('active');
-            if(activeTab === 'ia') document.getElementById('barIa')?.classList.add('active');
+            if(activeTab === 'elaws_compagnon') document.getElementById('barElaws')?.classList.add('active');
             if(activeTab === 'atelier_specifique') document.getElementById('barAtelier')?.classList.add('active');
             if(activeTab === 'factures') document.getElementById('barFactures')?.classList.add('active');
             if(activeTab === 'economie') document.getElementById('barEco')?.classList.add('active');
@@ -826,20 +789,20 @@
                     <div class="card" style="border-color: var(--accent);">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                             <div>
-                                <span style="font-size:11px; color:var(--accent); font-weight:700;">💼 PROFIL & OUTILS DE TRAVIAL HORS-LIGNE</span>
+                                <span style="font-size:11px; color:var(--accent); font-weight:700;">💼 PROFIL SOUVERAIN & ENVIRONNEMENT DE TRAVAIL</span>
                                 <div style="font-size:17px; font-weight:800;">${utilisateurActif.nom}</div>
                             </div>
                             <button class="btn-top" onclick="changerProfilSession()">🔄 Changer</button>
                         </div>
-                        <p class="text" style="margin-bottom:12px;">Écosystème configuré pour : <strong style="color:var(--accent);">${utilisateurActif.metierUnique}</strong> avec ses outils dédiés générés automatiquement.</p>
+                        <p class="text" style="margin-bottom:12px;">Profil configuré pour : <strong style="color:var(--accent);">${utilisateurActif.metierUnique}</strong>. Votre environnement de travail et vos logiciels spécialisés sont prêts.</p>
                         
-                        <!-- ACCÈS DIRECT À L'INTELLIGENCE ARTIFICIELLE ELAWS AI -->
+                        <!-- ACCÈS DIRECT AU COMPAGNON ELAWS AI -->
                         <div style="background:rgba(5,150,105,0.15); border:2px solid var(--accent); padding:16px; border-radius:12px; margin-bottom:15px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 4px 15px rgba(5,150,105,0.2);">
                             <div>
-                                <h4 style="margin:0 0 4px 0; color:var(--accent); font-size:16px;">🤖 Discuter avec ELAWS AI</h4>
-                                <p style="font-size:12px; margin:0; color:var(--text-secondary);">Votre intelligence artificielle personnelle pour vous guider dans votre métier.</p>
+                                <h4 style="margin:0 0 4px 0; color:var(--accent); font-size:16px;">🤖 Compagnon ELAWS AI</h4>
+                                <p style="font-size:12px; margin:0; color:var(--text-secondary);">Votre assistant personnel pour vous accompagner dans votre profil.</p>
                             </div>
-                            <button class="btn-action" style="width:auto; padding:12px 18px; font-size:14px;" onclick="switchTab('ia')">Ouvrir le Chat 💬</button>
+                            <button class="btn-action" style="width:auto; padding:12px 18px; font-size:14px;" onclick="switchTab('elaws_compagnon')">Parler au Compagnon 💬</button>
                         </div>
 
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; display:flex; flex-direction:column; gap:10px;">
@@ -885,14 +848,15 @@
                         </div>
                     </div>
                 `;
-            } else if (activeTab === 'ia') {
+            } else if (activeTab === 'elaws_compagnon') {
+                // COMPAGNON ELAWS AI (ASSISTANT DISTINCT DE L'OUTIL)
                 let chatHtml = '';
                 if (utilisateurActif.discussionsElaws) {
                     utilisateurActif.discussionsElaws.forEach(msg => {
                         const isAi = msg.role === 'ai';
                         const bg = isAi ? 'rgba(5,150,105,0.15)' : 'var(--bg-color)';
                         const border = isAi ? '4px solid var(--accent)' : '4px solid var(--border-color)';
-                        const auteur = isAi ? '🤖 ELAWS AI (Intelligence Artificielle)' : `👤 ${utilisateurActif.nom}`;
+                        const auteur = isAi ? '🤖 ELAWS AI (Compagnon de Route)' : `👤 ${utilisateurActif.nom}`;
                         chatHtml += `
                             <div style="background:${bg}; border-left:${border}; padding:14px; border-radius:10px; margin-bottom:12px;">
                                 <strong style="font-size:12px; color:${isAi ? 'var(--accent)' : 'var(--text-secondary)'};">${auteur}</strong>
@@ -907,26 +871,25 @@
                         <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; border-bottom:2px solid var(--border-color); padding-bottom:10px;">
                             <span style="font-size:28px;">🤖</span>
                             <div>
-                                <h3 class="card-title" style="margin:0; color:var(--accent);">ELAWS AI — Intelligence Artificielle Souveraine</h3>
-                                <p style="font-size:12px; margin:0; color:var(--text-secondary);">Assistance spécialisée pour : <strong>${utilisateurActif.metierUnique}</strong></p>
+                                <h3 class="card-title" style="margin:0; color:var(--accent);">ELAWS AI — Compagnon Intelligent</h3>
+                                <p style="font-size:12px; margin:0; color:var(--text-secondary);">Assistant personnel pour votre profil : <strong>${utilisateurActif.metierUnique}</strong></p>
                             </div>
                         </div>
-                        <p class="text">Discutez avec votre IA pour piloter vos outils de travail hors-ligne.</p>
+                        <p class="text">Échangez avec votre compagnon ELAWS AI pour vous faire conseiller, rédiger des courriers, structurer vos projets ou analyser vos données hors-ligne.</p>
                         
                         <div style="background:var(--bg-color); padding:15px; border-radius:12px; max-height:420px; overflow-y:auto; margin-bottom:15px; border:1px solid var(--border-color);">
                             ${chatHtml}
                         </div>
 
                         <div style="display:flex; gap:8px;">
-                            <input type="text" id="inputElawsChat" class="input" placeholder="Écrivez votre message à ELAWS AI ici..." style="margin-bottom:0; font-size:14px; padding:12px;" onkeypress="if(event.key === 'Enter') envoyerMessageElawsAI()">
+                            <input type="text" id="inputElawsChat" class="input" placeholder="Parlez à votre compagnon ELAWS AI..." style="margin-bottom:0; font-size:14px; padding:12px;" onkeypress="if(event.key === 'Enter') envoyerMessageElawsAI()">
                             <button class="btn-action" style="width:auto; padding:0 22px;" onclick="envoyerMessageElawsAI()">Envoyer 🚀</button>
                         </div>
                     </div>
                 `;
             } else if (activeTab === 'atelier_specifique') {
-                // --- GENERATEUR D'OUTILS METIERS ADAPTES ---
+                // --- OUTILS ET LOGICIELS METIERS INTEGRÉS DANS LE PROFIL ---
                 if (metierLower.includes('architecte') || metierLower.includes('batiment') || metierLower.includes('genie civil')) {
-                    // Outils d'architecte : Plans et Analyse des sols
                     let plansHtml = '';
                     let solHtml = '';
                     const dms = utilisateurActif.donneesMetierSpecifique || { plans: [], analysesSol: [] };
@@ -936,12 +899,12 @@
                             plansHtml += `
                                 <div style="background:var(--bg-color); padding:12px; border-radius:8px; margin-bottom:8px; border-left:4px solid var(--accent); position:relative;">
                                     <button onclick="supprimerDonneesMetier('plan', ${p.id})" style="position:absolute; top:10px; right:10px; background:none; border:none; cursor:pointer;" title="Supprimer">❌</button>
-                                    <strong style="color:var(--accent);">📐 Plan : ${p.nomPlan}</strong> (${p.date})<br>
+                                    <strong style="color:var(--accent);">📐 Plan DAO / Projet : ${p.nomPlan}</strong> (${p.date})<br>
                                     <small>Surface : <strong>${p.surface} m²</strong> | Pièces / Niveaux : ${p.pieces}</small>
                                 </div>
                             `;
                         });
-                    } else { plansHtml = '<p style="color:var(--text-secondary);">Aucun plan enregistré.</p>'; }
+                    } else { plansHtml = '<p style="color:var(--text-secondary);">Aucun plan DAO enregistré dans votre profil.</p>'; }
 
                     if (dms.analysesSol && dms.analysesSol.length > 0) {
                         dms.analysesSol.forEach(s => {
@@ -957,19 +920,19 @@
 
                     content.innerHTML = `
                         <div class="card" style="border-color:var(--accent);">
-                            <h3 class="card-title">📐 Atelier Architecte & Génie Civil : Plans & Analyse du Sol</h3>
-                            <p class="text">Gérez vos plans de construction, calculs de surfaces et études géotechniques hors-ligne.</p>
+                            <h3 class="card-title">📐 Outils & Logiciels Architecte : Plans DAO & Étude de Sol</h3>
+                            <p class="text">Votre profil d'architecte intègre vos logiciels de dessin, vos métrés et vos calculs de résistance des sols hors-ligne.</p>
                             
                             <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                                <h4 style="margin:0 0 8px 0; color:var(--accent);">➕ Enregistrer un Plan / Métré :</h4>
-                                <input type="text" id="archiNomPlan" class="input" placeholder="Nom du projet / Bâtiment (ex: Villa R+1 Lomé)" style="margin-bottom:8px;">
+                                <h4 style="margin:0 0 8px 0; color:var(--accent);">➕ Logiciel de Plan & Métré DAO :</h4>
+                                <input type="text" id="archiNomPlan" class="input" placeholder="Nom du projet / Bâtiment (ex: Immeuble R+2 Lomé)" style="margin-bottom:8px;">
                                 <input type="number" id="archiSurface" class="input" placeholder="Surface totale (m²)" style="margin-bottom:8px;">
                                 <input type="text" id="archiPieces" class="input" placeholder="Description des pièces / Niveaux" style="margin-bottom:8px;">
-                                <button class="btn-action" onclick="ajouterPlanArchitecte()">Enregistrer le Plan</button>
+                                <button class="btn-action" onclick="ajouterPlanArchitecte()">Enregistrer le Plan DAO</button>
                             </div>
 
                             <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:20px;">
-                                <h4 style="margin:0 0 8px 0; color:#f59e0b;">🧪 Analyse Géotechnique du Sol :</h4>
+                                <h4 style="margin:0 0 8px 0; color:#f59e0b;">🧪 Outil d'Analyse du Sol (Géotechnique) :</h4>
                                 <input type="text" id="solZone" class="input" placeholder="Emplacement du chantier (ex: Quartier Kodjoviakopé)" style="margin-bottom:8px;">
                                 <select id="solType" class="input" style="margin-bottom:8px;">
                                     <option value="Sable argileux">Sable argileux</option>
@@ -981,7 +944,7 @@
                                 <button class="btn-action" style="background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%);" onclick="ajouterAnalyseSol()">Enregistrer l'Analyse du Sol</button>
                             </div>
 
-                            <h4 style="margin-bottom:8px;">📂 Mes Plans Enregistrés :</h4>
+                            <h4 style="margin-bottom:8px;">📂 Mes Plans DAO Enregistrés :</h4>
                             ${plansHtml}
 
                             <h4 style="margin:15px 0 8px 0;">🔬 Études de Sols :</h4>
@@ -989,7 +952,6 @@
                         </div>
                     `;
                 } else if (metierLower.includes('cultivateur') || metierLower.includes('agriculteur') || metierLower.includes('champ') || metierLower.includes('elevage')) {
-                    // Outils cultivateur / agriculteur
                     let culturesHtml = '';
                     const dms = utilisateurActif.donneesMetierSpecifique || { cultures: [] };
                     if (dms.cultures && dms.cultures.length > 0) {
@@ -1002,16 +964,16 @@
                                 </div>
                             `;
                         });
-                    } else { culturesHtml = '<p style="color:var(--text-secondary);">Aucune culture enregistrée.</p>'; }
+                    } else { culturesHtml = '<p style="color:var(--text-secondary);">Aucune culture enregistrée dans votre profil.</p>'; }
 
                     content.innerHTML = `
                         <div class="card" style="border-color:var(--accent);">
-                            <h3 class="card-title">🌾 Atelier Cultivateur & Agriculteur : Gestion des Champs & Sols</h3>
-                            <p class="text">Organisez vos cultures, superficies et intrants agricoles sans connexion Internet.</p>
+                            <h3 class="card-title">🌾 Outils Cultivateur & Agriculteur : Champs & Sols</h3>
+                            <p class="text">Votre profil intègre vos outils de gestion des terres, des cultures et des intrants agricoles.</p>
                             
                             <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
                                 <h4 style="margin:0 0 8px 0; color:#22c55e;">➕ Enregistrer une Culture / Parcelle :</h4>
-                                <input type="text" id="agriCulture" class="input" placeholder="Type de culture (ex: Maïs, Manioc, Haricot)" style="margin-bottom:8px;">
+                                <input type="text" id="agriCulture" class="input" placeholder="Type de culture (ex: Maïs, Manioc, Coton)" style="margin-bottom:8px;">
                                 <input type="number" step="0.1" id="agriSuperficie" class="input" placeholder="Superficie (en hectares)" style="margin-bottom:8px;">
                                 <input type="text" id="agriSol" class="input" placeholder="Type de sol (ex: Argilo-limoneux, Humifère)" style="margin-bottom:8px;">
                                 <button class="btn-action" style="background:linear-gradient(135deg, #22c55e 0%, #16a34a 100%);" onclick="ajouterCultureChamp()">Enregistrer la Parcelle</button>
@@ -1022,7 +984,6 @@
                         </div>
                     `;
                 } else if (metierLower.includes('coutur') || metierLower.includes('tailleur') || metierLower.includes('hab')) {
-                    // Outils couturier
                     let mesuresHtml = '';
                     const dms = utilisateurActif.donneesMetierSpecifique || { mesuresClients: [] };
                     if (dms.mesuresClients && dms.mesuresClients.length > 0) {
@@ -1045,8 +1006,8 @@
 
                     content.innerHTML = `
                         <div class="card" style="border-color:var(--accent);">
-                            <h3 class="card-title">✂️ Atelier Couturier : Carnet de Mesures & Modèles d'Habits</h3>
-                            <p class="text">Enregistrez et consultez les mensurations de vos clients et vos modèles sans connexion.</p>
+                            <h3 class="card-title">✂️ Outils Couturier : Carnet de Mesures & Modèles d'Habits</h3>
+                            <p class="text">Votre profil intègre votre carnet de mensurations clients et vos registres de confection hors-ligne.</p>
                             
                             <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:20px;">
                                 <h4 style="margin:0 0 10px 0; color:var(--accent);">➕ Nouvelle Fiche de Mesures :</h4>
@@ -1066,11 +1027,10 @@
                         </div>
                     `;
                 } else {
-                    // Outil universel pour tout autre métier
                     content.innerHTML = `
                         <div class="card" style="border-color:var(--accent);">
-                            <h3 class="card-title">⚡ Outils de Travail : ${utilisateurActif.metierUnique}</h3>
-                            <p class="text">Votre écosystème de production est configuré pour <strong>${utilisateurActif.metierUnique}</strong>. Vous disposez de la caisse, des factures, de votre journal et de votre assistant ELAWS AI.</p>
+                            <h3 class="card-title">⚡ Outils & Logiciels : ${utilisateurActif.metierUnique}</h3>
+                            <p class="text">Votre environnement de travail est généré pour <strong>${utilisateurActif.metierUnique}</strong>. Vous disposez de la caisse, des factures, du journal et de votre compagnon ELAWS AI.</p>
                         </div>
                     `;
                 }
@@ -1175,7 +1135,7 @@
                     <div class="card">
                         <h3 class="card-title">💾 Sauvegarde & Restauration (JSON)</h3>
                         <button class="btn-action" onclick="exporterDonneesJSON()" style="margin-bottom:12px;">📥 Exporter mon Profil JSON</button>
-                        <p class="text">Sauvegardez l'intégralité de vos plans, cultures, fiches et finances dans un fichier souverain.</p>
+                        <p class="text">Sauvegardez l'intégralité de vos plans DAO, cultures, fiches et finances dans un fichier souverain.</p>
                     </div>
                 `;
             } else if (activeTab === 'convertisseur') {
