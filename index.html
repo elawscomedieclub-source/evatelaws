@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. & ELAWS - FAQ & Guide Interactif</title>
+    <title>E.V.A.T. & ELAWS - Écosystème Souverain Immersif (v19)</title>
     
     <link rel="manifest" href="manifest.webmanifest">
     <meta name="theme-color" content="#059669">
@@ -53,6 +53,7 @@
             min-height: 100vh;
             padding: 15px;
             padding-bottom: 90px;
+            transition: background 0.3s ease, color 0.3s ease;
         }
         header {
             display: flex;
@@ -67,7 +68,8 @@
         }
         .header-left { display: flex; align-items: center; gap: 12px; }
         .app-logo { width: 38px; height: 38px; border-radius: 10px; object-fit: cover; border: 2px solid var(--accent); }
-        .menu-toggle { background: var(--accent-gradient); color: white; border: none; padding: 10px 14px; border-radius: 8px; font-size: 1.1rem; cursor: pointer; }
+        .menu-toggle { background: var(--accent-gradient); color: white; border: none; padding: 10px 14px; border-radius: 8px; font-size: 1.1rem; cursor: pointer; transition: transform 0.2s; }
+        .menu-toggle:active { transform: scale(0.95); }
         .title { font-size: 1.05rem; font-weight: 800; }
         .header-right { display: flex; align-items: center; gap: 8px; }
         .btn-top { background-color: var(--border-color); padding: 8px 12px; border-radius: 8px; border: none; font-size: 12px; font-weight: 700; color: var(--text-main); cursor: pointer; }
@@ -78,32 +80,42 @@
             position: fixed; bottom: 0; left: 0; right: 0; background: var(--card-bg); border-top: 1px solid var(--border-color);
             padding: 10px 15px; display: flex; justify-content: space-around; align-items: center; z-index: 999; box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
         }
-        .bar-item { background: none; border: none; color: var(--text-secondary); font-size: 11px; font-weight: 700; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
-        .bar-item span.icon { font-size: 18px; }
+        .bar-item { background: none; border: none; color: var(--text-secondary); font-size: 10px; font-weight: 700; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; transition: color 0.2s; }
+        .bar-item span.icon { font-size: 16px; }
         .bar-item.active, .bar-item:hover { color: var(--accent); }
 
         #toastNotification {
             position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(100px);
             background: var(--card-bg); color: var(--text-main); border: 1px solid var(--accent); padding: 12px 20px;
             border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); font-size: 13px; font-weight: 700; z-index: 1000;
-            transition: transform 0.3s ease, opacity 0.3s ease; opacity: 0; display: flex; align-items: center; gap: 8px; text-align: center;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease; opacity: 0; display: flex; align-items: center; gap: 8px; text-align: center;
         }
         #toastNotification.show { transform: translateX(-50%) translateY(0); opacity: 1; }
         
-        .sidebar { display: none; background-color: var(--card-bg); border: 1px solid var(--border-color); padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: var(--shadow); max-height: 70vh; overflow-y: auto; }
+        .sidebar { display: none; background-color: var(--card-bg); border: 1px solid var(--border-color); padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: var(--shadow); max-height: 75vh; overflow-y: auto; animation: fadeIn 0.3s ease; }
         .sidebar.open { display: block; }
         .sidebar h3 { font-size: 0.95rem; color: var(--accent); margin-top: 0; border-bottom: 2px solid var(--border-color); padding-bottom: 8px; }
-        .menu-item { background: rgba(16, 185, 129, 0.08); color: var(--text-main); padding: 10px 14px; border-radius: 8px; margin-bottom: 6px; border: none; width: 100%; text-align: left; font-size: 0.85rem; cursor: pointer; font-weight: 600; }
+        .menu-item { background: rgba(16, 185, 129, 0.08); color: var(--text-main); padding: 10px 14px; border-radius: 8px; margin-bottom: 6px; border: none; width: 100%; text-align: left; font-size: 0.85rem; cursor: pointer; font-weight: 600; transition: background 0.2s; }
         .menu-item:hover { background: rgba(16, 185, 129, 0.18); }
         
-        .module-container { flex: 1; max-width: 750px; width: 100%; margin: 0 auto; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .module-container { flex: 1; max-width: 750px; width: 100%; margin: 0 auto; animation: fadeIn 0.3s ease; }
         .card { background-color: var(--card-bg); padding: 22px; border-radius: 14px; margin-bottom: 15px; border: 1px solid var(--border-color); box-shadow: var(--shadow); }
         .card-title { font-size: 15px; font-weight: 700; color: var(--text-secondary); margin-top: 0; margin-bottom: 10px; }
         .text { font-size: 14px; color: var(--text-secondary); margin-bottom: 15px; line-height: 1.6; }
-        .input { width: 100%; border: 1px solid var(--border-color); border-radius: 8px; padding: 11px; background: var(--card-bg); color: var(--text-main); font-size: 14px; outline: none; margin-bottom: 10px; }
+        .input { width: 100%; border: 1px solid var(--border-color); border-radius: 8px; padding: 11px; background: var(--card-bg); color: var(--text-main); font-size: 14px; outline: none; margin-bottom: 10px; transition: border-color 0.2s; }
+        .input:focus { border-color: var(--accent); }
         select.input { width: 100%; }
-        .btn-action { background: var(--accent-gradient); color: white; border: none; padding: 12px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; width: 100%; font-size: 14px; box-shadow: 0 4px 14px rgba(5, 150, 105, 0.25); }
+        .btn-action { background: var(--accent-gradient); color: white; border: none; padding: 12px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; width: 100%; font-size: 14px; box-shadow: 0 4px 14px rgba(5, 150, 105, 0.25); transition: transform 0.1s, opacity 0.2s; }
+        .btn-action:active { transform: scale(0.98); opacity: 0.9; }
         
+        .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
+        .stat-box { background: var(--bg-color); border: 1px solid var(--border-color); padding: 14px; border-radius: 10px; text-align: center; }
+        .stat-num { font-size: 18px; font-weight: 800; color: var(--accent); margin-top: 4px; }
+        
+        .badge-gamified { display: inline-flex; align-items: center; gap: 5px; background: rgba(5, 150, 105, 0.15); border: 1px solid var(--accent); color: var(--accent); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; margin-bottom: 12px; }
+
         .faq-item { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px 15px; margin-bottom: 10px; cursor: pointer; }
         .faq-question { font-weight: 700; font-size: 13.5px; color: var(--accent); display: flex; justify-content: space-between; align-items: center; }
         .faq-answer { font-size: 13px; color: var(--text-secondary); margin-top: 8px; display: none; line-height: 1.5; border-top: 1px dashed var(--border-color); padding-top: 8px; }
@@ -127,7 +139,7 @@
             </div>
         </header>
         <div class="badge-info">
-            <span id="badgeDomaineActif">🌍 Écosystème Souverain & FAQ Intégrée</span>
+            <span id="badgeDomaineActif">🌍 Écosystème Souverain Immersif (v19)</span>
             <span class="offline-status" id="reseauStatusIndicator">⚡ Vérification...</span>
         </div>
     </div>
@@ -140,23 +152,29 @@
     </div>
 
     <div id="sideMenu" class="sidebar">
-        <h3>📂 Navigation & Aide</h3>
+        <h3>📂 Navigation & Outils Immersifs (v19)</h3>
         <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Paramètres Vocaux</button>
+        <button class="menu-item" onclick="switchTab('dashboard')" style="background:rgba(59,130,246,0.15); border:1px solid #3b82f6; color:#3b82f6;">📊 <strong>Tableau de Bord & Score</strong></button>
+        <button class="menu-item" onclick="switchTab('agenda')" style="background:rgba(245,158,11,0.15); border:1px solid #f59e0b; color:#f59e0b;">📅 <strong>Agenda & Rendez-vous</strong></button>
+        <button class="menu-item" onclick="switchTab('calculatrice_marge')" style="background:rgba(16,185,129,0.15); border:1px solid #10b981; color:#10b981;">🧮 <strong>Calculatrice de Marge & Prix</strong></button>
+        <button class="menu-item" onclick="switchTab('recherche')" style="background:rgba(139,92,246,0.15); border:1px solid #8b5cf6;">🔍 <strong>Recherche Globale Rapide</strong></button>
         <button class="menu-item" onclick="switchTab('elaws_compagnon')" style="background:rgba(5,150,105,0.2); border:1px solid var(--accent);">🤖 <strong>Parler à ELAWS (Expert Métier 🎤)</strong></button>
         <button class="menu-item" onclick="switchTab('traduction_croisee')" style="background:rgba(59,130,246,0.15); border:1px solid #3b82f6;">🌐 <strong>Traduction Croisée & Dialectes</strong></button>
-        <button class="menu-item" onclick="switchTab('faq')" style="background:rgba(245,158,11,0.15); border:1px solid #f59e0b; color:#f59e0b;">❓ <strong>Guide & FAQ (Aide Utilisateur)</strong></button>
-        <button class="menu-item" onclick="switchTab('appels')">📞 Appels & Contacts (GSM / Data)</button>
-        <button class="menu-item" onclick="switchTab('atelier_specifique')" id="menuItemAtelier">⚡ Outils & Logiciels Métier</button>
-        <button class="menu-item" onclick="switchTab('economie')">🪙 Caisse & Trésorerie</button>
+        <button class="menu-item" onclick="switchTab('facturation')" style="background:rgba(16,185,129,0.15); border:1px solid #10b981;">📄 <strong>Facturation & Reçus PDF</strong></button>
+        <button class="menu-item" onclick="switchTab('notes_vocales')" style="background:rgba(236,72,153,0.15); border:1px solid #ec4899;">🎙️ <strong>Dictaphone & Notes Vocales</strong></button>
+        <button class="menu-item" onclick="switchTab('economie')">🪙 Journal de Caisse & Trésorerie</button>
+        <button class="menu-item" onclick="switchTab('sauvegarde')">💾 Sauvegarde & Sécurité Données</button>
+        <button class="menu-item" onclick="switchTab('faq')" style="color:#f59e0b;">❓ Guide & FAQ</button>
     </div>
 
     <div class="module-container" id="mainContent"></div>
 
     <div id="bottomBar" class="bottom-action-bar" style="display:none;">
         <button class="bar-item active" onclick="switchTab('accueil')" id="barAccueil"><span class="icon">💼</span><span>Profil</span></button>
+        <button class="bar-item" onclick="switchTab('dashboard')" id="barDash" style="color:#3b82f6;"><span class="icon">📊</span><span>Score</span></button>
+        <button class="bar-item" onclick="switchTab('agenda')" id="barAgenda" style="color:#f59e0b;"><span class="icon">📅</span><span>Agenda</span></button>
         <button class="bar-item" onclick="switchTab('elaws_compagnon')" id="barElaws" style="color:var(--accent);"><span class="icon">🤖</span><span>ELAWS</span></button>
-        <button class="bar-item" onclick="switchTab('traduction_croisee')" id="barTrad" style="color:#3b82f6;"><span class="icon">🌐</span><span>Traduo</span></button>
-        <button class="bar-item" onclick="switchTab('faq')" id="barFaq" style="color:#f59e0b;"><span class="icon">❓</span><span>FAQ</span></button>
+        <button class="bar-item" onclick="switchTab('facturation')" id="barFact" style="color:#10b981;"><span class="icon">📄</span><span>Facture</span></button>
         <button class="bar-item" onclick="switchTab('economie')" id="barEco"><span class="icon">🪙</span><span>Caisse</span></button>
     </div>
 
@@ -168,6 +186,23 @@
         let activeTab = 'accueil';
         let currentThemeIndex = 0;
         const themes = ['dark', 'light', 'eco'];
+
+        function jouerSonSucces() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+                osc.frequency.setValueAtTime(880, ctx.currentTime + 0.1); // A5
+                gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.3);
+            } catch(e) {}
+        }
 
         function changerTheme() {
             currentThemeIndex = (currentThemeIndex + 1) % themes.length;
@@ -187,6 +222,7 @@
             if (!utilisateurActif && listeProfils.length > 0) {
                 utilisateurActif = listeProfils[0];
                 idProfilActif = utilisateurActif.id;
+                localStorage.setItem('evat_profil_actif_id', idProfilActif);
             }
         }
         chargerDonneesProfil();
@@ -243,6 +279,12 @@
             return window.speechSynthesis.getVoices();
         }
 
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = () => {
+                if (activeTab === 'accueil') render();
+            };
+        }
+
         function lireTexteAAvoix(texte, langOverride) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
@@ -287,10 +329,16 @@
                 telephone: tel || '+228 98231402',
                 metierUnique: metierUnique,
                 solde: 50000,
-                contactsAppels: [{ id: 1, nom: "Contact Test", tel: "+228 98231402", type: "Client / Patient" }],
-                donneesMetierSpecifique: { registreUniversel: [] },
+                journalCaisse: [
+                    { id: 1, type: 'entree', libelle: 'Capital initial', montant: 50000, date: new Date().toLocaleDateString() }
+                ],
+                notesVocales: [],
+                talkieMessages: [],
+                factures: [],
+                agendaRdv: [],
+                contactsAppels: [{ id: 1, nom: "Client Test", tel: "+228 98231402", type: "Client" }],
                 discussionsElaws: [
-                    { role: 'ai', texte: `Bonjour ${nom} ! Je suis **ELAWS**, votre assistant expert en **${metierUnique}**. Consultez le module FAQ si vous avez besoin d'aide sur l'utilisation de l'application.` }
+                    { role: 'ai', texte: `Bonjour ${nom} ! Je suis **ELAWS**, votre assistant expert en **${metierUnique}**. Tous les modules immersifs (v19) sont prêts.` }
                 ]
             };
 
@@ -301,6 +349,7 @@
             idProfilActif = nouveauId;
             utilisateurActif = nouveauProfil;
 
+            jouerSonSucces();
             lireTexteAAvoix(`Bonjour ${nom}. Votre environnement ELAWS pour ${metierUnique} est prêt.`);
             showToast(`Bienvenue, ${nom} !`);
             render();
@@ -329,7 +378,206 @@
             element.classList.toggle('active');
         }
 
-        // EXPERT MÉTIER & PRESCRIPTION INTELLIGENTE
+        // --- GESTION CAISSE ---
+        function ajouterMouvementCaisse(type) {
+            const libelle = document.getElementById('caisseLib').value.trim();
+            const montant = parseFloat(document.getElementById('caisseMontant').value);
+            if(libelle && !isNaN(montant) && montant > 0) {
+                if(!utilisateurActif.journalCaisse) utilisateurActif.journalCaisse = [];
+                utilisateurActif.journalCaisse.unshift({ id: Date.now(), type, libelle, montant, date: new Date().toLocaleDateString() });
+                
+                if(type === 'entree') utilisateurActif.solde += montant;
+                else utilisateurActif.solde -= montant;
+
+                sauvegarderProfilActif();
+                jouerSonSucces();
+                showToast(`🪙 Mouvement de caisse enregistré !`);
+                render();
+            } else { showToast("Veuillez remplir correctement le libellé et le montant."); }
+        }
+
+        function appliquerSuggestionCaisse(texte) {
+            document.getElementById('caisseLib').value = texte;
+            showToast(`Suggéré : ${texte}`);
+        }
+
+        // --- FACTURATION ---
+        function genererFacturePDF() {
+            const client = document.getElementById('factClient').value.trim();
+            const desc = document.getElementById('factDesc').value.trim();
+            const montant = parseFloat(document.getElementById('factMontant').value);
+
+            if(client && desc && !isNaN(montant)) {
+                if(!utilisateurActif.factures) utilisateurActif.factures = [];
+                const numFacture = 'FAC-' + Math.floor(1000 + Math.random() * 9000);
+                const nouvelleFacture = { id: Date.now(), numero: numFacture, client, desc, montant, date: new Date().toLocaleDateString() };
+                
+                utilisateurActif.factures.unshift(nouvelleFacture);
+                sauvegarderProfilActif();
+                jouerSonSucces();
+
+                const containerFacture = document.getElementById('apercuFactureContainer');
+                if(containerFacture) {
+                    containerFacture.innerHTML = `
+                        <div style="background:#fff; color:#111; padding:20px; border-radius:8px; margin-top:15px; border:2px solid #10b981;">
+                            <h3>📄 Reçu / Facture N° ${numFacture}</h3>
+                            <p><strong>Émetteur :</strong> ${utilisateurActif.nom} (${utilisateurActif.metierUnique})</p>
+                            <p><strong>Client :</strong> ${client} | <strong>Date :</strong> ${nouvelleFacture.date}</p>
+                            <p><strong>Prestation :</strong> ${desc}</p>
+                            <h4 style="color:#059669;">Total : ${montant.toLocaleString()} FCFA</h4>
+                            <button class="btn-action" style="background:#10b981; margin-top:10px;" onclick="window.print()">🖨️ Imprimer / Enregistrer PDF</button>
+                        </div>
+                    `;
+                }
+                showToast("Facture générée avec succès !");
+                render();
+            } else { showToast("Remplissez tous les champs de la facture."); }
+        }
+
+        // --- NOTES VOCALES ---
+        function enregistrerNoteVocale() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                const saisieManuelle = prompt("Dictaphone vocal non supporté. Saisissez votre note :");
+                if(saisieManuelle) {
+                    if(!utilisateurActif.notesVocales) utilisateurActif.notesVocales = [];
+                    utilisateurActif.notesVocales.unshift({ id: Date.now(), texte: saisieManuelle, date: new Date().toLocaleDateString() });
+                    sauvegarderProfilActif();
+                    jouerSonSucces();
+                    showToast("Note enregistrée !");
+                    render();
+                }
+                return;
+            }
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'fr-FR';
+            showToast("🎙️ Parlez pour dicter votre note...");
+            recognition.onresult = (event) => {
+                const texte = event.results[0][0].transcript;
+                if(!utilisateurActif.notesVocales) utilisateurActif.notesVocales = [];
+                utilisateurActif.notesVocales.unshift({ id: Date.now(), texte, date: new Date().toLocaleDateString() });
+                sauvegarderProfilActif();
+                jouerSonSucces();
+                showToast("Note vocale enregistrée et transcrite !");
+                render();
+                lireTexteAAvoix("Note enregistrée : " + texte);
+            };
+            recognition.onerror = () => { showToast("Erreur micro."); };
+            recognition.start();
+        }
+
+        // --- AGENDA & RENDEZ-VOUS ---
+        function ajouterRdvAgenda() {
+            const titre = document.getElementById('rdvTitre').value.trim();
+            const date = document.getElementById('rdvDate').value;
+            const heure = document.getElementById('rdvHeure').value;
+
+            if(titre && date && heure) {
+                if(!utilisateurActif.agendaRdv) utilisateurActif.agendaRdv = [];
+                utilisateurActif.agendaRdv.unshift({ id: Date.now(), titre, date, heure });
+                sauvegarderProfilActif();
+                jouerSonSucces();
+                showToast("Rendez-vous ajouté à l'agenda !");
+                render();
+            } else { showToast("Veuillez remplir tous les champs du rendez-vous."); }
+        }
+
+        // --- CALCULATRICE DE MARGE & PRIX ---
+        function calculerMargeBeneficiaire() {
+            const cout = parseFloat(document.getElementById('calcCout').value);
+            const margePourcent = parseFloat(document.getElementById('calcMarge').value);
+            const resDiv = document.getElementById('resultatCalcMarge');
+
+            if(!isNaN(cout) && !isNaN(margePourcent) && cout > 0) {
+                const benefice = cout * (margePourcent / 100);
+                const prixVente = cout + benefice;
+                jouerSonSucces();
+                resDiv.innerHTML = `
+                    <div style="background:var(--card-bg); border:1px solid #10b981; padding:12px; border-radius:8px; margin-top:10px;">
+                        <strong style="color:#10b981;">🧮 Résultats du Calcul :</strong>
+                        <p style="margin:6px 0 2px 0;">Bénéfice estimé : <strong>${benefice.toLocaleString()} FCFA</strong></p>
+                        <p style="margin:0; font-size:16px; color:var(--accent);">Prix de Vente Conseillé : <strong>${prixVente.toLocaleString()} FCFA</strong></p>
+                    </div>
+                `;
+            } else { resDiv.innerHTML = '<p style="color:#ef4444; font-size:13px;">Veuillez saisir un coût et un pourcentage valides.</p>'; }
+        }
+
+        // --- RECHERCHE GLOBALE ---
+        function executerRechercheGlobale() {
+            const q = document.getElementById('inputRechercheGlobale').value.trim().toLowerCase();
+            const resDiv = document.getElementById('resultatsRechercheDiv');
+            if(!q) { resDiv.innerHTML = '<p style="color:var(--text-secondary);">Saisissez un mot-clé pour rechercher...</p>'; return; }
+
+            let resultatsHtml = '';
+            let totalMatch = 0;
+
+            if(utilisateurActif.factures) {
+                utilisateurActif.factures.forEach(f => {
+                    if(f.client.toLowerCase().includes(q) || f.desc.toLowerCase().includes(q) || f.numero.toLowerCase().includes(q)) {
+                        totalMatch++;
+                        resultatsHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:6px; margin-bottom:6px; border-left:3px solid #10b981;"><strong>📄 Facture ${f.numero}</strong> — ${f.client} (${f.montant.toLocaleString()} FCFA)</div>`;
+                    }
+                });
+            }
+
+            if(utilisateurActif.journalCaisse) {
+                utilisateurActif.journalCaisse.forEach(c => {
+                    if(c.libelle.toLowerCase().includes(q)) {
+                        totalMatch++;
+                        resultatsHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:6px; margin-bottom:6px; border-left:3px solid #3b82f6;"><strong>🪙 Caisse</strong> — ${c.libelle} (${c.montant.toLocaleString()} FCFA)</div>`;
+                    }
+                });
+            }
+
+            if(utilisateurActif.notesVocales) {
+                utilisateurActif.notesVocales.forEach(n => {
+                    if(n.texte.toLowerCase().includes(q)) {
+                        totalMatch++;
+                        resultatsHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:6px; margin-bottom:6px; border-left:3px solid #ec4899;"><strong>🎙️ Note</strong> — ${n.texte}</div>`;
+                    }
+                });
+            }
+
+            if(totalMatch === 0) {
+                resDiv.innerHTML = '<p style="color:var(--text-secondary);">Aucun résultat trouvé.</p>';
+            } else {
+                resDiv.innerHTML = `<p style="color:var(--accent); font-weight:700; margin-bottom:8px;">${totalMatch} résultat(s) trouvé(s) :</p>` + resultatsHtml;
+            }
+        }
+
+        // --- SAUVEGARDE & RESTAURATION ---
+        function exporterDonneesJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(listeProfils));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `evat_backup_${Date.now()}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            jouerSonSucces();
+            showToast("Sauvegarde exportée avec succès !");
+        }
+
+        function importerDonneesJSON(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if(Array.isArray(parsed)) {
+                        listeProfils = parsed;
+                        localStorage.setItem('evat_tous_profils', JSON.stringify(listeProfils));
+                        jouerSonSucces();
+                        showToast("Données restaurées !");
+                        render();
+                    } else { showToast("Format invalide."); }
+                } catch(err) { showToast("Erreur de lecture."); }
+            };
+            reader.readAsText(file);
+        }
+
+        // --- EXPERT & TRADUCTION ---
         function envoyerMessageElawsAI(texteForce) {
             const input = document.getElementById('inputElawsChat');
             const q = texteForce || (input ? input.value.trim() : '');
@@ -342,15 +590,16 @@
             let reponse = "";
 
             if (metier.includes('docteur') || metier.includes('medecin') || metier.includes('sante')) {
-                reponse = `[Assistant Médical ELAWS] Analyse clinique pour "${q}". Recommandation : Examen approfondi, prescription suggérée (Paracétamol 1000mg / Amoxicilline 500mg selon diagnostic) et hydratation.`;
+                reponse = `[Assistant Médical ELAWS] Analyse clinique pour "${q}". Recommandation : Examen approfondi et traitement adapté.`;
             } else if (metier.includes('mecanicien') || metier.includes('meca')) {
-                reponse = `[Expert Technique ELAWS] Diagnostic panne pour "${q}" : Vérification allumage, alimentation carburant et capteurs OBD. Nettoyage des injecteurs recommandé.`;
+                reponse = `[Expert Technique ELAWS] Diagnostic panne pour "${q}" : Vérification allumage et capteurs OBD.`;
             } else {
-                reponse = `[Expert Métier ELAWS] En tant qu'expert en ${utilisateurActif.metierUnique}, voici mon conseil pour "${q}" : Structurer l'action, valider les livrables et assurer le suivi.`;
+                reponse = `[Expert Métier ELAWS] En tant qu'expert en ${utilisateurActif.metierUnique}, voici mon conseil pour "${q}" : Structurer l'action et suivre les indicateurs.`;
             }
 
             utilisateurActif.discussionsElaws.push({ role: 'ai', texte: reponse });
             sauvegarderProfilActif();
+            jouerSonSucces();
             
             if(input) input.value = '';
             lireTexteAAvoix(reponse);
@@ -371,15 +620,14 @@
             recognition.start();
         }
 
-        // TRADUCTION CROISÉE & DIALECTES TEMPS RÉEL
         function executerTraductionCroisee() {
             const texteSource = document.getElementById('tradTexteInput').value.trim();
             const langCible = document.getElementById('selectLangueCible').value;
             const dialecteSource = document.getElementById('selectDialecteSource').value;
 
-            if(!texteSource) { showToast("Veuillez saisir un texte à traduire."); return; }
+            if(!texteSource) { showToast("Saisissez un texte à traduire."); return; }
 
-            let traductionSimulee = `[Traduction Interprète ELAWS vers ${langCible}] : "${texteSource}" (depuis ${dialecteSource}) -> Interprétation et retranscription vocale réussie.`;
+            let traductionSimulee = `[Interprète ELAWS vers ${langCible}] : "${texteSource}" (depuis ${dialecteSource}) -> Traduction validée.`;
             let langCode = 'fr-FR';
             if(langCible === 'en') langCode = 'en-US';
             if(langCible === 'es') langCode = 'es-ES';
@@ -387,11 +635,12 @@
             const resultatDiv = document.getElementById('resultatTraductionDiv');
             resultatDiv.innerHTML = `
                 <div style="background:var(--card-bg); border:1px solid #3b82f6; padding:12px; border-radius:8px; margin-top:10px;">
-                    <strong style="color:#3b82f6;">🌐 Résultat Traduction Croisée :</strong>
+                    <strong style="color:#3b82f6;">🌐 Résultat Traduction :</strong>
                     <p style="margin:6px 0 0 0; font-size:14px;">${traductionSimulee}</p>
                     <button class="btn-action" style="margin-top:8px; background:#3b82f6; padding:6px; font-size:12px;" onclick="lireTexteAAvoix('${traductionSimulee.replace(/'/g, "\'")}', '${langCode}')">🔊 Écouter</button>
                 </div>
             `;
+            jouerSonSucces();
             lireTexteAAvoix(traductionSimulee, langCode);
             showToast("Traduction effectuée !");
         }
@@ -408,37 +657,6 @@
                 executerTraductionCroisee();
             };
             recognition.start();
-        }
-
-        function ajouterContactAppel() {
-            const nom = document.getElementById('appelNom').value.trim();
-            const tel = document.getElementById('appelTel').value.trim();
-            if(nom && tel) {
-                if(!utilisateurActif.contactsAppels) utilisateurActif.contactsAppels = [];
-                utilisateurActif.contactsAppels.unshift({ id: Date.now(), nom, tel, type: 'Client / Patient' });
-                sauvegarderProfilActif(); showToast("Contact enregistré !"); render();
-            } else { showToast("Remplissez le nom et le téléphone."); }
-        }
-
-        function lancerAppelGSM(tel) { window.location.href = `tel:${tel}`; }
-        function lancerAppelInternet(nom) {
-            showToast(`🌐 Appel VoIP avec ${nom} établi !`);
-            lireTexteAAvoix(`Appel de données en cours avec ${nom}.`);
-        }
-
-        function ajouterDonneeMetier() {
-            const titre = document.getElementById('univTitre').value.trim();
-            const desc = document.getElementById('univDesc').value.trim();
-            if(titre) {
-                if(!utilisateurActif.donneesMetierSpecifique.registreUniversel) utilisateurActif.donneesMetierSpecifique.registreUniversel = [];
-                utilisateurActif.donneesMetierSpecifique.registreUniversel.unshift({ id: Date.now(), titre, desc, date: new Date().toLocaleDateString() });
-                sauvegarderProfilActif(); showToast("Enregistré !"); render();
-            } else { showToast("Remplissez l'intitulé."); }
-        }
-
-        function supprimerElementMetier(id) {
-            utilisateurActif.donneesMetierSpecifique.registreUniversel = utilisateurActif.donneesMetierSpecifique.registreUniversel.filter(x => x.id !== id);
-            sauvegarderProfilActif(); showToast("Supprimé."); render();
         }
 
         function render() {
@@ -462,16 +680,16 @@
                     <div class="card" style="border-color:var(--accent); max-width:500px; margin: 10px auto; text-align:center;">
                         <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo" style="width:72px; height:72px; margin-bottom:10px; border-radius:16px; border:2px solid var(--accent);">
                         <h2 style="color:var(--accent); margin-top:0;">✨ E.V.A.T. & ELAWS</h2>
-                        <p class="text" style="text-align:center;">Écosystème Souverain, Voix, Traduction & FAQ.</p>
+                        <p class="text" style="text-align:center;">Écosystème Souverain Immersif (v19)</p>
                         
                         ${profilsExistantsHtml}
 
                         <div style="text-align:left;">
                             <h4 style="margin-bottom:10px; border-top:1px solid var(--border-color); padding-top:15px;">📝 Créer mon Profil :</h4>
                             <input type="text" id="regNom" class="input" placeholder="Nom ou Pseudonyme *" style="margin-bottom:8px;">
-                            <input type="text" id="regMetierCustom" class="input" placeholder="Votre Métier (Docteur, Journaliste, Mécanicien...)" style="margin-bottom:8px;">
+                            <input type="text" id="regMetierCustom" class="input" placeholder="Votre Métier (Docteur, Commerçant, Mécanicien...)" style="margin-bottom:8px;">
                             <input type="text" id="regTel" class="input" placeholder="Téléphone (ex: +228 98231402)" style="margin-bottom:12px;">
-                            <button class="btn-action" onclick="creerNouveauProfil()">🚀 Générer mon Profil</button>
+                            <button class="btn-action" onclick="creerNouveauProfil()">🚀 Générer mon Profil Immersif</button>
                         </div>
                     </div>
                 `;
@@ -485,9 +703,10 @@
 
             document.querySelectorAll('.bar-item').forEach(el => el.classList.remove('active'));
             if(activeTab === 'accueil') document.getElementById('barAccueil')?.classList.add('active');
+            if(activeTab === 'dashboard') document.getElementById('barDash')?.classList.add('active');
+            if(activeTab === 'agenda') document.getElementById('barAgenda')?.classList.add('active');
             if(activeTab === 'elaws_compagnon') document.getElementById('barElaws')?.classList.add('active');
-            if(activeTab === 'traduction_croisee') document.getElementById('barTrad')?.classList.add('active');
-            if(activeTab === 'faq') document.getElementById('barFaq')?.classList.add('active');
+            if(activeTab === 'facturation') document.getElementById('barFact')?.classList.add('active');
             if(activeTab === 'economie') document.getElementById('barEco')?.classList.add('active');
 
             if (activeTab === 'accueil') {
@@ -504,6 +723,7 @@
 
                 content.innerHTML = `
                     <div class="card" style="border-color: var(--accent);">
+                        <div class="badge-gamified">🌟 Niveau 1 — Utilisateur Souverain Actif</div>
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                             <div>
                                 <span style="font-size:11px; color:var(--accent); font-weight:700;">💼 PROFIL SOUVERAIN</span>
@@ -511,7 +731,7 @@
                             </div>
                             <button class="btn-top" onclick="changerProfilSession()">🔄 Changer</button>
                         </div>
-                        <p class="text">Métier actif : <strong style="color:var(--accent);">${utilisateurActif.metierUnique}</strong>. Prêt pour l'assistance et les outils métiers.</p>
+                        <p class="text">Métier actif : <strong style="color:var(--accent);">${utilisateurActif.metierUnique}</strong>. Effets sonores, animations immersives et score activés (v19).</p>
 
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-top:15px; border:1px solid var(--border-color);">
                             <h4 style="margin:0 0 8px 0; color:var(--accent);">🗣️ Voix d'ELAWS :</h4>
@@ -519,6 +739,98 @@
                                 ${optionsVoixHtml}
                             </select>
                             <button class="btn-action" style="margin-top:8px; padding:8px;" onclick="lireTexteAAvoix('Test de la voix sélectionnée pour ELAWS.')">🔊 Tester cette voix</button>
+                        </div>
+                    </div>
+                `;
+            } else if (activeTab === 'dashboard') {
+                const totalFactures = utilisateurActif.factures ? utilisateurActif.factures.length : 0;
+                let montantFacturesTotal = 0;
+                if(utilisateurActif.factures) {
+                    utilisateurActif.factures.forEach(f => montantFacturesTotal += f.montant);
+                }
+                const totalNotes = utilisateurActif.notesVocales ? utilisateurActif.notesVocales.length : 0;
+                const totalRdvs = utilisateurActif.agendaRdv ? utilisateurActif.agendaRdv.length : 0;
+                const scoreProductivite = (totalFactures * 20) + (totalNotes * 10) + (totalRdvs * 15) + 50;
+
+                content.innerHTML = `
+                    <div class="card" style="border-color:#3b82f6;">
+                        <h3 class="card-title" style="color:#3b82f6;">📊 Tableau de Bord Immersif & Score</h3>
+                        <p class="text">Suivi gamifié de votre activité professionnelle et de votre productivité.</p>
+                        
+                        <div style="background:var(--bg-color); padding:16px; border-radius:12px; border:1px solid #3b82f6; text-align:center; margin-bottom:15px;">
+                            <div style="font-size:12px; color:var(--text-secondary); text-transform:uppercase; font-weight:700;">Score de Productivité Global</div>
+                            <div style="font-size:32px; font-weight:900; color:#3b82f6; margin-top:6px;">⭐ ${scoreProductivite} pts</div>
+                            <small style="color:var(--accent);">🔥 Excellent rythme d'utilisation !</small>
+                        </div>
+
+                        <div class="stat-grid">
+                            <div class="stat-box">
+                                <div style="font-size:12px; color:var(--text-secondary);">Trésorerie Actuelle</div>
+                                <div class="stat-num" style="color:var(--accent);">${utilisateurActif.solde.toLocaleString()} FCFA</div>
+                            </div>
+                            <div class="stat-box">
+                                <div style="font-size:12px; color:var(--text-secondary);">CA Facturé</div>
+                                <div class="stat-num" style="color:#10b981;">${montantFacturesTotal.toLocaleString()} FCFA</div>
+                            </div>
+                            <div class="stat-box">
+                                <div style="font-size:12px; color:var(--text-secondary);">Rendez-vous</div>
+                                <div class="stat-num" style="color:#f59e0b;">${totalRdvs}</div>
+                            </div>
+                            <div class="stat-box">
+                                <div style="font-size:12px; color:var(--text-secondary);">Notes Vocales</div>
+                                <div class="stat-num" style="color:#ec4899;">${totalNotes}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (activeTab === 'agenda') {
+                let rdvsHtml = '';
+                if(utilisateurActif.agendaRdv && utilisateurActif.agendaRdv.length > 0) {
+                    utilisateurActif.agendaRdv.forEach(r => {
+                        rdvsHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #f59e0b;"><strong>📅 ${r.titre}</strong> — <span style="color:var(--accent);">${r.date} à ${r.heure}</span></div>`;
+                    });
+                } else { rdvsHtml = '<p style="color:var(--text-secondary);">Aucun rendez-vous planifié.</p>'; }
+
+                content.innerHTML = `
+                    <div class="card" style="border-color:#f59e0b;">
+                        <h3 class="card-title" style="color:#f59e0b;">📅 Agenda & Rendez-vous Pro</h3>
+                        <p class="text">Planifiez vos consultations et chantiers hors-ligne.</p>
+                        
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                            <input type="text" id="rdvTitre" class="input" placeholder="Intitulé du rendez-vous *" style="margin-bottom:8px;">
+                            <input type="date" id="rdvDate" class="input" style="margin-bottom:8px;">
+                            <input type="time" id="rdvHeure" class="input" style="margin-bottom:10px;">
+                            <button class="btn-action" style="background:#f59e0b;" onclick="ajouterRdvAgenda()">📅 Planifier le Rendez-vous</button>
+                        </div>
+                        <h4 style="margin-bottom:8px;">Mes Prochains Rendez-vous :</h4>
+                        ${rdvsHtml}
+                    </div>
+                `;
+            } else if (activeTab === 'calculatrice_marge') {
+                content.innerHTML = `
+                    <div class="card" style="border-color:#10b981;">
+                        <h3 class="card-title" style="color:#10b981;">🧮 Calculatrice de Marge & Prix de Vente</h3>
+                        <p class="text">Calculez instantanément votre prix de vente en FCFA.</p>
+                        
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                            <input type="number" id="calcCout" class="input" placeholder="Coût d'achat (FCFA) *" style="margin-bottom:8px;">
+                            <input type="number" id="calcMarge" class="input" placeholder="Marge souhaitée (%) *" style="margin-bottom:10px;">
+                            <button class="btn-action" style="background:#10b981;" onclick="calculerMargeBeneficiaire()">Calculer le Prix de Vente 🧮</button>
+                        </div>
+                        <div id="resultatCalcMarge"></div>
+                    </div>
+                `;
+            } else if (activeTab === 'recherche') {
+                content.innerHTML = `
+                    <div class="card" style="border-color:#8b5cf6;">
+                        <h3 class="card-title" style="color:#8b5cf6;">🔍 Recherche Globale Rapide</h3>
+                        <p class="text">Trouvez instantanément un client, une facture ou une note.</p>
+                        
+                        <div style="margin-bottom:15px;">
+                            <input type="text" id="inputRechercheGlobale" class="input" placeholder="Tapez un mot-clé..." oninput="executerRechercheGlobale()">
+                        </div>
+                        <div id="resultatsRechercheDiv">
+                            <p style="color:var(--text-secondary);">Commencez à taper pour rechercher...</p>
                         </div>
                     </div>
                 `;
@@ -539,7 +851,7 @@
                 content.innerHTML = `
                     <div class="card" style="border-color:var(--accent);">
                         <h3 class="card-title" style="color:var(--accent);">🤖 ELAWS — Assistant & Expert Métier</h3>
-                        <p class="text">Posez vos questions ou décrivez un cas (symptômes de patient, panne technique, etc.) :</p>
+                        <p class="text">Posez vos questions :</p>
                         <div style="text-align:center; margin-bottom:15px;">
                             <button class="btn-action" onclick="demarrerEcouteMicrophone()" style="background:var(--accent-gradient); font-size:18px; padding:16px; border-radius:30px;">
                                 🎤 Parler à l'Expert ELAWS
@@ -549,7 +861,7 @@
                             ${chatHtml}
                         </div>
                         <div style="display:flex; gap:8px;">
-                            <input type="text" id="inputElawsChat" class="input" placeholder="Tapez votre question ou cas..." style="margin-bottom:0;" onkeypress="if(event.key === 'Enter') envoyerMessageElawsAI()">
+                            <input type="text" id="inputElawsChat" class="input" placeholder="Tapez votre question..." style="margin-bottom:0;" onkeypress="if(event.key === 'Enter') envoyerMessageElawsAI()">
                             <button class="btn-action" style="width:auto; padding:0 22px;" onclick="envoyerMessageElawsAI()">Analyser 🚀</button>
                         </div>
                     </div>
@@ -557,11 +869,10 @@
             } else if (activeTab === 'traduction_croisee') {
                 content.innerHTML = `
                     <div class="card" style="border-color:#3b82f6;">
-                        <h3 class="card-title" style="color:#3b82f6;">🌐 Module de Traduction Croisée & Dialectes</h3>
-                        <p class="text">Communiquez instantanément avec une personne parlant un autre dialecte ou une autre langue. ELAWS traduit et transcrit dans les deux sens.</p>
-                        
+                        <h3 class="card-title" style="color:#3b82f6;">🌐 Traduction Croisée & Dialectes</h3>
+                        <p class="text">Communiquez en temps réel.</p>
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
-                            <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;">1. Langue / Dialecte Source :</label>
+                            <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;">Langue Source :</label>
                             <select id="selectDialecteSource" class="input" style="margin-bottom:10px;">
                                 <option value="fr-FR">Français</option>
                                 <option value="en-US">Anglais (English)</option>
@@ -569,8 +880,7 @@
                                 <option value="yo-NG">Yoruba</option>
                                 <option value="ee-TG">Ewé / Gbe</option>
                             </select>
-
-                            <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;">2. Langue Cible (Votre choix) :</label>
+                            <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;">Langue Cible :</label>
                             <select id="selectLangueCible" class="input" style="margin-bottom:10px;">
                                 <option value="fr">Français</option>
                                 <option value="en">Anglais (English)</option>
@@ -578,101 +888,108 @@
                                 <option value="ew">Ewé</option>
                                 <option value="yo">Yoruba</option>
                             </select>
-
                             <textarea id="tradTexteInput" class="input" placeholder="Saisissez ou parlez..." rows="3" style="resize:none; margin-bottom:8px;"></textarea>
-                            
                             <div style="display:flex; gap:8px;">
-                                <button class="btn-action" style="background:#3b82f6;" onclick="executerTraductionCroisee()">Traduire & Transcrire 🔄</button>
+                                <button class="btn-action" style="background:#3b82f6;" onclick="executerTraductionCroisee()">Traduire 🔄</button>
                                 <button class="btn-action" style="background:#10b981; width:auto; padding:0 16px;" onclick="demarrerMicroTraduction()">🎤 Micro</button>
                             </div>
                         </div>
-
                         <div id="resultatTraductionDiv"></div>
+                    </div>
+                `;
+            } else if (activeTab === 'facturation') {
+                let facturesHtml = '';
+                if(utilisateurActif.factures && utilisateurActif.factures.length > 0) {
+                    utilisateurActif.factures.forEach(f => {
+                        facturesHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #10b981;"><strong>📄 ${f.numero}</strong> — Client: ${f.client} | <strong>${f.montant.toLocaleString()} FCFA</strong></div>`;
+                    });
+                } else { facturesHtml = '<p style="color:var(--text-secondary);">Aucune facture.</p>'; }
+
+                content.innerHTML = `
+                    <div class="card" style="border-color:#10b981;">
+                        <h3 class="card-title" style="color:#10b981;">📄 Facturation & Reçus PDF</h3>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                            <input type="text" id="factClient" class="input" placeholder="Nom du Client *" style="margin-bottom:8px;">
+                            <input type="text" id="factDesc" class="input" placeholder="Prestation *" style="margin-bottom:8px;">
+                            <input type="number" id="factMontant" class="input" placeholder="Montant en FCFA *" style="margin-bottom:10px;">
+                            <button class="btn-action" style="background:#10b981;" onclick="genererFacturePDF()">🖨️ Générer la Facture</button>
+                        </div>
+                        <div id="apercuFactureContainer"></div>
+                        <h4 style="margin-top:15px; margin-bottom:8px;">Historique :</h4>
+                        ${facturesHtml}
+                    </div>
+                `;
+            } else if (activeTab === 'notes_vocales') {
+                let notesHtml = '';
+                if(utilisateurActif.notesVocales && utilisateurActif.notesVocales.length > 0) {
+                    utilisateurActif.notesVocales.forEach(n => {
+                        notesHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #ec4899;"><strong>🎙️ ${n.date}</strong><p style="margin:4px 0 0 0; font-size:13.5px;">${n.texte}</p></div>`;
+                    });
+                } else { notesHtml = '<p style="color:var(--text-secondary);">Aucune note.</p>'; }
+
+                content.innerHTML = `
+                    <div class="card" style="border-color:#ec4899;">
+                        <h3 class="card-title" style="color:#ec4899;">🎙️ Dictaphone & Notes Vocales</h3>
+                        <div style="text-align:center; margin-bottom:15px;">
+                            <button class="btn-action" style="background:linear-gradient(135deg, #ec4899 0%, #db2777 100%); font-size:16px; padding:16px; border-radius:30px;" onclick="enregistrerNoteVocale()">🎙️ Enregistrer une Note</button>
+                        </div>
+                        ${notesHtml}
+                    </div>
+                `;
+            } else if (activeTab === 'economie') {
+                let caissesHtml = '';
+                if(utilisateurActif.journalCaisse && utilisateurActif.journalCaisse.length > 0) {
+                    utilisateurActif.journalCaisse.forEach(c => {
+                        const isEntree = c.type === 'entree';
+                        caissesHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid ${isEntree ? '#10b981' : '#ef4444'};"><strong>${isEntree ? '➕ Entrée' : '➖ Sortie'} : ${c.libelle}</strong> — <span style="color:${isEntree ? '#10b981' : '#ef4444'}; font-weight:bold;">${c.montant.toLocaleString()} FCFA</span></div>`;
+                    });
+                } else { caissesHtml = '<p style="color:var(--text-secondary);">Aucun mouvement.</p>'; }
+
+                content.innerHTML = `
+                    <div class="card" style="border-color:var(--accent);">
+                        <h3 class="card-title">🪙 Journal de Caisse & Trésorerie</h3>
+                        <div style="font-size:26px; font-weight:800; color:var(--accent); text-align:center; padding:10px; background:var(--bg-color); border-radius:10px; margin-bottom:15px;">${utilisateurActif.solde.toLocaleString()} FCFA</div>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                            <div style="display:flex; gap:6px; margin-bottom:8px; flex-wrap:wrap;">
+                                <button class="btn-top" onclick="appliquerSuggestionCaisse('Vente prestation')">⚡ Vente prestation</button>
+                                <button class="btn-top" onclick="appliquerSuggestionCaisse('Achat matériel')">⚡ Achat matériel</button>
+                                <button class="btn-top" onclick="appliquerSuggestionCaisse('Transport')">⚡ Transport</button>
+                            </div>
+                            <input type="text" id="caisseLib" class="input" placeholder="Libellé *" style="margin-bottom:8px;">
+                            <input type="number" id="caisseMontant" class="input" placeholder="Montant en FCFA *" style="margin-bottom:10px;">
+                            <div style="display:flex; gap:8px;">
+                                <button class="btn-action" style="background:#10b981;" onclick="ajouterMouvementCaisse('entree')">➕ Entrée</button>
+                                <button class="btn-action" style="background:#ef4444;" onclick="ajouterMouvementCaisse('sortie')">➖ Sortie</button>
+                            </div>
+                        </div>
+                        ${caissesHtml}
+                    </div>
+                `;
+            } else if (activeTab === 'sauvegarde') {
+                content.innerHTML = `
+                    <div class="card" style="border-color:#3b82f6;">
+                        <h3 class="card-title" style="color:#3b82f6;">💾 Sauvegarde & Sécurité</h3>
+                        <div style="display:flex; flex-direction:column; gap:12px; margin-top:15px;">
+                            <button class="btn-action" style="background:#3b82f6;" onclick="exporterDonneesJSON()">📥 Exporter (JSON)</button>
+                            <div style="background:var(--bg-color); padding:15px; border-radius:10px; border:1px solid var(--border-color); text-align:center;">
+                                <label style="font-size:13px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:8px;">📤 Restaurer :</label>
+                                <input type="file" id="fileRestaurer" accept=".json" onchange="importerDonneesJSON(event)" style="font-size:12px; color:var(--text-main);">
+                            </div>
+                        </div>
                     </div>
                 `;
             } else if (activeTab === 'faq') {
                 content.innerHTML = `
                     <div class="card" style="border-color:#f59e0b;">
-                        <h3 class="card-title" style="color:#f59e0b;">❓ FAQ & Guide d'Utilisation E.V.A.T.</h3>
-                        <p class="text">Trouvez ici toutes les réponses pour exploiter pleinement l'écosystème et l'assistant ELAWS.</p>
-                        
+                        <h3 class="card-title" style="color:#f59e0b;">❓ Guide & FAQ Immersif</h3>
                         <div class="faq-item" onclick="toggleFaqItem(this)">
-                            <div class="faq-question">1. Comment installer l'application sur mon téléphone ? <span>▼</span></div>
-                            <div class="faq-answer">Cliquez simplement sur le bouton <strong>"🚀 Installer l'Application"</strong> qui apparaît en haut de l'écran ou utilisez le menu de votre navigateur mobile (Safari / Chrome) en sélectionnant <em>"Ajouter à l'écran d'accueil"</em>.</div>
+                            <div class="faq-question">1. Comment fonctionne le Score de Productivité ? <span>▼</span></div>
+                            <div class="faq-answer">Le score augmente à chaque facture créée, note vocale dictée ou rendez-vous planifié pour rendre l'utilisation quotidienne ludique et motivante.</div>
                         </div>
-
                         <div class="faq-item" onclick="toggleFaqItem(this)">
-                            <div class="faq-question">2. Comment changer la voix d'ELAWS ? <span>▼</span></div>
-                            <div class="faq-answer">Rendez-vous dans l'onglet <strong>Profil</strong> sur la page d'accueil. Vous y trouverez un menu déroulant listant toutes les voix disponibles sur votre appareil. Choisissez celle qui vous plaît et testez-la en direct.</div>
+                            <div class="faq-question">2. Y a-t-il des effets sonores ? <span>▼</span></div>
+                            <div class="faq-answer">Oui ! Un son discret et mélodieux confirme chaque validation (encaissement, sauvegarde, facture) pour une expérience utilisateur haut de gamme.</div>
                         </div>
-
-                        <div class="faq-item" onclick="toggleFaqItem(this)">
-                            <div class="faq-question">3. Comment fonctionne la Traduction Croisée ? <span>▼</span></div>
-                            <div class="faq-answer">Allez dans le module <strong>Traduction (🌐)</strong>. Sélectionnez la langue ou le dialecte de votre interlocuteur et votre langue cible. Tapez ou utilisez le micro pour traduire et écouter instantanément la restitution vocale.</div>
-                        </div>
-
-                        <div class="faq-item" onclick="toggleFaqItem(this)">
-                            <div class="faq-question">4. Comment ELAWS m'aide-t-il selon mon métier ? <span>▼</span></div>
-                            <div class="faq-answer">Lors de la création de votre profil, indiquez votre profession (Docteur, Mécanicien, Journaliste, etc.). ELAWS analyse le contexte et adapte ses conseils (protocoles cliniques, diagnostics techniques, structures de texte).</div>
-                        </div>
-
-                        <div class="faq-item" onclick="toggleFaqItem(this)">
-                            <div class="faq-question">5. L'application fonctionne-t-elle hors-ligne ? <span>▼</span></div>
-                            <div class="faq-answer">Oui ! Grâce au Service Worker et au stockage local (localStorage), l'application fonctionne entièrement sans connexion internet, garantissant une souveraineté totale de vos données.</div>
-                        </div>
-                    </div>
-                `;
-            } else if (activeTab === 'appels') {
-                let contactsHtml = '';
-                if(utilisateurActif.contactsAppels) {
-                    utilisateurActif.contactsAppels.forEach(c => {
-                        contactsHtml += `
-                            <div style="background:var(--bg-color); padding:14px; border-radius:10px; margin-bottom:10px; border-left:4px solid var(--accent); display:flex; justify-content:space-between; align-items:center;">
-                                <div><strong>👤 ${c.nom}</strong><br><small style="color:var(--text-secondary);">${c.tel}</small></div>
-                                <div style="display:flex; gap:8px;">
-                                    <button class="btn-action" style="width:auto; padding:8px 12px; background:#10b981;" onclick="lancerAppelGSM('${c.tel}')">📞 GSM</button>
-                                    <button class="btn-action" style="width:auto; padding:8px 12px; background:#3b82f6;" onclick="lancerAppelInternet('${c.nom}')">🌐 Data</button>
-                                </div>
-                            </div>
-                        `;
-                    });
-                }
-                content.innerHTML = `
-                    <div class="card" style="border-color:var(--accent);">
-                        <h3 class="card-title">📞 Appels & Contacts</h3>
-                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                            <input type="text" id="appelNom" class="input" placeholder="Nom du contact" style="margin-bottom:8px;">
-                            <input type="text" id="appelTel" class="input" placeholder="Téléphone" style="margin-bottom:8px;">
-                            <button class="btn-action" onclick="ajouterContactAppel()">Enregistrer le Contact</button>
-                        </div>
-                        ${contactsHtml}
-                    </div>
-                `;
-            } else if (activeTab === 'atelier_specifique') {
-                let listeUniv = '';
-                const dms = utilisateurActif.donneesMetierSpecifique || {};
-                if(dms.registreUniversel && dms.registreUniversel.length > 0) {
-                    dms.registreUniversel.forEach(u => {
-                        listeUniv += `<div style="background:var(--bg-color); padding:10px; border-radius:6px; margin-bottom:6px; position:relative;"><strong>📌 ${u.titre}</strong> — ${u.desc} <button onclick="supprimerElementMetier(${u.id})" style="float:right; background:none; border:none; color:#ef4444; cursor:pointer;">❌</button></div>`;
-                    });
-                } else { listeUniv = '<p style="color:var(--text-secondary);">Aucun enregistrement.</p>'; }
-
-                content.innerHTML = `
-                    <div class="card" style="border-color:var(--accent);">
-                        <h3 class="card-title">⚡ Outils : ${utilisateurActif.metierUnique}</h3>
-                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                            <input type="text" id="univTitre" class="input" placeholder="Intitulé de la tâche / dossier patient" style="margin-bottom:8px;">
-                            <input type="text" id="univDesc" class="input" placeholder="Détails ou remarques" style="margin-bottom:8px;">
-                            <button class="btn-action" onclick="ajouterDonneeMetier()">Enregistrer</button>
-                        </div>
-                        ${listeUniv}
-                    </div>
-                `;
-            } else if (activeTab === 'economie') {
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">🪙 Caisse & Trésorerie</h3>
-                        <div style="font-size:24px; font-weight:800; color:var(--accent); text-align:center; padding:15px;">${utilisateurActif.solde.toLocaleString()} FCFA</div>
                     </div>
                 `;
             }
