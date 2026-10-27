@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. & ELAWS AI - Écosystème Souverain & Environnements Métiers</title>
+    <title>E.V.A.T. & ELAWS - Écosystème Souverain & Environnements Métiers</title>
     
     <link rel="manifest" href="data:application/manifest+json,{
-        'name': 'E.V.A.T. & ELAWS AI',
+        'name': 'E.V.A.T. & ELAWS',
         'short_name': 'EVAT',
         'start_url': '.',
         'display': 'standalone',
@@ -95,7 +95,7 @@
             transition: transform 0.2s;
         }
         .menu-toggle:hover { transform: scale(1.05); }
-        .title { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.5px; }
+        .title { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.5px; }
         .header-right { display: flex; align-items: center; gap: 8px; }
         .btn-top {
             background-color: var(--border-color);
@@ -267,7 +267,7 @@
             <div class="header-left">
                 <button class="menu-toggle" onclick="toggleMenu()">☰</button>
                 <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo ELAWS" class="app-logo">
-                <div class="title">E.V.A.T. & ELAWS AI</div>
+                <div class="title">E.V.A.T. & ELAWS</div>
             </div>
             <div class="header-right">
                 <button class="btn-top" onclick="changerTheme()">🎨 Thème</button>
@@ -275,7 +275,7 @@
             </div>
         </header>
         <div class="badge-info">
-            <span id="badgeDomaineActif">🌍 Écosystème Souverain & Compagnon ELAWS AI</span>
+            <span id="badgeDomaineActif">🌍 Écosystème Souverain & Compagnon ELAWS</span>
             <span class="offline-status">⚡ 100% Hors-Ligne</span>
         </div>
     </div>
@@ -283,7 +283,7 @@
     <!-- BANDEAU D'INSTALLATION AUTOMATIQUE -->
     <div id="installBanner" class="card" style="display:none; border-color:var(--accent); background:rgba(5,150,105,0.15); text-align:center;">
         <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo" style="width:50px; height:50px; margin-bottom:8px; border-radius:12px;">
-        <h3 class="card-title" style="color:var(--accent); margin-bottom:6px;">📲 Installer E.V.A.T. & ELAWS AI</h3>
+        <h3 class="card-title" style="color:var(--accent); margin-bottom:6px;">📲 Installer E.V.A.T. & ELAWS</h3>
         <p class="text" style="margin-bottom:12px;">Installez l'application pour l'utiliser partout, même sans aucune connexion Internet !</p>
         <button class="btn-action" id="btnInstallApp" style="font-size:15px; padding:14px;">Installer l'Application</button>
     </div>
@@ -291,7 +291,7 @@
     <div id="sideMenu" class="sidebar">
         <h3>📂 Navigation & Environnement</h3>
         <button class="menu-item" onclick="switchTab('accueil')">🏠 Mon Profil & Environnement</button>
-        <button class="menu-item" onclick="switchTab('elaws_compagnon')" style="background:rgba(5,150,105,0.2); border:1px solid var(--accent);">🤖 <strong>Compagnon ELAWS AI (Assistant)</strong></button>
+        <button class="menu-item" onclick="switchTab('elaws_compagnon')" style="background:rgba(5,150,105,0.2); border:1px solid var(--accent);">🤖 <strong>Compagnon ELAWS (Assistant)</strong></button>
         <button class="menu-item" onclick="switchTab('atelier_specifique')" id="menuItemAtelier">⚡ Outils & Logiciels Métier</button>
         <button class="menu-item" onclick="switchTab('factures')">🧾 Reçus & Factures</button>
         <button class="menu-item" onclick="switchTab('economie')">🪙 Caisse & Trésorerie</button>
@@ -312,7 +312,7 @@
             <span class="icon">💼</span><span>Profil</span>
         </button>
         <button class="bar-item" onclick="switchTab('elaws_compagnon')" id="barElaws" style="color:var(--accent);">
-            <span class="icon">🤖</span><span>ELAWS AI</span>
+            <span class="icon">🤖</span><span>ELAWS</span>
         </button>
         <button class="bar-item" onclick="switchTab('atelier_specifique')" id="barAtelier">
             <span class="icon" id="iconBarMetier">⚡</span><span id="labelBarMetier">Outils</span>
@@ -419,10 +419,15 @@
                     analysesSol: [],
                     cultures: [],
                     mesuresClients: [],
-                    commandesAtelier: []
+                    enquetesJournaliste: [],
+                    sourcesJournaliste: [],
+                    coursEnseignant: [],
+                    notesEleves: [],
+                    coursesChauffeur: [],
+                    vehiculeChauffeur: []
                 },
                 discussionsElaws: [
-                    { role: 'ai', texte: `Bonjour ${nom} ! Je suis **ELAWS AI**, votre compagnon intelligent. J'ai généré automatiquement votre profil complet et votre environnement de travail dédié au métier de **${metierUnique}** (logiciels de dessin, outils de calcul, registres). Tout fonctionne 100% hors-ligne. Comment puis-je vous accompagner aujourd'hui ?` }
+                    { role: 'ai', texte: `Bonjour ${nom} ! Je suis **ELAWS**, votre compagnon intelligent. J'ai généré automatiquement votre profil complet et votre environnement de travail dédié au métier de **${metierUnique}**. Tout fonctionne 100% hors-ligne. Comment puis-je vous accompagner aujourd'hui ?` }
                 ],
                 historiqueFinancier: [
                     { date: new Date().toLocaleDateString(), desc: "Capital initial", montant: 50000, type: "entree" }
@@ -475,7 +480,7 @@
             utilisateurActif.telephone = document.getElementById('inputTelUtilisateur').value.trim() || utilisateurActif.telephone;
             
             if(!utilisateurActif.donneesMetierSpecifique) {
-                utilisateurActif.donneesMetierSpecifique = { plans: [], analysesSol: [], cultures: [], mesuresClients: [], commandesAtelier: [] };
+                utilisateurActif.donneesMetierSpecifique = { plans: [], analysesSol: [], cultures: [], mesuresClients: [], enquetesJournaliste: [], sourcesJournaliste: [], coursEnseignant: [], notesEleves: [], coursesChauffeur: [] };
             }
 
             sauvegarderProfilActif();
@@ -483,7 +488,37 @@
             render();
         }
 
-        // --- GESTION DES OUTILS METIERS ---
+        // --- GESTION DES OUTILS METIERS SPECIFIQUES ---
+        function ajouterEnqueteJournaliste() {
+            const sujet = document.getElementById('jourSujet').value.trim();
+            const angle = document.getElementById('jourAngle').value.trim();
+            const statut = document.getElementById('jourStatut').value;
+            if (sujet) {
+                if(!utilisateurActif.donneesMetierSpecifique.enquetesJournaliste) utilisateurActif.donneesMetierSpecifique.enquetesJournaliste = [];
+                utilisateurActif.donneesMetierSpecifique.enquetesJournaliste.unshift({
+                    id: Date.now(), sujet, angle: angle || 'Standard', statut, date: new Date().toLocaleDateString()
+                });
+                sauvegarderProfilActif();
+                showToast("Enquête / Article enregistré !");
+                render();
+            } else { showToast("Saisissez le sujet de l'enquête."); }
+        }
+
+        function ajouterSourceJournaliste() {
+            const nomSource = document.getElementById('jourSourceNom').value.trim();
+            const contact = document.getElementById('jourSourceContact').value.trim();
+            const conf = document.getElementById('jourSourceConf').value;
+            if (nomSource) {
+                if(!utilisateurActif.donneesMetierSpecifique.sourcesJournaliste) utilisateurActif.donneesMetierSpecifique.sourcesJournaliste = [];
+                utilisateurActif.donneesMetierSpecifique.sourcesJournaliste.unshift({
+                    id: Date.now(), nomSource, contact: contact || 'N/C', conf, date: new Date().toLocaleDateString()
+                });
+                sauvegarderProfilActif();
+                showToast("Source / Contact enregistré !");
+                render();
+            } else { showToast("Saisissez le nom de la source."); }
+        }
+
         function ajouterPlanArchitecte() {
             const nomPlan = document.getElementById('archiNomPlan').value.trim();
             const surface = document.getElementById('archiSurface').value;
@@ -497,21 +532,6 @@
                 showToast("Plan DAO / Métré enregistré !");
                 render();
             } else { showToast("Remplissez le nom du plan et la surface."); }
-        }
-
-        function ajouterAnalyseSol() {
-            const zone = document.getElementById('solZone').value.trim();
-            const typeSol = document.getElementById('solType').value;
-            const resistance = document.getElementById('solResistance').value;
-            if (zone) {
-                if(!utilisateurActif.donneesMetierSpecifique.analysesSol) utilisateurActif.donneesMetierSpecifique.analysesSol = [];
-                utilisateurActif.donneesMetierSpecifique.analysesSol.unshift({
-                    id: Date.now(), zone, typeSol, resistance: resistance || '2.5', date: new Date().toLocaleDateString()
-                });
-                sauvegarderProfilActif();
-                showToast("Analyse géotechnique enregistrée !");
-                render();
-            } else { showToast("Indiquez la zone ou le chantier."); }
         }
 
         function ajouterCultureChamp() {
@@ -534,13 +554,10 @@
             const typeHabit = document.getElementById('mesureTypeHabit').value.trim();
             const poitrine = document.getElementById('mesurePoitrine').value;
             const longueur = document.getElementById('mesureLongueur').value;
-            const manches = document.getElementById('mesureManches').value;
-            const details = document.getElementById('mesureDetails').value.trim();
-
             if (client && typeHabit) {
                 if(!utilisateurActif.donneesMetierSpecifique.mesuresClients) utilisateurActif.donneesMetierSpecifique.mesuresClients = [];
                 utilisateurActif.donneesMetierSpecifique.mesuresClients.unshift({
-                    id: Date.now(), client, typeHabit, poitrine: poitrine || 'N/C', longueur: longueur || 'N/C', manches: manches || 'N/C', details: details || 'Aucune consigne', date: new Date().toLocaleDateString()
+                    id: Date.now(), client, typeHabit, poitrine: poitrine || 'N/C', longueur: longueur || 'N/C', date: new Date().toLocaleDateString()
                 });
                 sauvegarderProfilActif();
                 showToast("Fiche de mesures enregistrée !");
@@ -549,8 +566,9 @@
         }
 
         function supprimerDonneesMetier(type, id) {
-            if(type === 'plan') utilisateurActif.donneesMetierSpecifique.plans = utilisateurActif.donneesMetierSpecifique.plans.filter(p => p.id !== id);
-            else if(type === 'sol') utilisateurActif.donneesMetierSpecifique.analysesSol = utilisateurActif.donneesMetierSpecifique.analysesSol.filter(s => s.id !== id);
+            if(type === 'enquete') utilisateurActif.donneesMetierSpecifique.enquetesJournaliste = utilisateurActif.donneesMetierSpecifique.enquetesJournaliste.filter(e => e.id !== id);
+            else if(type === 'source') utilisateurActif.donneesMetierSpecifique.sourcesJournaliste = utilisateurActif.donneesMetierSpecifique.sourcesJournaliste.filter(s => s.id !== id);
+            else if(type === 'plan') utilisateurActif.donneesMetierSpecifique.plans = utilisateurActif.donneesMetierSpecifique.plans.filter(p => p.id !== id);
             else if(type === 'culture') utilisateurActif.donneesMetierSpecifique.cultures = utilisateurActif.donneesMetierSpecifique.cultures.filter(c => c.id !== id);
             else if(type === 'mesure') utilisateurActif.donneesMetierSpecifique.mesuresClients = utilisateurActif.donneesMetierSpecifique.mesuresClients.filter(m => m.id !== id);
             sauvegarderProfilActif();
@@ -673,13 +691,9 @@
             const metier = utilisateurActif.metierUnique.toLowerCase();
 
             if (qLower.includes('bonjour') || qLower.includes('salut') || qLower.includes('coucou')) {
-                reponse = `Bonjour ${utilisateurActif.nom} ! C'est ELAWS AI, votre compagnon intelligent. Je suis à vos côtés pour vous assister, vous conseiller et répondre à vos questions sur votre métier de ${metier}. Que puis-je faire pour vous ?`;
-            } else if (metier.includes('architecte') || metier.includes('batiment')) {
-                reponse = `En tant qu'architecte, n'oubliez pas d'utiliser l'onglet 'Outils & Logiciels' pour enregistrer vos plans DAO et vos études géotechniques de sols. Je peux vous aider à rédiger vos devis ou estimer vos métrés si vous le souhaitez !`;
-            } else if (metier.includes('cultivateur') || metier.includes('agriculteur')) {
-                reponse = `En tant qu'agriculteur, suivez vos parcelles dans l'onglet 'Outils & Logiciels'. Je suis là pour vous conseiller sur les rotations de cultures et la gestion de votre trésorerie hors-ligne.`;
+                reponse = `Bonjour ${utilisateurActif.nom} ! C'est ELAWS, votre compagnon intelligent. Je suis à vos côtés pour vous assister, vous conseiller et répondre à vos questions sur votre métier de ${metier}. Que puis-je faire pour vous ?`;
             } else {
-                reponse = `ELAWS AI (votre compagnon) a bien pris en compte votre demande : "${q}". Je reste à vos côtés pour vous accompagner pas à pas dans votre activité de ${utilisateurActif.metierUnique} !`;
+                reponse = `ELAWS (votre compagnon) a bien pris en compte votre demande : "${q}". Je reste à vos côtés pour vous accompagner pas à pas dans votre activité de ${utilisateurActif.metierUnique} !`;
             }
 
             utilisateurActif.discussionsElaws.push({ role: 'ai', texte: reponse });
@@ -708,8 +722,8 @@
                 content.innerHTML = `
                     <div class="card" style="border-color:var(--accent); max-width:500px; margin: 20px auto; text-align:center;">
                         <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo" style="width:72px; height:72px; margin-bottom:10px; border-radius:16px; border:2px solid var(--accent); box-shadow:0 0 20px rgba(5,150,105,0.4);">
-                        <h2 style="color:var(--accent); margin-top:0;">✨ E.V.A.T. & ELAWS AI</h2>
-                        <p class="text" style="text-align:center;">Écosystème Souverain 100% Hors-Ligne. Saisissez votre métier (ex: <em>Architecte</em>, <em>Cultivateur</em>, <em>Couturier</em>, <em>Chauffeur</em>) pour que l'application génère <strong>instantanément votre profil, votre environnement de travail complet et votre compagnon ELAWS AI</strong>.</p>
+                        <h2 style="color:var(--accent); margin-top:0;">✨ E.V.A.T. & ELAWS</h2>
+                        <p class="text" style="text-align:center;">Écosystème Souverain 100% Hors-Ligne. Saisissez votre métier (ex: <em>Journaliste</em>, <em>Architecte</em>, <em>Cultivateur</em>, <em>Couturier</em>) pour que l'application génère <strong>instantanément votre profil, votre environnement de travail complet et votre compagnon ELAWS</strong>.</p>
                         
                         ${profilsExistantsHtml}
 
@@ -722,7 +736,7 @@
                             <input type="email" id="regEmail" class="input" placeholder="Ex: monemail@domaine.com">
 
                             <label style="font-size:11px; color:var(--text-secondary);">Votre Métier / Corps de métier exact * :</label>
-                            <input type="text" id="regMetierCustom" class="input" placeholder="Ex: Architecte, Cultivateur, Couturier, Menuisier...">
+                            <input type="text" id="regMetierCustom" class="input" placeholder="Ex: Journaliste, Architecte, Cultivateur, Couturier...">
 
                             <label style="font-size:11px; color:var(--text-secondary);">Téléphone :</label>
                             <input type="text" id="regTel" class="input" placeholder="Ex: +228 98231402">
@@ -763,14 +777,14 @@
             const metierLower = utilisateurActif.metierUnique.toLowerCase();
             let iconeMetier = '⚡';
             let labelMetierNav = 'Outils';
-            if (metierLower.includes('architecte') || metierLower.includes('batiment')) {
+            if (metierLower.includes('journaliste') || metierLower.includes('redacteur') || metierLower.includes('presse')) {
+                iconeMetier = '📰'; labelMetierNav = 'Enquêtes';
+            } else if (metierLower.includes('architecte') || metierLower.includes('batiment')) {
                 iconeMetier = '📐'; labelMetierNav = 'Plans & Sols';
-            } else if (metierLower.includes('cultivateur') || metierLower.includes('agriculteur') || metierLower.includes('champ')) {
+            } else if (metierLower.includes('cultivateur') || metierLower.includes('agriculteur')) {
                 iconeMetier = '🌾'; labelMetierNav = 'Champs';
             } else if (metierLower.includes('coutur') || metierLower.includes('tailleur')) {
                 iconeMetier = '✂️'; labelMetierNav = 'Mesures';
-            } else if (metierLower.includes('chauff') || metierLower.includes('transport')) {
-                iconeMetier = '🚗'; labelMetierNav = 'Courses';
             }
 
             document.getElementById('iconBarMetier').innerText = iconeMetier;
@@ -796,13 +810,13 @@
                         </div>
                         <p class="text" style="margin-bottom:12px;">Profil configuré pour : <strong style="color:var(--accent);">${utilisateurActif.metierUnique}</strong>. Votre environnement de travail et vos logiciels spécialisés sont prêts.</p>
                         
-                        <!-- ACCÈS DIRECT AU COMPAGNON ELAWS AI -->
+                        <!-- ACCÈS DIRECT AU COMPAGNON ELAWS -->
                         <div style="background:rgba(5,150,105,0.15); border:2px solid var(--accent); padding:16px; border-radius:12px; margin-bottom:15px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 4px 15px rgba(5,150,105,0.2);">
                             <div>
-                                <h4 style="margin:0 0 4px 0; color:var(--accent); font-size:16px;">🤖 Compagnon ELAWS AI</h4>
+                                <h4 style="margin:0 0 4px 0; color:var(--accent); font-size:16px;">🤖 Compagnon ELAWS</h4>
                                 <p style="font-size:12px; margin:0; color:var(--text-secondary);">Votre assistant personnel pour vous accompagner dans votre profil.</p>
                             </div>
-                            <button class="btn-action" style="width:auto; padding:12px 18px; font-size:14px;" onclick="switchTab('elaws_compagnon')">Parler au Compagnon 💬</button>
+                            <button class="btn-action" style="width:auto; padding:12px 18px; font-size:14px;" onclick="switchTab('elaws_compagnon')">Parler à ELAWS 💬</button>
                         </div>
 
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; display:flex; flex-direction:column; gap:10px;">
@@ -849,14 +863,13 @@
                     </div>
                 `;
             } else if (activeTab === 'elaws_compagnon') {
-                // COMPAGNON ELAWS AI (ASSISTANT DISTINCT DE L'OUTIL)
                 let chatHtml = '';
                 if (utilisateurActif.discussionsElaws) {
                     utilisateurActif.discussionsElaws.forEach(msg => {
                         const isAi = msg.role === 'ai';
                         const bg = isAi ? 'rgba(5,150,105,0.15)' : 'var(--bg-color)';
                         const border = isAi ? '4px solid var(--accent)' : '4px solid var(--border-color)';
-                        const auteur = isAi ? '🤖 ELAWS AI (Compagnon de Route)' : `👤 ${utilisateurActif.nom}`;
+                        const auteur = isAi ? '🤖 ELAWS (Compagnon de Route)' : `👤 ${utilisateurActif.nom}`;
                         chatHtml += `
                             <div style="background:${bg}; border-left:${border}; padding:14px; border-radius:10px; margin-bottom:12px;">
                                 <strong style="font-size:12px; color:${isAi ? 'var(--accent)' : 'var(--text-secondary)'};">${auteur}</strong>
@@ -871,166 +884,119 @@
                         <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; border-bottom:2px solid var(--border-color); padding-bottom:10px;">
                             <span style="font-size:28px;">🤖</span>
                             <div>
-                                <h3 class="card-title" style="margin:0; color:var(--accent);">ELAWS AI — Compagnon Intelligent</h3>
+                                <h3 class="card-title" style="margin:0; color:var(--accent);">ELAWS — Compagnon Intelligent</h3>
                                 <p style="font-size:12px; margin:0; color:var(--text-secondary);">Assistant personnel pour votre profil : <strong>${utilisateurActif.metierUnique}</strong></p>
                             </div>
                         </div>
-                        <p class="text">Échangez avec votre compagnon ELAWS AI pour vous faire conseiller, rédiger des courriers, structurer vos projets ou analyser vos données hors-ligne.</p>
+                        <p class="text">Échangez avec votre compagnon ELAWS pour vous faire conseiller, rédiger des articles ou structurer vos notes hors-ligne.</p>
                         
                         <div style="background:var(--bg-color); padding:15px; border-radius:12px; max-height:420px; overflow-y:auto; margin-bottom:15px; border:1px solid var(--border-color);">
                             ${chatHtml}
                         </div>
 
                         <div style="display:flex; gap:8px;">
-                            <input type="text" id="inputElawsChat" class="input" placeholder="Parlez à votre compagnon ELAWS AI..." style="margin-bottom:0; font-size:14px; padding:12px;" onkeypress="if(event.key === 'Enter') envoyerMessageElawsAI()">
+                            <input type="text" id="inputElawsChat" class="input" placeholder="Parlez à votre compagnon ELAWS..." style="margin-bottom:0; font-size:14px; padding:12px;" onkeypress="if(event.key === 'Enter') envoyerMessageElawsAI()">
                             <button class="btn-action" style="width:auto; padding:0 22px;" onclick="envoyerMessageElawsAI()">Envoyer 🚀</button>
                         </div>
                     </div>
                 `;
             } else if (activeTab === 'atelier_specifique') {
-                // --- OUTILS ET LOGICIELS METIERS INTEGRÉS DANS LE PROFIL ---
-                if (metierLower.includes('architecte') || metierLower.includes('batiment') || metierLower.includes('genie civil')) {
-                    let plansHtml = '';
-                    let solHtml = '';
-                    const dms = utilisateurActif.donneesMetierSpecifique || { plans: [], analysesSol: [] };
+                // --- OUTILS SPECIFIQUES POUR JOURNALISTE ET AUTRES ---
+                if (metierLower.includes('journaliste') || metierLower.includes('redacteur') || metierLower.includes('presse')) {
+                    let enquetesHtml = '';
+                    let sourcesHtml = '';
+                    const dms = utilisateurActif.donneesMetierSpecifique || { enquetesJournaliste: [], sourcesJournaliste: [] };
                     
+                    if (dms.enquetesJournaliste && dms.enquetesJournaliste.length > 0) {
+                        dms.enquetesJournaliste.forEach(e => {
+                            enquetesHtml += `
+                                <div style="background:var(--bg-color); padding:12px; border-radius:8px; margin-bottom:8px; border-left:4px solid var(--accent); position:relative;">
+                                    <button onclick="supprimerDonneesMetier('enquete', ${e.id})" style="position:absolute; top:10px; right:10px; background:none; border:none; cursor:pointer;" title="Supprimer">❌</button>
+                                    <strong style="color:var(--accent);">📰 Sujet / Enquête : ${e.sujet}</strong> (${e.date})<br>
+                                    <small>Angle : <strong>${e.angle}</strong> | Statut : ${e.statut}</small>
+                                </div>
+                            `;
+                        });
+                    } else { enquetesHtml = '<p style="color:var(--text-secondary);">Aucune enquête ou article enregistré.</p>'; }
+
+                    if (dms.sourcesJournaliste && dms.sourcesJournaliste.length > 0) {
+                        dms.sourcesJournaliste.forEach(s => {
+                            sourcesHtml += `
+                                <div style="background:var(--bg-color); padding:12px; border-radius:8px; margin-bottom:8px; border-left:4px solid #f59e0b; position:relative;">
+                                    <button onclick="supprimerDonneesMetier('source', ${s.id})" style="position:absolute; top:10px; right:10px; background:none; border:none; cursor:pointer;" title="Supprimer">❌</button>
+                                    <strong style="color:#f59e0b;">🔒 Source / Contact : ${s.nomSource}</strong> (${s.date})<br>
+                                    <small>Coordonnées : ${s.contact} | Confidentialité : <strong>${s.conf}</strong></small>
+                                </div>
+                            `;
+                        });
+                    } else { sourcesHtml = '<p style="color:var(--text-secondary);">Aucune source enregistrée.</p>'; }
+
+                    content.innerHTML = `
+                        <div class="card" style="border-color:var(--accent);">
+                            <h3 class="card-title">📰 Outils Journaliste : Carnet d'Enquêtes & Répertoire de Sources</h3>
+                            <p class="text">Votre profil de journaliste intègre vos carnets d'investigation et la gestion sécurisée de vos sources hors-ligne.</p>
+                            
+                            <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
+                                <h4 style="margin:0 0 8px 0; color:var(--accent);">➕ Enregistrer un Sujet / Enquête :</h4>
+                                <input type="text" id="jourSujet" class="input" placeholder="Titre du sujet ou de l'article" style="margin-bottom:8px;">
+                                <input type="text" id="jourAngle" class="input" placeholder="Angle journalistique (ex: Enquête sur la vie chère)" style="margin-bottom:8px;">
+                                <select id="jourStatut" class="input" style="margin-bottom:8px;">
+                                    <option value="En cours d'investigation">🔍 En cours d'investigation</option>
+                                    <option value="Rédaction en cours">✍️ Rédaction en cours</option>
+                                    <option value="Publié / Transmis">✅ Publié / Transmis</option>
+                                </select>
+                                <button class="btn-action" onclick="ajouterEnqueteJournaliste()">Enregistrer l'Enquête</button>
+                            </div>
+
+                            <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:20px;">
+                                <h4 style="margin:0 0 8px 0; color:#f59e0b;">🔒 Répertoire Sécurisé des Sources :</h4>
+                                <input type="text" id="jourSourceNom" class="input" placeholder="Nom de la source ou personne ressource" style="margin-bottom:8px;">
+                                <input type="text" id="jourSourceContact" class="input" placeholder="Téléphone / E-mail / Signal" style="margin-bottom:8px;">
+                                <select id="jourSourceConf" class="input" style="margin-bottom:8px;">
+                                    <option value="Strictement Confidentiel">🔒 Strictement Confidentiel</option>
+                                    <option value="Off the record">🤫 Off the record</option>
+                                    <option value="Source publique">🌐 Source publique / Officielle</option>
+                                </select>
+                                <button class="btn-action" style="background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%);" onclick="ajouterSourceJournaliste()">Enregistrer la Source</button>
+                            </div>
+
+                            <h4 style="margin-bottom:8px;">📂 Mes Enquêtes & Articles :</h4>
+                            ${enquetesHtml}
+
+                            <h4 style="margin:15px 0 8px 0;">🛡️ Mes Sources :</h4>
+                            ${sourcesHtml}
+                        </div>
+                    `;
+                } else if (metierLower.includes('architecte') || metierLower.includes('batiment')) {
+                    let plansHtml = '';
+                    const dms = utilisateurActif.donneesMetierSpecifique || { plans: [] };
                     if (dms.plans && dms.plans.length > 0) {
                         dms.plans.forEach(p => {
                             plansHtml += `
                                 <div style="background:var(--bg-color); padding:12px; border-radius:8px; margin-bottom:8px; border-left:4px solid var(--accent); position:relative;">
                                     <button onclick="supprimerDonneesMetier('plan', ${p.id})" style="position:absolute; top:10px; right:10px; background:none; border:none; cursor:pointer;" title="Supprimer">❌</button>
-                                    <strong style="color:var(--accent);">📐 Plan DAO / Projet : ${p.nomPlan}</strong> (${p.date})<br>
-                                    <small>Surface : <strong>${p.surface} m²</strong> | Pièces / Niveaux : ${p.pieces}</small>
+                                    <strong style="color:var(--accent);">📐 Plan DAO : ${p.nomPlan}</strong> (${p.date})<br>
+                                    <small>Surface : <strong>${p.surface} m²</strong></small>
                                 </div>
                             `;
                         });
-                    } else { plansHtml = '<p style="color:var(--text-secondary);">Aucun plan DAO enregistré dans votre profil.</p>'; }
-
-                    if (dms.analysesSol && dms.analysesSol.length > 0) {
-                        dms.analysesSol.forEach(s => {
-                            solHtml += `
-                                <div style="background:var(--bg-color); padding:12px; border-radius:8px; margin-bottom:8px; border-left:4px solid #f59e0b; position:relative;">
-                                    <button onclick="supprimerDonneesMetier('sol', ${s.id})" style="position:absolute; top:10px; right:10px; background:none; border:none; cursor:pointer;" title="Supprimer">❌</button>
-                                    <strong style="color:#f59e0b;">🧪 Étude Géotechnique : ${s.zone}</strong> (${s.date})<br>
-                                    <small>Type de sol : ${s.typeSol} | Résistance admissible : <strong>${s.resistance} bars</strong></small>
-                                </div>
-                            `;
-                        });
-                    } else { solHtml = '<p style="color:var(--text-secondary);">Aucune étude de sol enregistrée.</p>'; }
-
+                    } else { plansHtml = '<p style="color:var(--text-secondary);">Aucun plan enregistré.</p>'; }
                     content.innerHTML = `
                         <div class="card" style="border-color:var(--accent);">
-                            <h3 class="card-title">📐 Outils & Logiciels Architecte : Plans DAO & Étude de Sol</h3>
-                            <p class="text">Votre profil d'architecte intègre vos logiciels de dessin, vos métrés et vos calculs de résistance des sols hors-ligne.</p>
-                            
+                            <h3 class="card-title">📐 Outils Architecte : Plans DAO</h3>
                             <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                                <h4 style="margin:0 0 8px 0; color:var(--accent);">➕ Logiciel de Plan & Métré DAO :</h4>
-                                <input type="text" id="archiNomPlan" class="input" placeholder="Nom du projet / Bâtiment (ex: Immeuble R+2 Lomé)" style="margin-bottom:8px;">
-                                <input type="number" id="archiSurface" class="input" placeholder="Surface totale (m²)" style="margin-bottom:8px;">
-                                <input type="text" id="archiPieces" class="input" placeholder="Description des pièces / Niveaux" style="margin-bottom:8px;">
-                                <button class="btn-action" onclick="ajouterPlanArchitecte()">Enregistrer le Plan DAO</button>
+                                <input type="text" id="archiNomPlan" class="input" placeholder="Nom du projet" style="margin-bottom:8px;">
+                                <input type="number" id="archiSurface" class="input" placeholder="Surface (m²)" style="margin-bottom:8px;">
+                                <button class="btn-action" onclick="ajouterPlanArchitecte()">Enregistrer le Plan</button>
                             </div>
-
-                            <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:20px;">
-                                <h4 style="margin:0 0 8px 0; color:#f59e0b;">🧪 Outil d'Analyse du Sol (Géotechnique) :</h4>
-                                <input type="text" id="solZone" class="input" placeholder="Emplacement du chantier (ex: Quartier Kodjoviakopé)" style="margin-bottom:8px;">
-                                <select id="solType" class="input" style="margin-bottom:8px;">
-                                    <option value="Sable argileux">Sable argileux</option>
-                                    <option value="Argile latéritique">Argile latéritique</option>
-                                    <option value="Sol rocheux">Sol rocheux / Roc</option>
-                                    <option value="Sol sableux meuble">Sol sableux meuble</option>
-                                </select>
-                                <input type="number" step="0.1" id="solResistance" class="input" placeholder="Résistance du sol (bars, ex: 2.5)" style="margin-bottom:8px;">
-                                <button class="btn-action" style="background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%);" onclick="ajouterAnalyseSol()">Enregistrer l'Analyse du Sol</button>
-                            </div>
-
-                            <h4 style="margin-bottom:8px;">📂 Mes Plans DAO Enregistrés :</h4>
                             ${plansHtml}
-
-                            <h4 style="margin:15px 0 8px 0;">🔬 Études de Sols :</h4>
-                            ${solHtml}
-                        </div>
-                    `;
-                } else if (metierLower.includes('cultivateur') || metierLower.includes('agriculteur') || metierLower.includes('champ') || metierLower.includes('elevage')) {
-                    let culturesHtml = '';
-                    const dms = utilisateurActif.donneesMetierSpecifique || { cultures: [] };
-                    if (dms.cultures && dms.cultures.length > 0) {
-                        dms.cultures.forEach(c => {
-                            culturesHtml += `
-                                <div style="background:var(--bg-color); padding:12px; border-radius:8px; margin-bottom:8px; border-left:4px solid #22c55e; position:relative;">
-                                    <button onclick="supprimerDonneesMetier('culture', ${c.id})" style="position:absolute; top:10px; right:10px; background:none; border:none; cursor:pointer;" title="Supprimer">❌</button>
-                                    <strong style="color:#22c55e;">🌾 Culture : ${c.culture}</strong> (${c.date})<br>
-                                    <small>Superficie : <strong>${c.superficie} hectares</strong> | Type de sol : ${c.sol}</small>
-                                </div>
-                            `;
-                        });
-                    } else { culturesHtml = '<p style="color:var(--text-secondary);">Aucune culture enregistrée dans votre profil.</p>'; }
-
-                    content.innerHTML = `
-                        <div class="card" style="border-color:var(--accent);">
-                            <h3 class="card-title">🌾 Outils Cultivateur & Agriculteur : Champs & Sols</h3>
-                            <p class="text">Votre profil intègre vos outils de gestion des terres, des cultures et des intrants agricoles.</p>
-                            
-                            <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                                <h4 style="margin:0 0 8px 0; color:#22c55e;">➕ Enregistrer une Culture / Parcelle :</h4>
-                                <input type="text" id="agriCulture" class="input" placeholder="Type de culture (ex: Maïs, Manioc, Coton)" style="margin-bottom:8px;">
-                                <input type="number" step="0.1" id="agriSuperficie" class="input" placeholder="Superficie (en hectares)" style="margin-bottom:8px;">
-                                <input type="text" id="agriSol" class="input" placeholder="Type de sol (ex: Argilo-limoneux, Humifère)" style="margin-bottom:8px;">
-                                <button class="btn-action" style="background:linear-gradient(135deg, #22c55e 0%, #16a34a 100%);" onclick="ajouterCultureChamp()">Enregistrer la Parcelle</button>
-                            </div>
-
-                            <h4 style="margin-bottom:8px;">🌿 Mes Parcelles & Cultures :</h4>
-                            ${culturesHtml}
-                        </div>
-                    `;
-                } else if (metierLower.includes('coutur') || metierLower.includes('tailleur') || metierLower.includes('hab')) {
-                    let mesuresHtml = '';
-                    const dms = utilisateurActif.donneesMetierSpecifique || { mesuresClients: [] };
-                    if (dms.mesuresClients && dms.mesuresClients.length > 0) {
-                        dms.mesuresClients.forEach(m => {
-                            mesuresHtml += `
-                                <div style="background:var(--bg-color); padding:14px; border-radius:10px; margin-bottom:10px; border-left:4px solid var(--accent); position:relative;">
-                                    <button onclick="supprimerDonneesMetier('mesure', ${m.id})" style="position:absolute; top:10px; right:10px; background:none; border:none; cursor:pointer;" title="Supprimer">❌</button>
-                                    <strong style="font-size:15px; color:var(--accent);">👤 Client : ${m.client}</strong> <small style="color:var(--text-secondary);">(${m.date})</small><br>
-                                    <div style="margin-top:6px; font-size:13px; display:grid; grid-template-columns: repeat(2, 1fr); gap:4px;">
-                                        <div><strong>Modèle :</strong> ${m.typeHabit}</div>
-                                        <div><strong>Poitrine :</strong> ${m.poitrine} cm</div>
-                                        <div><strong>Longueur :</strong> ${m.longueur} cm</div>
-                                        <div><strong>Manches :</strong> ${m.manches} cm</div>
-                                    </div>
-                                    <div style="margin-top:6px; font-size:12px; color:var(--text-secondary);"><strong>Consignes :</strong> ${m.details}</div>
-                                </div>
-                            `;
-                        });
-                    } else { mesuresHtml = `<p style="text-align:center; color:var(--text-secondary);">Aucune fiche de mesure enregistrée.</p>`; }
-
-                    content.innerHTML = `
-                        <div class="card" style="border-color:var(--accent);">
-                            <h3 class="card-title">✂️ Outils Couturier : Carnet de Mesures & Modèles d'Habits</h3>
-                            <p class="text">Votre profil intègre votre carnet de mensurations clients et vos registres de confection hors-ligne.</p>
-                            
-                            <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:20px;">
-                                <h4 style="margin:0 0 10px 0; color:var(--accent);">➕ Nouvelle Fiche de Mesures :</h4>
-                                <input type="text" id="mesureClientNom" class="input" placeholder="Nom et Prénom du client *" style="margin-bottom:8px;">
-                                <input type="text" id="mesureTypeHabit" class="input" placeholder="Modèle / Type d'habit (ex: Boubou, Costume) *" style="margin-bottom:8px;">
-                                <div style="display:flex; gap:8px; margin-bottom:8px;">
-                                    <input type="text" id="mesurePoitrine" class="input" placeholder="Poitrine (cm)">
-                                    <input type="text" id="mesureLongueur" class="input" placeholder="Longueur (cm)">
-                                    <input type="text" id="mesureManches" class="input" placeholder="Manches (cm)">
-                                </div>
-                                <textarea id="mesureDetails" class="input" placeholder="Détails du tissu, style de col..." style="margin-bottom:10px;"></textarea>
-                                <button class="btn-action" onclick="ajouterMesureClient()">Enregistrer la Fiche Client</button>
-                            </div>
-
-                            <h4 style="margin-bottom:10px;">📋 Fiches Enregistrées (${dms.mesuresClients ? dms.mesuresClients.length : 0}) :</h4>
-                            ${mesuresHtml}
                         </div>
                     `;
                 } else {
                     content.innerHTML = `
                         <div class="card" style="border-color:var(--accent);">
                             <h3 class="card-title">⚡ Outils & Logiciels : ${utilisateurActif.metierUnique}</h3>
-                            <p class="text">Votre environnement de travail est généré pour <strong>${utilisateurActif.metierUnique}</strong>. Vous disposez de la caisse, des factures, du journal et de votre compagnon ELAWS AI.</p>
+                            <p class="text">Votre environnement de travail est généré pour <strong>${utilisateurActif.metierUnique}</strong>. Vous disposez de la caisse, des factures, du journal et de votre compagnon ELAWS.</p>
                         </div>
                     `;
                 }
@@ -1068,7 +1034,7 @@
                         </div>
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
                             <h4 style="margin:0 0 8px 0; color:var(--accent);">Ajouter une entrée / sortie :</h4>
-                            <input type="text" id="descCaisse" class="input" placeholder="Libellé (ex: Vente de prestation)" style="margin-bottom:8px;">
+                            <input type="text" id="descCaisse" class="input" placeholder="Libellé" style="margin-bottom:8px;">
                             <input type="number" id="montantCaisse" class="input" placeholder="Montant en FCFA" style="margin-bottom:8px;">
                             <select id="typeCaisse" class="input" style="margin-bottom:8px;">
                                 <option value="entree">Entrée d'argent (+)</option>
@@ -1135,7 +1101,7 @@
                     <div class="card">
                         <h3 class="card-title">💾 Sauvegarde & Restauration (JSON)</h3>
                         <button class="btn-action" onclick="exporterDonneesJSON()" style="margin-bottom:12px;">📥 Exporter mon Profil JSON</button>
-                        <p class="text">Sauvegardez l'intégralité de vos plans DAO, cultures, fiches et finances dans un fichier souverain.</p>
+                        <p class="text">Sauvegardez l'intégralité de vos enquêtes, sources et finances dans un fichier souverain.</p>
                     </div>
                 `;
             } else if (activeTab === 'convertisseur') {
@@ -1143,7 +1109,7 @@
                     <div class="card">
                         <h3 class="card-title">💱 Convertisseur de Devises</h3>
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                            <input type="number" id="montantDevise" class="input" placeholder="Montant à convertir" style="margin-bottom:8px;">
+                            <input type="number" id="montantDevise" class="input" placeholder="Montant" style="margin-bottom:8px;">
                             <select id="paireDevise" class="input" style="margin-bottom:8px;">
                                 <option value="eur_xof">EUR ➡️ XOF (FCFA)</option>
                                 <option value="xof_eur">XOF (FCFA) ➡️ EUR</option>
