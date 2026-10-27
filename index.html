@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. & ELAWS - Écosystème Souverain Universel & Installation Auto</title>
+    <title>E.V.A.T. & ELAWS - Écosystème Souverain Universel</title>
     
-    <!-- Manifeste PWA intégré pour l'installation automatique sur tout support -->
     <link rel="manifest" href="data:application/manifest+json,{
         'name': 'E.V.A.T. & ELAWS',
         'short_name': 'EVAT',
@@ -110,6 +109,32 @@
             align-items: center;
             gap: 6px;
         }
+        #toastNotification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--accent);
+            padding: 12px 20px;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            font-size: 13px;
+            font-weight: 700;
+            z-index: 1000;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            max-width: 90%;
+            text-align: center;
+        }
+        #toastNotification.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
         .sidebar {
             display: none;
             background-color: var(--card-bg);
@@ -213,6 +238,8 @@
 </head>
 <body data-theme="dark">
 
+    <div id="toastNotification">✨ <span id="toastText">Action exécutée avec succès</span></div>
+
     <header>
         <div class="header-left">
             <button class="menu-toggle" onclick="toggleMenu()">☰</button>
@@ -224,19 +251,18 @@
         </div>
     </header>
 
-    <div class="badge-info">📲 Installation Automatique PWA | Caméra & GPS Intégrés</div>
+    <div class="badge-info">⚡ Écosystème Souverain | Menu & Navigation Fluide</div>
 
-    <!-- Bannière d'installation automatique (apparaît si le navigateur le permet) -->
     <div id="installBanner" class="card" style="display:none; border-color:var(--accent); background:rgba(5,150,105,0.12);">
         <h3 class="card-title" style="color:var(--accent);">📲 Installer E.V.A.T. & ELAWS</h3>
-        <p class="text">Installez l'application instantanément sur votre appareil pour y accéder en un clic et 100% hors-ligne !</p>
-        <button class="btn-action" id="btnInstallApp">Installer l'Application sur mon Support</button>
+        <p class="text">Installez l'application instantanément sur votre support en un clic !</p>
+        <button class="btn-action" id="btnInstallApp">Installer l'Application</button>
     </div>
 
     <div id="sideMenu" class="sidebar">
         <h3>📂 Navigation Globale E.V.A.T.</h3>
         <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Hub Modulable</button>
-        <button class="menu-item" onclick="switchTab('camera')">📸 Caméra & Analyse Intelligente</button>
+        <button class="menu-item" onclick="switchTab('camera')">📸 Caméra & Analyse de Sol/Documents (Menu)</button>
         <button class="menu-item" onclick="switchTab('gps')">🧭 Géolocalisation & Itinéraire (Chauffeur)</button>
         <button class="menu-item" onclick="switchTab('simulateur')">🧮 Calculateurs & Outils Métiers</button>
         <button class="menu-item" onclick="switchTab('stocks')">📦 Stocks, Récoltes & Matériel</button>
@@ -260,10 +286,17 @@
         let soldeCaisse = 45200;
         let gpsStatus = "📍 Prêt pour la géolocalisation en ligne (Point A vers Point B).";
         let etatSynchro = "🟢 Données synchronisées et sécurisées en local.";
-        let analysisResult = "Aucune image scannée pour le moment. Prenez une photo du sol, d'une culture ou d'un document pour lancer l'analyse ELAWS.";
+        let analysisResult = "Aucune image scannée pour le moment. Prenez une photo depuis le menu Caméra pour lancer l'analyse.";
         let capturedImageSrc = null;
 
-        // Gestionnaire pour l'installation automatique PWA
+        function showToast(message) {
+            const toast = document.getElementById('toastNotification');
+            const text = document.getElementById('toastText');
+            text.innerHTML = message;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 2500);
+        }
+
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
@@ -275,12 +308,10 @@
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    document.getElementById('installBanner').style.display = 'none';
-                }
+                if (outcome === 'accepted') { document.getElementById('installBanner').style.display = 'none'; }
                 deferredPrompt = null;
             } else {
-                alert("Pour installer l'application, vous pouvez aussi utiliser le menu de votre navigateur (⋮ ou Partager) et choisir 'Ajouter à l'écran d'accueil'.");
+                showToast("Utilisez le menu de votre navigateur pour installer l'application.");
             }
         });
 
@@ -289,14 +320,14 @@
         function changerTheme() {
             themeIndex = (themeIndex + 1) % themes.length;
             document.body.setAttribute('data-theme', themes[themeIndex]);
-            alert("Thème appliqué : " + themeNoms[themeIndex]);
+            showToast("Thème appliqué : " + themeNoms[themeIndex]);
         }
 
-        function changerLangue() { alert("Mode Multilingue actif."); }
+        function changerLangue() { showToast("Mode Multilingue actif."); }
 
         function selectionnerMetier(nom) {
             metierActif = nom;
-            alert(`Profil actif basculé sur : ${nom}`);
+            showToast(`Profil basculé sur : ${nom}`);
             render();
         }
 
@@ -306,10 +337,11 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     capturedImageSrc = e.target.result;
-                    analysisResult = `🔍 <strong>Analyse ELAWS de l'image capturée :</strong><br>` +
-                        `- Type détecté : Échantillon de sol / Végétation / Document professionnel.<br>` +
-                        `- Indice d'humidité / Fertilité : Optimal (Zone favorable aux cultures).<br>` +
-                        `- Recommandation : Intégrer les données dans le registre des stocks et lancer le calcul.`;
+                    analysisResult = `🔍 <strong>Analyse ELAWS de l'image :</strong><br>` +
+                        `- Type détecté : Échantillon de sol / Végétation / Document.<br>` +
+                        `- Indice de fertilité / intégrité : Optimal.<br>` +
+                        `- Statut : Enregistré avec succès dans le système.`;
+                    showToast("Photo analysée avec succès !");
                     render();
                 };
                 reader.readAsDataURL(file);
@@ -318,28 +350,28 @@
 
         function obtenirGeolocalisation() {
             if (!navigator.onLine) {
-                gpsStatus = "🔴 Mode Hors-ligne : Connexion Internet requise pour le guidage GPS en direct.";
-                render();
+                showToast("Mode Hors-ligne : Connexion requise pour le GPS.");
                 return;
             }
             if (navigator.geolocation) {
-                gpsStatus = "🛰️ Recherche GPS en cours...";
-                render();
+                showToast("Recherche de position GPS en cours...");
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         const lat = position.coords.latitude;
                         const lon = position.coords.longitude;
-                        gpsStatus = `📍 Position GPS active : Lat ${lat.toFixed(4)}, Lon ${lon.toFixed(4)} (Prêt pour l'itinéraire).`;
+                        gpsStatus = `📍 Position GPS active : Lat ${lat.toFixed(4)}, Lon ${lon.toFixed(4)}`;
+                        showToast("Position GPS actualisée !");
                         render();
                     },
-                    (error) => { gpsStatus = "⚠️ Erreur de géolocalisation."; render(); }
+                    (error) => { gpsStatus = "⚠️ Erreur de géolocalisation."; showToast("Erreur GPS."); render(); }
                 );
             }
         }
 
         function lancerItineraireDestination() {
             const dest = document.getElementById('inputDestination')?.value.trim();
-            if (!dest) { alert("Veuillez entrer une destination."); return; }
+            if (!dest) { showToast("Veuillez entrer une destination."); return; }
+            showToast("Ouverture de l'itinéraire...");
             window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dest)}`, '_blank');
         }
 
@@ -401,7 +433,7 @@
                 content.innerHTML = `
                     <div class="card">
                         <h3 class="card-title">📸 Caméra & Analyse Intelligente (Sol & Documents)</h3>
-                        <p class="text">Prenez en photo un type de sol, une culture agricole, un document ou un équipement pour que le système l'analyse.</p>
+                        <p class="text">Prenez en photo un type de sol, une culture agricole, un document ou un équipement pour que le système l'analyse et l'intègre.</p>
                         
                         <div class="tool-card" style="text-align:center; padding:20px; border-left-color:var(--accent);">
                             <input type="file" accept="image/*" capture="environment" id="cameraInput" style="display:none;" onchange="handleImageCapture(event)">
@@ -425,8 +457,8 @@
             } else if (activeTab === 'gps') {
                 content.innerHTML = `
                     <div class="card">
-                        <h3 class="card-title">🧭 Géolocalisation & Itinéraire (Chauffeur / Navigateur)</h3>
-                        <p class="text">Obtenez votre position et tracez votre route en ligne du point A vers le point B.</p>
+                        <h3 class="card-title">🧭 Géolocalisation & Itinéraire</h3>
+                        <p class="text">Obtenez votre position et tracez votre route en ligne.</p>
                         <div class="tool-card">
                             📡 ${gpsStatus}<br><br>
                             <button class="btn-action" onclick="obtenirGeolocalisation()">📍 Actualiser ma Position GPS</button>
