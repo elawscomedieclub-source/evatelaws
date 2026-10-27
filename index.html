@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. & ELAWS - Écosystème Souverain Multi-Profils</title>
+    <title>E.V.A.T. & ELAWS - Écosystème Souverain Multi-Profils & Domaines Dynamiques</title>
     
     <link rel="manifest" href="data:application/manifest+json,{
         'name': 'E.V.A.T. & ELAWS',
@@ -227,6 +227,7 @@
             cursor: pointer;
             transition: all 0.2s;
             text-align: left;
+            position: relative;
         }
         .metier-card-widget:hover { border-color: var(--accent); transform: translateY(-2px); }
         .metier-card-widget.active { border-color: var(--accent); background: rgba(5, 150, 105, 0.15); box-shadow: 0 0 10px rgba(5,150,105,0.2); }
@@ -281,14 +282,14 @@
                 <button class="btn-top" onclick="changerProfilSession()">👤 Profils</button>
             </div>
         </header>
-        <div class="badge-info">🌍 Écosystème Souverain Multi-Profils & Logo Actif</div>
+        <div class="badge-info">🌍 Domaines & Métiers 100% Dynamiques</div>
     </div>
 
-    <!-- BANDEAU D'INSTALLATION AUTOMATIQUE FORCÉ -->
+    <!-- BANDEAU D'INSTALLATION AUTOMATIQUE -->
     <div id="installBanner" class="card" style="display:none; border-color:var(--accent); background:rgba(5,150,105,0.15); text-align:center;">
         <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo" style="width:50px; height:50px; margin-bottom:8px; border-radius:12px;">
-        <h3 class="card-title" style="color:var(--accent); margin-bottom:6px;">📲 Installer E.V.A.T. & ELAWS sur votre téléphone</h3>
-        <p class="text" style="margin-bottom:12px;">Profitez de l'application en plein écran, rapide et 100% hors-ligne en un seul clic !</p>
+        <h3 class="card-title" style="color:var(--accent); margin-bottom:6px;">📲 Installer E.V.A.T. & ELAWS</h3>
+        <p class="text" style="margin-bottom:12px;">Installez l'application en un clic pour l'utiliser en plein écran et hors-ligne !</p>
         <button class="btn-action" id="btnInstallApp" style="font-size:15px; padding:14px;">Installer l'Application Immédiatement</button>
     </div>
 
@@ -358,12 +359,10 @@
             setTimeout(() => { toast.classList.remove('show'); }, 2500);
         }
 
-        // --- ENREGISTREMENT DU SERVICE WORKER & CAPTURE DE L'INSTALLATION AUTOMATIQUE ---
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            // Affiche le grand bouton d'installation automatique
             document.getElementById('installBanner').style.display = 'block';
         });
 
@@ -377,14 +376,9 @@
                 }
                 deferredPrompt = null;
             } else {
-                showToast("L'application est déjà installée ou prête sur votre écran.");
+                showToast("L'application est prête sur votre écran.");
             }
         });
-
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('data:text/javascript;base64,JG5hZ2lhdG9yLm9ubGluZSI=')
-                .catch(() => {});
-        }
 
         function toggleMenu() { document.getElementById('sideMenu').classList.toggle('open'); }
         function changerTheme() { showToast("Thème basculé."); }
@@ -392,12 +386,13 @@
         function creerNouveauProfil() {
             const nom = document.getElementById('regNom').value.trim();
             const email = document.getElementById('regEmail').value.trim();
+            const metierCustom = document.getElementById('regMetierCustom').value.trim() || 'Entrepreneur / Professionnel';
             const tel = document.getElementById('regTel').value.trim();
             const nat = document.getElementById('regNationalite').value;
             const pays = document.getElementById('regPaysActuel').value;
 
             if (!nom || !email) {
-                showToast("Veuillez renseigner au moins votre nom et votre e-mail.");
+                showToast("Veuillez renseigner votre nom et votre e-mail.");
                 return;
             }
 
@@ -409,19 +404,17 @@
                 telephone: tel || '+228 00000000',
                 nationalite: nat,
                 paysActuel: pays,
-                langueMaternelle: 'Français',
-                metierActif: 'Conducteur / Chauffeur',
+                metierActif: metierCustom,
                 metiers: [
-                    { nom: 'Conducteur / Chauffeur', icone: '🚕', desc: 'GPS & Transport' },
-                    { nom: 'Agriculteur', icone: '🌾', desc: 'Récoltes & Sols' },
-                    { nom: 'Artisan / Entrepreneur', icone: '✂️', desc: 'Devis & Commerce' },
-                    { nom: 'Explorateur / Voyageur', icone: '🌍', desc: 'Mobilité Globale' }
+                    { nom: metierCustom, icone: '💼', desc: 'Domaine principal' },
+                    { nom: 'Conducteur / Chauffeur', icone: '🚕', desc: 'Transport' },
+                    { nom: 'Artisan / Commerçant', icone: '✂️', desc: 'Commerce' }
                 ],
                 objectifs: [
-                    { id: 1, categorie: "Finances & Business", titre: "Établir l'autonomie et structurer la caisse", statut: "En cours" }
+                    { id: 1, categorie: "Finances & Business", titre: `Développer mon activité en tant que ${metierCustom}`, statut: "En cours" }
                 ],
                 notes: [
-                    { id: 1, titre: "Bienvenue dans E.V.A.T.", texte: "Votre espace souverain est sécurisé.", date: new Date().toLocaleDateString() }
+                    { id: 1, titre: "Bienvenue dans E.V.A.T.", texte: `Espace souverain configuré pour ${metierCustom}.`, date: new Date().toLocaleDateString() }
                 ],
                 solde: 50000,
                 carnet: []
@@ -434,9 +427,7 @@
             idProfilActif = nouveauId;
             utilisateurActif = nouveauProfil;
 
-            showToast(`Bienvenue, ${nom} ! Profil créé.`);
-            document.getElementById('appHeader').style.display = 'block';
-            document.getElementById('bottomBar').style.display = 'flex';
+            showToast(`Bienvenue, ${nom} (${metierCustom}) !`);
             render();
         }
 
@@ -455,15 +446,47 @@
             localStorage.setItem('evat_profil_actif_id', id);
             chargerDonneesProfil();
             showToast(`Profil chargé : ${utilisateurActif.nom}`);
-            document.getElementById('appHeader').style.display = 'block';
-            document.getElementById('bottomBar').style.display = 'flex';
             render();
         }
 
         function selectionnerMetier(nom) {
             utilisateurActif.metierActif = nom;
             sauvegarderProfilActif();
-            showToast(`Profil actif : ${nom}`);
+            showToast(`Domaine actif : ${nom}`);
+            render();
+        }
+
+        function ajouterNouveauDomaineMetier() {
+            const nouveauNom = document.getElementById('inputNouveauMetier').value.trim();
+            const nouvelleDesc = document.getElementById('inputDescMetier').value.trim() || 'Activité professionnelle';
+            if (nouveauNom) {
+                // Vérifier si existe déjà
+                if (!utilisateurActif.metiers.some(m => m.nom.toLowerCase() === nouveauNom.toLowerCase())) {
+                    utilisateurActif.metiers.push({ nom: nouveauNom, icone: '🚀', desc: nouvelleDesc });
+                    utilisateurActif.metierActif = nouveauNom;
+                    sauvegarderProfilActif();
+                    showToast(`Domaine "${nouveauNom}" ajouté et activé !`);
+                    render();
+                } else {
+                    showToast("Ce domaine existe déjà dans votre liste.");
+                }
+            } else {
+                showToast("Veuillez saisir le nom de votre domaine ou métier.");
+            }
+        }
+
+        function supprimerMetier(nomMetier, event) {
+            event.stopPropagation();
+            if (utilisateurActif.metiers.length <= 1) {
+                showToast("Vous devez garder au moins un domaine d'activité.");
+                return;
+            }
+            utilisateurActif.metiers = utilisateurActif.metiers.filter(m => m.nom !== nomMetier);
+            if (utilisateurActif.metierActif === nomMetier) {
+                utilisateurActif.metierActif = utilisateurActif.metiers[0].nom;
+            }
+            sauvegarderProfilActif();
+            showToast("Domaine supprimé.");
             render();
         }
 
@@ -528,12 +551,12 @@
                         <div style="text-align:center; border-bottom:2px solid #cbd5e1; padding-bottom:10px; margin-bottom:10px;">
                             <img src="https://img.icons8.com/color/48/000000/artificial-intelligence.png" style="width:32px; height:32px; vertical-align:middle; margin-right:8px;">
                             <h3 style="margin:0; display:inline-block; color:#059669;">🧾 REÇU DE PRESTATION</h3>
-                            <br><small>E.V.A.T. & ELAWS — ${utilisateurActif.nom}</small>
+                            <br><small>E.V.A.T. (${utilisateurActif.metierActif}) — ${utilisateurActif.nom}</small>
                         </div>
                         <p><strong>Date :</strong> ${new Date().toLocaleDateString()}</p>
                         <p><strong>Émetteur :</strong> ${utilisateurActif.nom} (${utilisateurActif.telephone})</p>
                         <p><strong>Client :</strong> ${client}</p>
-                        <p><strong>Prestation :</strong> ${service}</p>
+                        <p><strong>Prestation (${utilisateurActif.metierActif}) :</strong> ${service}</p>
                         <p style="font-size:16px;"><strong>Montant :</strong> <span style="color:#059669; font-weight:800;">${parseFloat(montant).toLocaleString()} ${devise}</span></p>
                     </div>
                 `;
@@ -548,7 +571,7 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(utilisateurActif, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `EVAT_Profil_${utilisateurActif.nom.replace(/\s+/g, '_')}_${Date.now()}.json`);
+            downloadAnchor.setAttribute("download", `EVAT_${utilisateurActif.metierActif.replace(/\s+/g, '_')}_${Date.now()}.json`);
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
@@ -567,26 +590,29 @@
                 if (listeProfils.length > 0) {
                     profilsExistantsHtml = `<div style="margin-bottom:20px;"><h4 style="margin-bottom:8px;">👥 Ou choisissez un profil existant :</h4><div style="display:flex; flex-direction:column; gap:8px;">`;
                     listeProfils.forEach(p => {
-                        profilsExistantsHtml += `<button class="btn-action" style="background:var(--card-bg); border:1px solid var(--accent); color:var(--text-main); text-align:left; padding:12px;" onclick="selectionnerProfilExistant('${p.id}')">👤 <strong>${p.nom}</strong> <small style="float:right; color:var(--text-secondary);">${p.nationalite}</small></button>`;
+                        profilsExistantsHtml += `<button class="btn-action" style="background:var(--card-bg); border:1px solid var(--accent); color:var(--text-main); text-align:left; padding:12px;" onclick="selectionnerProfilExistant('${p.id}')">👤 <strong>${p.nom}</strong> <small style="float:right; color:var(--accent);">[${p.metierActif}]</small></button>`;
                     });
                     profilsExistantsHtml += `</div></div>`;
                 }
 
                 content.innerHTML = `
                     <div class="card" style="border-color:var(--accent); max-width:500px; margin: 20px auto; text-align:center;">
-                        <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo ELAWS" style="width:72px; height:72px; margin-bottom:10px; border-radius:16px; border:2px solid var(--accent); box-shadow:0 0 20px rgba(5,150,105,0.4);">
+                        <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo" style="width:72px; height:72px; margin-bottom:10px; border-radius:16px; border:2px solid var(--accent); box-shadow:0 0 20px rgba(5,150,105,0.4);">
                         <h2 style="color:var(--accent); margin-top:0;">✨ E.V.A.T. & ELAWS</h2>
-                        <p class="text" style="text-align:center;">Écosystème Souverain Multi-Profils. Créez votre espace personnel pour sécuriser vos données en local.</p>
+                        <p class="text" style="text-align:center;">Écosystème Souverain Multi-Profils. Créez votre espace et définissez votre domaine d'activité personnalisé.</p>
                         
                         ${profilsExistantsHtml}
 
                         <div style="text-align:left;">
-                            <h4 style="margin-bottom:10px; border-top:1px solid var(--border-color); padding-top:15px;">📝 Créer un nouveau profil :</h4>
+                            <h4 style="margin-bottom:10px; border-top:1px solid var(--border-color); padding-top:15px;">📝 Inscription & Domaine d'Activité :</h4>
                             <label style="font-size:11px; color:var(--text-secondary);">Nom complet ou Pseudonyme * :</label>
                             <input type="text" id="regNom" class="input" placeholder="Ex: Jean Dupont">
                             
                             <label style="font-size:11px; color:var(--text-secondary);">Adresse E-mail * :</label>
                             <input type="email" id="regEmail" class="input" placeholder="Ex: monemail@domaine.com">
+
+                            <label style="font-size:11px; color:var(--text-secondary);">Votre Métier / Domaine d'Activité principal * :</label>
+                            <input type="text" id="regMetierCustom" class="input" placeholder="Ex: Développeur, Chauffeur, Commerçant, Agriculteur...">
 
                             <label style="font-size:11px; color:var(--text-secondary);">Téléphone :</label>
                             <input type="text" id="regTel" class="input" placeholder="Ex: +228 98000000">
@@ -612,7 +638,7 @@
                                 </div>
                             </div>
 
-                            <button class="btn-action" style="margin-top:10px;" onclick="creerNouveauProfil()">🚀 Commencer mon Espace Souverain</button>
+                            <button class="btn-action" style="margin-top:10px;" onclick="creerNouveauProfil()">🚀 Créer mon Espace Souverain</button>
                         </div>
                     </div>
                 `;
@@ -635,6 +661,7 @@
                     const isActive = m.nom === utilisateurActif.metierActif ? 'active' : '';
                     cartesMetiersHtml += `
                         <div class="metier-card-widget ${isActive}" onclick="selectionnerMetier('${m.nom}')">
+                            <button onclick="supprimerMetier('${m.nom}', event)" style="position:absolute; top:8px; right:8px; background:none; border:none; color:var(--text-secondary); cursor:pointer; font-size:12px;" title="Supprimer">❌</button>
                             <div style="font-size:20px; margin-bottom:4px;">${m.icone}</div>
                             <div style="font-weight:700; font-size:13px;">${m.nom}</div>
                             <div style="font-size:11px; color:var(--text-secondary);">${m.desc}</div>
@@ -646,12 +673,12 @@
                     <div class="card" style="border-color: var(--accent);">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                             <div>
-                                <span style="font-size:11px; color:var(--accent); font-weight:700;">👤 ESPACE PROFIL SOUVERAIN</span>
-                                <div style="font-size:17px; font-weight:800;">${utilisateurActif.nom}</div>
+                                <span style="font-size:11px; color:var(--accent); font-weight:700;">👤 ESPACE SOUVERAIN & DOMAINE ACTIF</span>
+                                <div style="font-size:17px; font-weight:800;">${utilisateurActif.nom} <span style="color:var(--accent); font-size:13px;">(${utilisateurActif.metierActif})</span></div>
                             </div>
                             <button class="btn-top" onclick="changerProfilSession()">🔄 Changer</button>
                         </div>
-                        <p class="text" style="margin-bottom:12px;">Vos informations personnelles et coordonnées sécurisées :</p>
+                        <p class="text" style="margin-bottom:12px;">Gérez vos informations personnelles et vos domaines d'activité dynamiques :</p>
                         
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; display:flex; flex-direction:column; gap:10px;">
                             <div>
@@ -691,9 +718,17 @@
                             <button class="btn-action" style="padding:10px; font-size:13px; margin-top:4px;" onclick="mettreAJourIdentite()">💾 Enregistrer les Modifications</button>
                         </div>
 
-                        <div style="font-size:14px; font-weight:800; margin-bottom:8px;">Sélectionnez votre rôle :</div>
+                        <div style="font-size:14px; font-weight:800; margin-bottom:8px;">Mes Domaines & Métiers (Cliquer pour activer) :</div>
                         <div class="grid-metiers">
                             ${cartesMetiersHtml}
+                        </div>
+
+                        <!-- AJOUTER UN NOUVEAU DOMAINE DYNAMIQUE -->
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-top:15px; border:1px dashed var(--accent);">
+                            <h4 style="margin:0 0 8px 0; color:var(--accent);">➕ Ajouter un nouveau domaine ou métier :</h4>
+                            <input type="text" id="inputNouveauMetier" class="input" placeholder="Ex: Menuisier, Designer, Consultant..." style="margin-bottom:8px;">
+                            <input type="text" id="inputDescMetier" class="input" placeholder="Courte description (ex: Fabrication sur mesure)" style="margin-bottom:10px;">
+                            <button class="btn-action" onclick="ajouterNouveauDomaineMetier()">Enregistrer & Activer ce Domaine</button>
                         </div>
                     </div>
                 `;
@@ -710,7 +745,7 @@
                 });
                 content.innerHTML = `
                     <div class="card" style="border-color:var(--accent);">
-                        <h3 class="card-title">🎯 Gestionnaire d'Objectifs de Vie & Autonomie</h3>
+                        <h3 class="card-title">🎯 Objectifs de Vie & Projets (${utilisateurActif.metierActif})</h3>
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
                             <label style="font-size:11px; color:var(--text-secondary);">Catégorie :</label>
                             <select id="objCategorie" class="input" style="margin-top:4px; margin-bottom:8px;">
@@ -749,15 +784,15 @@
             } else if (activeTab === 'factures') {
                 content.innerHTML = `
                     <div class="card">
-                        <h3 class="card-title">🧾 Générateur de Reçus & Factures</h3>
+                        <h3 class="card-title">🧾 Générateur de Reçus & Factures (${utilisateurActif.metierActif})</h3>
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
                             <input type="text" id="factureClient" class="input" placeholder="Nom du client" style="margin-bottom:8px;">
-                            <input type="text" id="factureService" class="input" placeholder="Prestation" style="margin-bottom:8px;">
+                            <input type="text" id="factureService" class="input" placeholder="Prestation / Service" style="margin-bottom:8px;">
                             <div style="display:flex; gap:8px; margin-bottom:10px;">
                                 <input type="number" id="factureMontant" class="input" placeholder="Montant">
                                 <select id="factureDevise" class="input" style="flex:0.6;"><option value="FCFA">FCFA</option><option value="EUR">EUR</option><option value="USD">USD</option></select>
                             </div>
-                            <button class="btn-action" onclick="genererRecuFacture()">Générer</button>
+                            <button class="btn-action" onclick="genererRecuFacture()">Générer le Reçu</button>
                         </div>
                         <div id="resultatFacture">Remplissez les champs ci-dessus.</div>
                     </div>
@@ -765,13 +800,13 @@
             } else if (activeTab === 'sauvegarde') {
                 content.innerHTML = `
                     <div class="card">
-                        <h3 class="card-title">💾 Sauvegarde & Restauration Souveraine (JSON)</h3>
+                        <h3 class="card-title">💾 Sauvegarde & Restauration (JSON)</h3>
                         <button class="btn-action" onclick="exporterDonneesJSON()" style="margin-bottom:12px;">📥 Exporter mon Profil JSON</button>
-                        <p class="text">Chaque profil dispose de son propre fichier de sauvegarde indépendant.</p>
+                        <p class="text">Sauvegardez l'intégralité de vos données, incluant vos domaines et vos notes personnalisées.</p>
                     </div>
                 `;
             } else {
-                content.innerHTML = `<div class="card"><h3 class="card-title">🛠️ Module actif</h3><p class="text">Prêt pour ${utilisateurActif.nom}.</p></div>`;
+                content.innerHTML = `<div class="card"><h3 class="card-title">🛠️ Module actif</h3><p class="text">Prêt pour ${utilisateurActif.nom} (${utilisateurActif.metierActif}).</p></div>`;
             }
         }
 
