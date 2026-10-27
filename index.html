@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. & ELAWS - Version 22 (Socle Stable)</title>
+    <title>E.V.A.T. & ELAWS - Écosystème Souverain Immersif (v19)</title>
+    
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#059669">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <style>
         :root {
             --bg-color: #0b0f19;
@@ -11,182 +18,984 @@
             --text-main: #f8fafc;
             --text-secondary: #94a3b8;
             --accent: #34d399;
+            --accent-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
             --border-color: #334155;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+        [data-theme="light"] {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-secondary: #64748b;
+            --accent: #059669;
+            --accent-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --border-color: #e2e8f0;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+        [data-theme="eco"] {
+            --bg-color: #000000;
+            --card-bg: #121212;
+            --text-main: #22c55e;
+            --text-secondary: #15803d;
+            --accent: #22c55e;
+            --accent-gradient: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            --border-color: #14532d;
+            --shadow: 0 0 15px rgba(34, 197, 94, 0.15);
         }
         * { box-sizing: border-box; }
         body {
             margin: 0;
-            font-family: system-ui, -apple-system, sans-serif;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
             padding: 15px;
-            padding-bottom: 80px;
+            padding-bottom: 90px;
+            transition: background 0.3s ease, color 0.3s ease;
         }
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             background-color: var(--card-bg);
-            padding: 15px;
+            padding: 15px 20px;
             border-radius: 12px;
+            box-shadow: var(--shadow);
             margin-bottom: 15px;
             border: 1px solid var(--border-color);
         }
-        .card {
-            background-color: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            border: 1px solid var(--border-color);
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .app-logo { width: 38px; height: 38px; border-radius: 10px; object-fit: cover; border: 2px solid var(--accent); }
+        .menu-toggle { background: var(--accent-gradient); color: white; border: none; padding: 10px 14px; border-radius: 8px; font-size: 1.1rem; cursor: pointer; transition: transform 0.2s; }
+        .menu-toggle:active { transform: scale(0.95); }
+        .title { font-size: 1.05rem; font-weight: 800; }
+        .header-right { display: flex; align-items: center; gap: 8px; }
+        .btn-top { background-color: var(--border-color); padding: 8px 12px; border-radius: 8px; border: none; font-size: 12px; font-weight: 700; color: var(--text-main); cursor: pointer; }
+        .badge-info { font-size: 11px; color: var(--accent); font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; }
+        .offline-status { background: rgba(16, 185, 129, 0.2); color: var(--accent); padding: 3px 8px; border-radius: 12px; font-size: 10px; font-weight: 800; }
+        
+        .bottom-action-bar {
+            position: fixed; bottom: 0; left: 0; right: 0; background: var(--card-bg); border-top: 1px solid var(--border-color);
+            padding: 10px 15px; display: flex; justify-content: space-around; align-items: center; z-index: 999; box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
         }
-        .input {
-            width: 100%;
-            padding: 12px;
-            background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            border-radius: 8px;
-            margin-bottom: 10px;
-            font-size: 14px;
+        .bar-item { background: none; border: none; color: var(--text-secondary); font-size: 10px; font-weight: 700; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; transition: color 0.2s; }
+        .bar-item span.icon { font-size: 16px; }
+        .bar-item.active, .bar-item:hover { color: var(--accent); }
+
+        #toastNotification {
+            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: var(--card-bg); color: var(--text-main); border: 1px solid var(--accent); padding: 12px 20px;
+            border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); font-size: 13px; font-weight: 700; z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease; opacity: 0; display: flex; align-items: center; gap: 8px; text-align: center;
         }
-        .btn {
-            background: #10b981;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: bold;
-            width: 100%;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .toast {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: #10b981; color: white; padding: 10px 20px; border-radius: 20px;
-            font-size: 13px; font-weight: bold; display: none; z-index: 9999;
-        }
+        #toastNotification.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        
+        .sidebar { display: none; background-color: var(--card-bg); border: 1px solid var(--border-color); padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: var(--shadow); max-height: 75vh; overflow-y: auto; animation: fadeIn 0.3s ease; }
+        .sidebar.open { display: block; }
+        .sidebar h3 { font-size: 0.95rem; color: var(--accent); margin-top: 0; border-bottom: 2px solid var(--border-color); padding-bottom: 8px; }
+        .menu-item { background: rgba(16, 185, 129, 0.08); color: var(--text-main); padding: 10px 14px; border-radius: 8px; margin-bottom: 6px; border: none; width: 100%; text-align: left; font-size: 0.85rem; cursor: pointer; font-weight: 600; transition: background 0.2s; }
+        .menu-item:hover { background: rgba(16, 185, 129, 0.18); }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .module-container { flex: 1; max-width: 750px; width: 100%; margin: 0 auto; animation: fadeIn 0.3s ease; }
+        .card { background-color: var(--card-bg); padding: 22px; border-radius: 14px; margin-bottom: 15px; border: 1px solid var(--border-color); box-shadow: var(--shadow); }
+        .card-title { font-size: 15px; font-weight: 700; color: var(--text-secondary); margin-top: 0; margin-bottom: 10px; }
+        .text { font-size: 14px; color: var(--text-secondary); margin-bottom: 15px; line-height: 1.6; }
+        .input { width: 100%; border: 1px solid var(--border-color); border-radius: 8px; padding: 11px; background: var(--card-bg); color: var(--text-main); font-size: 14px; outline: none; margin-bottom: 10px; transition: border-color 0.2s; }
+        .input:focus { border-color: var(--accent); }
+        select.input { width: 100%; }
+        .btn-action { background: var(--accent-gradient); color: white; border: none; padding: 12px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; width: 100%; font-size: 14px; box-shadow: 0 4px 14px rgba(5, 150, 105, 0.25); transition: transform 0.1s, opacity 0.2s; }
+        .btn-action:active { transform: scale(0.98); opacity: 0.9; }
+        
+        .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
+        .stat-box { background: var(--bg-color); border: 1px solid var(--border-color); padding: 14px; border-radius: 10px; text-align: center; }
+        .stat-num { font-size: 18px; font-weight: 800; color: var(--accent); margin-top: 4px; }
+        
+        .badge-gamified { display: inline-flex; align-items: center; gap: 5px; background: rgba(5, 150, 105, 0.15); border: 1px solid var(--accent); color: var(--accent); padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; margin-bottom: 12px; }
+
+        .faq-item { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px 15px; margin-bottom: 10px; cursor: pointer; }
+        .faq-question { font-weight: 700; font-size: 13.5px; color: var(--accent); display: flex; justify-content: space-between; align-items: center; }
+        .faq-answer { font-size: 13px; color: var(--text-secondary); margin-top: 8px; display: none; line-height: 1.5; border-top: 1px dashed var(--border-color); padding-top: 8px; }
+        .faq-item.active .faq-answer { display: block; }
     </style>
 </head>
-<body>
-    <div id="toast" class="toast">Action réussie</div>
-    <div id="app"></div>
+<body data-theme="dark">
+
+    <div id="toastNotification">✨ <span id="toastText">Action</span></div>
+
+    <div id="appHeader" style="display:none;">
+        <header>
+            <div class="header-left">
+                <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+                <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo ELAWS" class="app-logo">
+                <div class="title">E.V.A.T. & ELAWS</div>
+            </div>
+            <div class="header-right">
+                <button class="btn-top" onclick="changerTheme()">🎨 Thème</button>
+                <button class="btn-top" onclick="changerProfilSession()">👤 Profils</button>
+            </div>
+        </header>
+        <div class="badge-info">
+            <span id="badgeDomaineActif">🌍 Écosystème Souverain Immersif (v19)</span>
+            <span class="offline-status" id="reseauStatusIndicator">⚡ Vérification...</span>
+        </div>
+    </div>
+
+    <!-- BOUTON D'INSTALLATION DIRECTE AUTOMATIQUE -->
+    <div id="installCardContainer" class="card" style="border-color:var(--accent); background:rgba(5,150,105,0.15); display:none; text-align:center;">
+        <h3 class="card-title" style="color:var(--accent);">📲 Installation Automatique Prête</h3>
+        <p class="text">Installez E.V.A.T. directement sur votre téléphone en un seul clic !</p>
+        <button class="btn-action" id="btnInstallApp" style="font-size:16px; padding:16px;">🚀 Installer l'Application sur l'Écran d'Accueil</button>
+    </div>
+
+    <div id="sideMenu" class="sidebar">
+        <h3>📂 Navigation & Outils Immersifs (v19)</h3>
+        <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Paramètres Vocaux</button>
+        <button class="menu-item" onclick="switchTab('dashboard')" style="background:rgba(59,130,246,0.15); border:1px solid #3b82f6; color:#3b82f6;">📊 <strong>Tableau de Bord & Score</strong></button>
+        <button class="menu-item" onclick="switchTab('agenda')" style="background:rgba(245,158,11,0.15); border:1px solid #f59e0b; color:#f59e0b;">📅 <strong>Agenda & Rendez-vous</strong></button>
+        <button class="menu-item" onclick="switchTab('calculatrice_marge')" style="background:rgba(16,185,129,0.15); border:1px solid #10b981; color:#10b981;">🧮 <strong>Calculatrice de Marge & Prix</strong></button>
+        <button class="menu-item" onclick="switchTab('recherche')" style="background:rgba(139,92,246,0.15); border:1px solid #8b5cf6;">🔍 <strong>Recherche Globale Rapide</strong></button>
+        <button class="menu-item" onclick="switchTab('elaws_compagnon')" style="background:rgba(5,150,105,0.2); border:1px solid var(--accent);">🤖 <strong>Parler à ELAWS (Expert Métier 🎤)</strong></button>
+        <button class="menu-item" onclick="switchTab('traduction_croisee')" style="background:rgba(59,130,246,0.15); border:1px solid #3b82f6;">🌐 <strong>Traduction Croisée & Dialectes</strong></button>
+        <button class="menu-item" onclick="switchTab('facturation')" style="background:rgba(16,185,129,0.15); border:1px solid #10b981;">📄 <strong>Facturation & Reçus PDF</strong></button>
+        <button class="menu-item" onclick="switchTab('notes_vocales')" style="background:rgba(236,72,153,0.15); border:1px solid #ec4899;">🎙️ <strong>Dictaphone & Notes Vocales</strong></button>
+        <button class="menu-item" onclick="switchTab('economie')">🪙 Journal de Caisse & Trésorerie</button>
+        <button class="menu-item" onclick="switchTab('sauvegarde')">💾 Sauvegarde & Sécurité Données</button>
+        <button class="menu-item" onclick="switchTab('faq')" style="color:#f59e0b;">❓ Guide & FAQ</button>
+    </div>
+
+    <div class="module-container" id="mainContent"></div>
+
+    <div id="bottomBar" class="bottom-action-bar" style="display:none;">
+        <button class="bar-item active" onclick="switchTab('accueil')" id="barAccueil"><span class="icon">💼</span><span>Profil</span></button>
+        <button class="bar-item" onclick="switchTab('dashboard')" id="barDash" style="color:#3b82f6;"><span class="icon">📊</span><span>Score</span></button>
+        <button class="bar-item" onclick="switchTab('agenda')" id="barAgenda" style="color:#f59e0b;"><span class="icon">📅</span><span>Agenda</span></button>
+        <button class="bar-item" onclick="switchTab('elaws_compagnon')" id="barElaws" style="color:var(--accent);"><span class="icon">🤖</span><span>ELAWS</span></button>
+        <button class="bar-item" onclick="switchTab('facturation')" id="barFact" style="color:#10b981;"><span class="icon">📄</span><span>Facture</span></button>
+        <button class="bar-item" onclick="switchTab('economie')" id="barEco"><span class="icon">🪙</span><span>Caisse</span></button>
+    </div>
 
     <script>
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.innerText = msg;
-            t.style.display = 'block';
-            setTimeout(() => t.style.display = 'none', 2500);
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(() => {});
         }
 
-        let profil = JSON.parse(localStorage.getItem('evat_v22_profil')) || null;
-        let messages = JSON.parse(localStorage.getItem('evat_v22_msg')) || [
-            { role: 'ai', texte: "Bonjour ! Je suis ELAWS, ton assistant personnel. Comment puis-je t'aider aujourd'hui ?" }
-        ];
+        let activeTab = 'accueil';
+        let currentThemeIndex = 0;
+        const themes = ['dark', 'light', 'eco'];
 
-        function sauvegarder() {
-            localStorage.setItem('evat_v22_profil', JSON.stringify(profil));
-            localStorage.setItem('evat_v22_msg', JSON.stringify(messages));
+        function jouerSonSucces() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+                osc.frequency.setValueAtTime(880, ctx.currentTime + 0.1); // A5
+                gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.3);
+            } catch(e) {}
         }
 
-        function creerProfil() {
-            const nom = document.getElementById('nom').value.trim();
-            const role = document.getElementById('role').value.trim();
-            if (!nom) { showToast("Veuillez entrer un nom."); return; }
-            profil = { nom, role: role || 'Pasteur / Guide', solde: 50000 };
-            sauvegarder();
-            showToast("Profil enregistré !");
+        function changerTheme() {
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+            document.body.setAttribute('data-theme', themes[currentThemeIndex]);
+            showToast(`Thème : ${themes[currentThemeIndex].toUpperCase()}`);
+        }
+
+        let listeProfils = JSON.parse(localStorage.getItem('evat_tous_profils')) || [];
+        let idProfilActif = localStorage.getItem('evat_profil_actif_id') || null;
+        let utilisateurActif = null;
+        let voixActiveIndex = localStorage.getItem('evat_voix_index') || 0;
+
+        function chargerDonneesProfil() {
+            if (idProfilActif) {
+                utilisateurActif = listeProfils.find(p => p.id == idProfilActif) || null;
+            }
+            if (!utilisateurActif && listeProfils.length > 0) {
+                utilisateurActif = listeProfils[0];
+                idProfilActif = utilisateurActif.id;
+                localStorage.setItem('evat_profil_actif_id', idProfilActif);
+            }
+        }
+        chargerDonneesProfil();
+
+        function showToast(m) {
+            const t = document.getElementById('toastNotification');
+            document.getElementById('toastText').innerHTML = m;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2500);
+        }
+
+        function mettreAJourEtatReseau() {
+            const ind = document.getElementById('reseauStatusIndicator');
+            if(!ind) return;
+            ind.innerText = navigator.onLine ? "🌐 En Ligne" : "⚡ Hors-Ligne";
+        }
+        window.addEventListener('online', mettreAJourEtatReseau);
+        window.addEventListener('offline', mettreAJourEtatReseau);
+
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            const container = document.getElementById('installCardContainer');
+            if(container) container.style.display = 'block';
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnInstall = document.getElementById('btnInstallApp');
+            if(btnInstall) {
+                btnInstall.addEventListener('click', async () => {
+                    if (deferredPrompt) {
+                        deferredPrompt.prompt();
+                        const { outcome } = await deferredPrompt.userChoice;
+                        if (outcome === 'accepted') { showToast("Application installée avec succès !"); }
+                        deferredPrompt = null;
+                        document.getElementById('installCardContainer').style.display = 'none';
+                    } else { showToast("Installation déjà active ou non requise."); }
+                });
+            }
+        });
+
+        function initialiserAudioVocale() {
+            if ('speechSynthesis' in window) {
+                const silentUtterance = new SpeechSynthesisUtterance("");
+                silentUtterance.volume = 0;
+                window.speechSynthesis.speak(silentUtterance);
+            }
+        }
+        window.addEventListener('click', initialiserAudioVocale, { once: true });
+
+        function getAvailableVoices() {
+            if (!('speechSynthesis' in window)) return [];
+            return window.speechSynthesis.getVoices();
+        }
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = () => {
+                if (activeTab === 'accueil') render();
+            };
+        }
+
+        function lireTexteAAvoix(texte, langOverride) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(texte);
+                utterance.lang = langOverride || 'fr-FR';
+                utterance.rate = 1.0;
+                utterance.pitch = 1.0;
+
+                const voixList = getAvailableVoices();
+                if (voixList.length > 0 && voixList[voixActiveIndex] && !langOverride) {
+                    utterance.voice = voixList[voixActiveIndex];
+                } else {
+                    const voixLang = voixList.find(v => v.lang.startsWith(utterance.lang.substring(0,2)));
+                    if (voixLang) utterance.voice = voixLang;
+                }
+
+                window.speechSynthesis.speak(utterance);
+                showToast("🔊 ELAWS / Assistant vocal actif...");
+            }
+        }
+
+        function changerVoixElaws(selectElement) {
+            voixActiveIndex = selectElement.value;
+            localStorage.setItem('evat_voix_index', voixActiveIndex);
+            showToast("Voix d'ELAWS mise à jour !");
+            lireTexteAAvoix("Bonjour, je suis ELAWS avec ma nouvelle voix.");
+        }
+
+        function toggleMenu() { document.getElementById('sideMenu').classList.toggle('open'); }
+
+        function creerNouveauProfil() {
+            const nom = document.getElementById('regNom').value.trim();
+            const metierUnique = document.getElementById('regMetierCustom').value.trim() || 'Artisan';
+            const tel = document.getElementById('regTel').value.trim();
+
+            if (!nom) { showToast("Veuillez renseigner votre nom."); return; }
+
+            const nouveauId = 'prof_' + Date.now();
+            const nouveauProfil = {
+                id: nouveauId,
+                nom: nom,
+                telephone: tel || '+228 98231402',
+                metierUnique: metierUnique,
+                solde: 50000,
+                journalCaisse: [
+                    { id: 1, type: 'entree', libelle: 'Capital initial', montant: 50000, date: new Date().toLocaleDateString() }
+                ],
+                notesVocales: [],
+                talkieMessages: [],
+                factures: [],
+                agendaRdv: [],
+                contactsAppels: [{ id: 1, nom: "Client Test", tel: "+228 98231402", type: "Client" }],
+                discussionsElaws: [
+                    { role: 'ai', texte: `Bonjour ${nom} ! Je suis **ELAWS**, votre assistant expert en **${metierUnique}**. Tous les modules immersifs (v19) sont prêts.` }
+                ]
+            };
+
+            listeProfils.push(nouveauProfil);
+            localStorage.setItem('evat_tous_profils', JSON.stringify(listeProfils));
+            localStorage.setItem('evat_profil_actif_id', nouveauId);
+            
+            idProfilActif = nouveauId;
+            utilisateurActif = nouveauProfil;
+
+            jouerSonSucces();
+            lireTexteAAvoix(`Bonjour ${nom}. Votre environnement ELAWS pour ${metierUnique} est prêt.`);
+            showToast(`Bienvenue, ${nom} !`);
             render();
         }
 
-        function envoyerMessage() {
-            const input = document.getElementById('inputChat');
-            const txt = input.value.trim();
-            if(!txt) return;
-
-            messages.push({ role: 'user', texte: txt });
-            
-            let reponse = "J'ai bien reçu ton message. Je suis là pour t'épauler avec fluidité et sincérité.";
-            const lower = txt.toLowerCase();
-            if(lower.includes('culte') || lower.includes('predication') || lower.includes('foi') || lower.includes('prier')) {
-                reponse = `[Ministère / Pastorale — ELAWS]\n${profil.nom}, pour ton message ou ton culte : appuie-toi sur la simplicité, l'écoute et l'amour du prochain.`;
-            } else if(lower.includes('argent') || lower.includes('caisse') || lower.includes('solde')) {
-                reponse = `Ton solde actuel est de ${profil.solde.toLocaleString()} FCFA.`;
-            }
-
-            messages.push({ role: 'ai', texte: reponse });
-            sauvegarder();
-            input.value = '';
+        function changerProfilSession() {
+            idProfilActif = null; utilisateurActif = null;
+            localStorage.removeItem('evat_profil_actif_id');
             render();
-            
-            if('speechSynthesis' in window) {
-                window.speechSynthesis.speak(new SpeechSynthesisUtterance(reponse.replace(/[\[\]]/g, '')));
-            }
         }
 
-        function reinitialiser() {
-            if(confirm("Réinitialiser l'application ?")) {
-                localStorage.clear();
-                profil = null;
-                messages = [{ role: 'ai', texte: "Bonjour ! Je suis ELAWS." }];
+        function selectionnerProfilExistant(id) {
+            idProfilActif = id;
+            localStorage.setItem('evat_profil_actif_id', id);
+            chargerDonneesProfil();
+            showToast(`Profil chargé : ${utilisateurActif.nom}`);
+            render();
+        }
+
+        function sauvegarderProfilActif() {
+            const index = listeProfils.findIndex(p => p.id == utilisateurActif.id);
+            if (index !== -1) { listeProfils[index] = utilisateurActif; localStorage.setItem('evat_tous_profils', JSON.stringify(listeProfils)); }
+        }
+
+        function toggleFaqItem(element) {
+            element.classList.toggle('active');
+        }
+
+        // --- GESTION CAISSE ---
+        function ajouterMouvementCaisse(type) {
+            const libelle = document.getElementById('caisseLib').value.trim();
+            const montant = parseFloat(document.getElementById('caisseMontant').value);
+            if(libelle && !isNaN(montant) && montant > 0) {
+                if(!utilisateurActif.journalCaisse) utilisateurActif.journalCaisse = [];
+                utilisateurActif.journalCaisse.unshift({ id: Date.now(), type, libelle, montant, date: new Date().toLocaleDateString() });
+                
+                if(type === 'entree') utilisateurActif.solde += montant;
+                else utilisateurActif.solde -= montant;
+
+                sauvegarderProfilActif();
+                jouerSonSucces();
+                showToast(`🪙 Mouvement de caisse enregistré !`);
                 render();
+            } else { showToast("Veuillez remplir correctement le libellé et le montant."); }
+        }
+
+        function appliquerSuggestionCaisse(texte) {
+            document.getElementById('caisseLib').value = texte;
+            showToast(`Suggéré : ${texte}`);
+        }
+
+        // --- FACTURATION ---
+        function genererFacturePDF() {
+            const client = document.getElementById('factClient').value.trim();
+            const desc = document.getElementById('factDesc').value.trim();
+            const montant = parseFloat(document.getElementById('factMontant').value);
+
+            if(client && desc && !isNaN(montant)) {
+                if(!utilisateurActif.factures) utilisateurActif.factures = [];
+                const numFacture = 'FAC-' + Math.floor(1000 + Math.random() * 9000);
+                const nouvelleFacture = { id: Date.now(), numero: numFacture, client, desc, montant, date: new Date().toLocaleDateString() };
+                
+                utilisateurActif.factures.unshift(nouvelleFacture);
+                sauvegarderProfilActif();
+                jouerSonSucces();
+
+                const containerFacture = document.getElementById('apercuFactureContainer');
+                if(containerFacture) {
+                    containerFacture.innerHTML = `
+                        <div style="background:#fff; color:#111; padding:20px; border-radius:8px; margin-top:15px; border:2px solid #10b981;">
+                            <h3>📄 Reçu / Facture N° ${numFacture}</h3>
+                            <p><strong>Émetteur :</strong> ${utilisateurActif.nom} (${utilisateurActif.metierUnique})</p>
+                            <p><strong>Client :</strong> ${client} | <strong>Date :</strong> ${nouvelleFacture.date}</p>
+                            <p><strong>Prestation :</strong> ${desc}</p>
+                            <h4 style="color:#059669;">Total : ${montant.toLocaleString()} FCFA</h4>
+                            <button class="btn-action" style="background:#10b981; margin-top:10px;" onclick="window.print()">🖨️ Imprimer / Enregistrer PDF</button>
+                        </div>
+                    `;
+                }
+                showToast("Facture générée avec succès !");
+                render();
+            } else { showToast("Remplissez tous les champs de la facture."); }
+        }
+
+        // --- NOTES VOCALES ---
+        function enregistrerNoteVocale() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                const saisieManuelle = prompt("Dictaphone vocal non supporté. Saisissez votre note :");
+                if(saisieManuelle) {
+                    if(!utilisateurActif.notesVocales) utilisateurActif.notesVocales = [];
+                    utilisateurActif.notesVocales.unshift({ id: Date.now(), texte: saisieManuelle, date: new Date().toLocaleDateString() });
+                    sauvegarderProfilActif();
+                    jouerSonSucces();
+                    showToast("Note enregistrée !");
+                    render();
+                }
+                return;
             }
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'fr-FR';
+            showToast("🎙️ Parlez pour dicter votre note...");
+            recognition.onresult = (event) => {
+                const texte = event.results[0][0].transcript;
+                if(!utilisateurActif.notesVocales) utilisateurActif.notesVocales = [];
+                utilisateurActif.notesVocales.unshift({ id: Date.now(), texte, date: new Date().toLocaleDateString() });
+                sauvegarderProfilActif();
+                jouerSonSucces();
+                showToast("Note vocale enregistrée et transcrite !");
+                render();
+                lireTexteAAvoix("Note enregistrée : " + texte);
+            };
+            recognition.onerror = () => { showToast("Erreur micro."); };
+            recognition.start();
+        }
+
+        // --- AGENDA & RENDEZ-VOUS ---
+        function ajouterRdvAgenda() {
+            const titre = document.getElementById('rdvTitre').value.trim();
+            const date = document.getElementById('rdvDate').value;
+            const heure = document.getElementById('rdvHeure').value;
+
+            if(titre && date && heure) {
+                if(!utilisateurActif.agendaRdv) utilisateurActif.agendaRdv = [];
+                utilisateurActif.agendaRdv.unshift({ id: Date.now(), titre, date, heure });
+                sauvegarderProfilActif();
+                jouerSonSucces();
+                showToast("Rendez-vous ajouté à l'agenda !");
+                render();
+            } else { showToast("Veuillez remplir tous les champs du rendez-vous."); }
+        }
+
+        // --- CALCULATRICE DE MARGE & PRIX ---
+        function calculerMargeBeneficiaire() {
+            const cout = parseFloat(document.getElementById('calcCout').value);
+            const margePourcent = parseFloat(document.getElementById('calcMarge').value);
+            const resDiv = document.getElementById('resultatCalcMarge');
+
+            if(!isNaN(cout) && !isNaN(margePourcent) && cout > 0) {
+                const benefice = cout * (margePourcent / 100);
+                const prixVente = cout + benefice;
+                jouerSonSucces();
+                resDiv.innerHTML = `
+                    <div style="background:var(--card-bg); border:1px solid #10b981; padding:12px; border-radius:8px; margin-top:10px;">
+                        <strong style="color:#10b981;">🧮 Résultats du Calcul :</strong>
+                        <p style="margin:6px 0 2px 0;">Bénéfice estimé : <strong>${benefice.toLocaleString()} FCFA</strong></p>
+                        <p style="margin:0; font-size:16px; color:var(--accent);">Prix de Vente Conseillé : <strong>${prixVente.toLocaleString()} FCFA</strong></p>
+                    </div>
+                `;
+            } else { resDiv.innerHTML = '<p style="color:#ef4444; font-size:13px;">Veuillez saisir un coût et un pourcentage valides.</p>'; }
+        }
+
+        // --- RECHERCHE GLOBALE ---
+        function executerRechercheGlobale() {
+            const q = document.getElementById('inputRechercheGlobale').value.trim().toLowerCase();
+            const resDiv = document.getElementById('resultatsRechercheDiv');
+            if(!q) { resDiv.innerHTML = '<p style="color:var(--text-secondary);">Saisissez un mot-clé pour rechercher...</p>'; return; }
+
+            let resultatsHtml = '';
+            let totalMatch = 0;
+
+            if(utilisateurActif.factures) {
+                utilisateurActif.factures.forEach(f => {
+                    if(f.client.toLowerCase().includes(q) || f.desc.toLowerCase().includes(q) || f.numero.toLowerCase().includes(q)) {
+                        totalMatch++;
+                        resultatsHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:6px; margin-bottom:6px; border-left:3px solid #10b981;"><strong>📄 Facture ${f.numero}</strong> — ${f.client} (${f.montant.toLocaleString()} FCFA)</div>`;
+                    }
+                });
+            }
+
+            if(utilisateurActif.journalCaisse) {
+                utilisateurActif.journalCaisse.forEach(c => {
+                    if(c.libelle.toLowerCase().includes(q)) {
+                        totalMatch++;
+                        resultatsHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:6px; margin-bottom:6px; border-left:3px solid #3b82f6;"><strong>🪙 Caisse</strong> — ${c.libelle} (${c.montant.toLocaleString()} FCFA)</div>`;
+                    }
+                });
+            }
+
+            if(utilisateurActif.notesVocales) {
+                utilisateurActif.notesVocales.forEach(n => {
+                    if(n.texte.toLowerCase().includes(q)) {
+                        totalMatch++;
+                        resultatsHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:6px; margin-bottom:6px; border-left:3px solid #ec4899;"><strong>🎙️ Note</strong> — ${n.texte}</div>`;
+                    }
+                });
+            }
+
+            if(totalMatch === 0) {
+                resDiv.innerHTML = '<p style="color:var(--text-secondary);">Aucun résultat trouvé.</p>';
+            } else {
+                resDiv.innerHTML = `<p style="color:var(--accent); font-weight:700; margin-bottom:8px;">${totalMatch} résultat(s) trouvé(s) :</p>` + resultatsHtml;
+            }
+        }
+
+        // --- SAUVEGARDE & RESTAURATION ---
+        function exporterDonneesJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(listeProfils));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `evat_backup_${Date.now()}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            jouerSonSucces();
+            showToast("Sauvegarde exportée avec succès !");
+        }
+
+        function importerDonneesJSON(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if(Array.isArray(parsed)) {
+                        listeProfils = parsed;
+                        localStorage.setItem('evat_tous_profils', JSON.stringify(listeProfils));
+                        jouerSonSucces();
+                        showToast("Données restaurées !");
+                        render();
+                    } else { showToast("Format invalide."); }
+                } catch(err) { showToast("Erreur de lecture."); }
+            };
+            reader.readAsText(file);
+        }
+
+        // --- EXPERT & TRADUCTION ---
+        function envoyerMessageElawsAI(texteForce) {
+            const input = document.getElementById('inputElawsChat');
+            const q = texteForce || (input ? input.value.trim() : '');
+            if (!q) return;
+
+            if (!utilisateurActif.discussionsElaws) utilisateurActif.discussionsElaws = [];
+            utilisateurActif.discussionsElaws.push({ role: 'user', texte: q });
+
+            const metier = utilisateurActif.metierUnique.toLowerCase();
+            let reponse = "";
+
+            if (metier.includes('docteur') || metier.includes('medecin') || metier.includes('sante')) {
+                reponse = `[Assistant Médical ELAWS] Analyse clinique pour "${q}". Recommandation : Examen approfondi et traitement adapté.`;
+            } else if (metier.includes('mecanicien') || metier.includes('meca')) {
+                reponse = `[Expert Technique ELAWS] Diagnostic panne pour "${q}" : Vérification allumage et capteurs OBD.`;
+            } else {
+                reponse = `[Expert Métier ELAWS] En tant qu'expert en ${utilisateurActif.metierUnique}, voici mon conseil pour "${q}" : Structurer l'action et suivre les indicateurs.`;
+            }
+
+            utilisateurActif.discussionsElaws.push({ role: 'ai', texte: reponse });
+            sauvegarderProfilActif();
+            jouerSonSucces();
+            
+            if(input) input.value = '';
+            lireTexteAAvoix(reponse);
+            render();
+        }
+
+        function demarrerEcouteMicrophone() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) { showToast("Micro non supporté."); return; }
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'fr-FR';
+            showToast("🎤 Écoute de l'expert en cours...");
+            recognition.onresult = (event) => {
+                const texte = event.results[0][0].transcript;
+                document.getElementById('inputElawsChat').value = texte;
+                envoyerMessageElawsAI(texte);
+            };
+            recognition.start();
+        }
+
+        function executerTraductionCroisee() {
+            const texteSource = document.getElementById('tradTexteInput').value.trim();
+            const langCible = document.getElementById('selectLangueCible').value;
+            const dialecteSource = document.getElementById('selectDialecteSource').value;
+
+            if(!texteSource) { showToast("Saisissez un texte à traduire."); return; }
+
+            let traductionSimulee = `[Interprète ELAWS vers ${langCible}] : "${texteSource}" (depuis ${dialecteSource}) -> Traduction validée.`;
+            let langCode = 'fr-FR';
+            if(langCible === 'en') langCode = 'en-US';
+            if(langCible === 'es') langCode = 'es-ES';
+
+            const resultatDiv = document.getElementById('resultatTraductionDiv');
+            resultatDiv.innerHTML = `
+                <div style="background:var(--card-bg); border:1px solid #3b82f6; padding:12px; border-radius:8px; margin-top:10px;">
+                    <strong style="color:#3b82f6;">🌐 Résultat Traduction :</strong>
+                    <p style="margin:6px 0 0 0; font-size:14px;">${traductionSimulee}</p>
+                    <button class="btn-action" style="margin-top:8px; background:#3b82f6; padding:6px; font-size:12px;" onclick="lireTexteAAvoix('${traductionSimulee.replace(/'/g, "\'")}', '${langCode}')">🔊 Écouter</button>
+                </div>
+            `;
+            jouerSonSucces();
+            lireTexteAAvoix(traductionSimulee, langCode);
+            showToast("Traduction effectuée !");
+        }
+
+        function demarrerMicroTraduction() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) { showToast("Micro non supporté."); return; }
+            const recognition = new SpeechRecognition();
+            recognition.lang = document.getElementById('selectDialecteSource').value;
+            showToast("🌐 Écoute du dialecte source...");
+            recognition.onresult = (event) => {
+                const texte = event.results[0][0].transcript;
+                document.getElementById('tradTexteInput').value = texte;
+                executerTraductionCroisee();
+            };
+            recognition.start();
         }
 
         function render() {
-            const app = document.getElementById('app');
-            if(!profil) {
-                app.innerHTML = `
-                    <div class="card" style="max-width:400px; margin: 40px auto; text-align:center;">
-                        <h2>✨ E.V.A.T. & ELAWS</h2>
-                        <p style="color:var(--text-secondary);">Version 22 Stable</p>
-                        <input type="text" id="nom" class="input" placeholder="Votre Nom *">
-                        <input type="text" id="role" class="input" value="Pasteur / Guide">
-                        <button class="btn" onclick="creerProfil()">Démarrer 🚀</button>
+            const content = document.getElementById('mainContent');
+            content.innerHTML = '';
+
+            if (!utilisateurActif) {
+                document.getElementById('appHeader').style.display = 'none';
+                document.getElementById('bottomBar').style.display = 'none';
+                
+                let profilsExistantsHtml = '';
+                if (listeProfils.length > 0) {
+                    profilsExistantsHtml = `<div style="margin-bottom:20px;"><h4 style="margin-bottom:8px;">👥 Ou choisissez un profil existant :</h4><div style="display:flex; flex-direction:column; gap:8px;">`;
+                    listeProfils.forEach(p => {
+                        profilsExistantsHtml += `<button class="btn-action" style="background:var(--card-bg); border:1px solid var(--accent); color:var(--text-main); text-align:left; padding:12px;" onclick="selectionnerProfilExistant('${p.id}')">👤 <strong>${p.nom}</strong> <small style="float:right; color:var(--accent);">[${p.metierUnique}]</small></button>`;
+                    });
+                    profilsExistantsHtml += `</div></div>`;
+                }
+
+                content.innerHTML = `
+                    <div class="card" style="border-color:var(--accent); max-width:500px; margin: 10px auto; text-align:center;">
+                        <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo" style="width:72px; height:72px; margin-bottom:10px; border-radius:16px; border:2px solid var(--accent);">
+                        <h2 style="color:var(--accent); margin-top:0;">✨ E.V.A.T. & ELAWS</h2>
+                        <p class="text" style="text-align:center;">Écosystème Souverain Immersif (v19)</p>
+                        
+                        ${profilsExistantsHtml}
+
+                        <div style="text-align:left;">
+                            <h4 style="margin-bottom:10px; border-top:1px solid var(--border-color); padding-top:15px;">📝 Créer mon Profil :</h4>
+                            <input type="text" id="regNom" class="input" placeholder="Nom ou Pseudonyme *" style="margin-bottom:8px;">
+                            <input type="text" id="regMetierCustom" class="input" placeholder="Votre Métier (Docteur, Commerçant, Mécanicien...)" style="margin-bottom:8px;">
+                            <input type="text" id="regTel" class="input" placeholder="Téléphone (ex: +228 98231402)" style="margin-bottom:12px;">
+                            <button class="btn-action" onclick="creerNouveauProfil()">🚀 Générer mon Profil Immersif</button>
+                        </div>
                     </div>
                 `;
                 return;
             }
 
-            let chatHtml = '';
-            messages.forEach(m => {
-                const isAi = m.role === 'ai';
-                chatHtml += `
-                    <div style="background:${isAi ? 'rgba(16,185,129,0.1)' : 'var(--bg-color)'}; border-left:3px solid ${isAi ? '#10b981' : '#334155'}; padding:12px; border-radius:8px; margin-bottom:10px;">
-                        <strong style="font-size:11px; color:${isAi ? '#10b981' : 'var(--text-secondary)'};">${isAi ? '🤖 ELAWS' : profil.nom}</strong>
-                        <p style="margin:6px 0 0 0; font-size:14px; white-space: pre-line;">${m.texte}</p>
+            document.getElementById('appHeader').style.display = 'block';
+            document.getElementById('bottomBar').style.display = 'flex';
+            document.getElementById('badgeDomaineActif').innerHTML = `💼 Profil : ${utilisateurActif.metierUnique}`;
+            mettreAJourEtatReseau();
+
+            document.querySelectorAll('.bar-item').forEach(el => el.classList.remove('active'));
+            if(activeTab === 'accueil') document.getElementById('barAccueil')?.classList.add('active');
+            if(activeTab === 'dashboard') document.getElementById('barDash')?.classList.add('active');
+            if(activeTab === 'agenda') document.getElementById('barAgenda')?.classList.add('active');
+            if(activeTab === 'elaws_compagnon') document.getElementById('barElaws')?.classList.add('active');
+            if(activeTab === 'facturation') document.getElementById('barFact')?.classList.add('active');
+            if(activeTab === 'economie') document.getElementById('barEco')?.classList.add('active');
+
+            if (activeTab === 'accueil') {
+                let voixList = getAvailableVoices();
+                let optionsVoixHtml = '';
+                if (voixList.length > 0) {
+                    voixList.forEach((v, index) => {
+                        const selected = index == voixActiveIndex ? 'selected' : '';
+                        optionsVoixHtml += `<option value="${index}" ${selected}>${v.name} (${v.lang})</option>`;
+                    });
+                } else {
+                    optionsVoixHtml = `<option value="0">Voix par défaut du système</option>`;
+                }
+
+                content.innerHTML = `
+                    <div class="card" style="border-color: var(--accent);">
+                        <div class="badge-gamified">🌟 Niveau 1 — Utilisateur Souverain Actif</div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                            <div>
+                                <span style="font-size:11px; color:var(--accent); font-weight:700;">💼 PROFIL SOUVERAIN</span>
+                                <div style="font-size:17px; font-weight:800;">${utilisateurActif.nom}</div>
+                            </div>
+                            <button class="btn-top" onclick="changerProfilSession()">🔄 Changer</button>
+                        </div>
+                        <p class="text">Métier actif : <strong style="color:var(--accent);">${utilisateurActif.metierUnique}</strong>. Effets sonores, animations immersives et score activés (v19).</p>
+
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-top:15px; border:1px solid var(--border-color);">
+                            <h4 style="margin:0 0 8px 0; color:var(--accent);">🗣️ Voix d'ELAWS :</h4>
+                            <select id="selectVoix" class="input" onchange="changerVoixElaws(this)">
+                                ${optionsVoixHtml}
+                            </select>
+                            <button class="btn-action" style="margin-top:8px; padding:8px;" onclick="lireTexteAAvoix('Test de la voix sélectionnée pour ELAWS.')">🔊 Tester cette voix</button>
+                        </div>
                     </div>
                 `;
-            });
+            } else if (activeTab === 'dashboard') {
+                const totalFactures = utilisateurActif.factures ? utilisateurActif.factures.length : 0;
+                let montantFacturesTotal = 0;
+                if(utilisateurActif.factures) {
+                    utilisateurActif.factures.forEach(f => montantFacturesTotal += f.montant);
+                }
+                const totalNotes = utilisateurActif.notesVocales ? utilisateurActif.notesVocales.length : 0;
+                const totalRdvs = utilisateurActif.agendaRdv ? utilisateurActif.agendaRdv.length : 0;
+                const scoreProductivite = (totalFactures * 20) + (totalNotes * 10) + (totalRdvs * 15) + 50;
 
-            app.innerHTML = `
-                <header>
-                    <div>
-                        <strong>${profil.nom}</strong><br>
-                        <small style="color:var(--accent);">${profil.role}</small>
-                    </div>
-                    <button onclick="reinitialiser()" style="background:#ef4444; color:white; border:none; padding:6px 10px; border-radius:6px; font-size:11px; cursor:pointer;">Réinitialiser</button>
-                </header>
+                content.innerHTML = `
+                    <div class="card" style="border-color:#3b82f6;">
+                        <h3 class="card-title" style="color:#3b82f6;">📊 Tableau de Bord Immersif & Score</h3>
+                        <p class="text">Suivi gamifié de votre activité professionnelle et de votre productivité.</p>
+                        
+                        <div style="background:var(--bg-color); padding:16px; border-radius:12px; border:1px solid #3b82f6; text-align:center; margin-bottom:15px;">
+                            <div style="font-size:12px; color:var(--text-secondary); text-transform:uppercase; font-weight:700;">Score de Productivité Global</div>
+                            <div style="font-size:32px; font-weight:900; color:#3b82f6; margin-top:6px;">⭐ ${scoreProductivite} pts</div>
+                            <small style="color:var(--accent);">🔥 Excellent rythme d'utilisation !</small>
+                        </div>
 
-                <div class="card">
-                    <h3 style="margin-top:0; color:#10b981;">🤖 Assistant ELAWS</h3>
-                    <div style="max-height:300px; overflow-y:auto; margin-bottom:15px; padding-right:5px;">
-                        ${chatHtml}
+                        <div class="stat-grid">
+                            <div class="stat-box">
+                                <div style="font-size:12px; color:var(--text-secondary);">Trésorerie Actuelle</div>
+                                <div class="stat-num" style="color:var(--accent);">${utilisateurActif.solde.toLocaleString()} FCFA</div>
+                            </div>
+                            <div class="stat-box">
+                                <div style="font-size:12px; color:var(--text-secondary);">CA Facturé</div>
+                                <div class="stat-num" style="color:#10b981;">${montantFacturesTotal.toLocaleString()} FCFA</div>
+                            </div>
+                            <div class="stat-box">
+                                <div style="font-size:12px; color:var(--text-secondary);">Rendez-vous</div>
+                                <div class="stat-num" style="color:#f59e0b;">${totalRdvs}</div>
+                            </div>
+                            <div class="stat-box">
+                                <div style="font-size:12px; color:var(--text-secondary);">Notes Vocales</div>
+                                <div class="stat-num" style="color:#ec4899;">${totalNotes}</div>
+                            </div>
+                        </div>
                     </div>
-                    <div style="display:flex; gap:8px;">
-                        <input type="text" id="inputChat" class="input" placeholder="Écris ton message..." style="margin-bottom:0;" onkeypress="if(event.key==='Enter') envoyerMessage()">
-                        <button class="btn" style="width:auto; padding:0 20px;" onclick="envoyerMessage()">Envoyer</button>
-                    </div>
-                </div>
+                `;
+            } else if (activeTab === 'agenda') {
+                let rdvsHtml = '';
+                if(utilisateurActif.agendaRdv && utilisateurActif.agendaRdv.length > 0) {
+                    utilisateurActif.agendaRdv.forEach(r => {
+                        rdvsHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #f59e0b;"><strong>📅 ${r.titre}</strong> — <span style="color:var(--accent);">${r.date} à ${r.heure}</span></div>`;
+                    });
+                } else { rdvsHtml = '<p style="color:var(--text-secondary);">Aucun rendez-vous planifié.</p>'; }
 
-                <div class="card">
-                    <h3 style="margin-top:0; color:#3b82f6;">🪙 Caisse & Trésorerie</h3>
-                    <p style="font-size:22px; font-weight:bold; color:#10b981; margin:5px 0;">${profil.solde.toLocaleString()} FCFA</p>
-                    <button class="btn" style="background:#3b82f6; margin-top:8px;" onclick="profil.solde += 5000; sauvegarder(); render(); showToast('+5 000 FCFA ajoutés');">➕ Ajouter 5 000 FCFA</button>
-                </div>
-            `;
+                content.innerHTML = `
+                    <div class="card" style="border-color:#f59e0b;">
+                        <h3 class="card-title" style="color:#f59e0b;">📅 Agenda & Rendez-vous Pro</h3>
+                        <p class="text">Planifiez vos consultations et chantiers hors-ligne.</p>
+                        
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                            <input type="text" id="rdvTitre" class="input" placeholder="Intitulé du rendez-vous *" style="margin-bottom:8px;">
+                            <input type="date" id="rdvDate" class="input" style="margin-bottom:8px;">
+                            <input type="time" id="rdvHeure" class="input" style="margin-bottom:10px;">
+                            <button class="btn-action" style="background:#f59e0b;" onclick="ajouterRdvAgenda()">📅 Planifier le Rendez-vous</button>
+                        </div>
+                        <h4 style="margin-bottom:8px;">Mes Prochains Rendez-vous :</h4>
+                        ${rdvsHtml}
+                    </div>
+                `;
+            } else if (activeTab === 'calculatrice_marge') {
+                content.innerHTML = `
+                    <div class="card" style="border-color:#10b981;">
+                        <h3 class="card-title" style="color:#10b981;">🧮 Calculatrice de Marge & Prix de Vente</h3>
+                        <p class="text">Calculez instantanément votre prix de vente en FCFA.</p>
+                        
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                            <input type="number" id="calcCout" class="input" placeholder="Coût d'achat (FCFA) *" style="margin-bottom:8px;">
+                            <input type="number" id="calcMarge" class="input" placeholder="Marge souhaitée (%) *" style="margin-bottom:10px;">
+                            <button class="btn-action" style="background:#10b981;" onclick="calculerMargeBeneficiaire()">Calculer le Prix de Vente 🧮</button>
+                        </div>
+                        <div id="resultatCalcMarge"></div>
+                    </div>
+                `;
+            } else if (activeTab === 'recherche') {
+                content.innerHTML = `
+                    <div class="card" style="border-color:#8b5cf6;">
+                        <h3 class="card-title" style="color:#8b5cf6;">🔍 Recherche Globale Rapide</h3>
+                        <p class="text">Trouvez instantanément un client, une facture ou une note.</p>
+                        
+                        <div style="margin-bottom:15px;">
+                            <input type="text" id="inputRechercheGlobale" class="input" placeholder="Tapez un mot-clé..." oninput="executerRechercheGlobale()">
+                        </div>
+                        <div id="resultatsRechercheDiv">
+                            <p style="color:var(--text-secondary);">Commencez à taper pour rechercher...</p>
+                        </div>
+                    </div>
+                `;
+            } else if (activeTab === 'elaws_compagnon') {
+                let chatHtml = '';
+                if (utilisateurActif.discussionsElaws) {
+                    utilisateurActif.discussionsElaws.forEach(msg => {
+                        const isAi = msg.role === 'ai';
+                        chatHtml += `
+                            <div style="background:${isAi ? 'rgba(5,150,105,0.15)' : 'var(--bg-color)'}; border-left:4px solid ${isAi ? 'var(--accent)' : 'var(--border-color)'}; padding:14px; border-radius:10px; margin-bottom:12px; position:relative;">
+                                <strong style="font-size:12px; color:${isAi ? 'var(--accent)' : 'var(--text-secondary)'};">${isAi ? '🤖 ELAWS (Expert ' + utilisateurActif.metierUnique + ')' : utilisateurActif.nom}</strong>
+                                <p style="margin:8px 0 0 0; font-size:14px;">${msg.texte}</p>
+                                ${isAi ? `<button onclick="lireTexteAAvoix('${msg.texte.replace(/'/g, "'")}')" style="position:absolute; top:10px; right:10px; background:var(--accent); color:#000; border:none; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;">🔊 Écouter</button>` : ''}
+                            </div>
+                        `;
+                    });
+                }
+                content.innerHTML = `
+                    <div class="card" style="border-color:var(--accent);">
+                        <h3 class="card-title" style="color:var(--accent);">🤖 ELAWS — Assistant & Expert Métier</h3>
+                        <p class="text">Posez vos questions :</p>
+                        <div style="text-align:center; margin-bottom:15px;">
+                            <button class="btn-action" onclick="demarrerEcouteMicrophone()" style="background:var(--accent-gradient); font-size:18px; padding:16px; border-radius:30px;">
+                                🎤 Parler à l'Expert ELAWS
+                            </button>
+                        </div>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:12px; max-height:350px; overflow-y:auto; margin-bottom:15px; border:1px solid var(--border-color);">
+                            ${chatHtml}
+                        </div>
+                        <div style="display:flex; gap:8px;">
+                            <input type="text" id="inputElawsChat" class="input" placeholder="Tapez votre question..." style="margin-bottom:0;" onkeypress="if(event.key === 'Enter') envoyerMessageElawsAI()">
+                            <button class="btn-action" style="width:auto; padding:0 22px;" onclick="envoyerMessageElawsAI()">Analyser 🚀</button>
+                        </div>
+                    </div>
+                `;
+            } else if (activeTab === 'traduction_croisee') {
+                content.innerHTML = `
+                    <div class="card" style="border-color:#3b82f6;">
+                        <h3 class="card-title" style="color:#3b82f6;">🌐 Traduction Croisée & Dialectes</h3>
+                        <p class="text">Communiquez en temps réel.</p>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                            <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;">Langue Source :</label>
+                            <select id="selectDialecteSource" class="input" style="margin-bottom:10px;">
+                                <option value="fr-FR">Français</option>
+                                <option value="en-US">Anglais (English)</option>
+                                <option value="es-ES">Espagnol (Español)</option>
+                                <option value="yo-NG">Yoruba</option>
+                                <option value="ee-TG">Ewé / Gbe</option>
+                            </select>
+                            <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;">Langue Cible :</label>
+                            <select id="selectLangueCible" class="input" style="margin-bottom:10px;">
+                                <option value="fr">Français</option>
+                                <option value="en">Anglais (English)</option>
+                                <option value="es">Espagnol (Español)</option>
+                                <option value="ew">Ewé</option>
+                                <option value="yo">Yoruba</option>
+                            </select>
+                            <textarea id="tradTexteInput" class="input" placeholder="Saisissez ou parlez..." rows="3" style="resize:none; margin-bottom:8px;"></textarea>
+                            <div style="display:flex; gap:8px;">
+                                <button class="btn-action" style="background:#3b82f6;" onclick="executerTraductionCroisee()">Traduire 🔄</button>
+                                <button class="btn-action" style="background:#10b981; width:auto; padding:0 16px;" onclick="demarrerMicroTraduction()">🎤 Micro</button>
+                            </div>
+                        </div>
+                        <div id="resultatTraductionDiv"></div>
+                    </div>
+                `;
+            } else if (activeTab === 'facturation') {
+                let facturesHtml = '';
+                if(utilisateurActif.factures && utilisateurActif.factures.length > 0) {
+                    utilisateurActif.factures.forEach(f => {
+                        facturesHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #10b981;"><strong>📄 ${f.numero}</strong> — Client: ${f.client} | <strong>${f.montant.toLocaleString()} FCFA</strong></div>`;
+                    });
+                } else { facturesHtml = '<p style="color:var(--text-secondary);">Aucune facture.</p>'; }
+
+                content.innerHTML = `
+                    <div class="card" style="border-color:#10b981;">
+                        <h3 class="card-title" style="color:#10b981;">📄 Facturation & Reçus PDF</h3>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                            <input type="text" id="factClient" class="input" placeholder="Nom du Client *" style="margin-bottom:8px;">
+                            <input type="text" id="factDesc" class="input" placeholder="Prestation *" style="margin-bottom:8px;">
+                            <input type="number" id="factMontant" class="input" placeholder="Montant en FCFA *" style="margin-bottom:10px;">
+                            <button class="btn-action" style="background:#10b981;" onclick="genererFacturePDF()">🖨️ Générer la Facture</button>
+                        </div>
+                        <div id="apercuFactureContainer"></div>
+                        <h4 style="margin-top:15px; margin-bottom:8px;">Historique :</h4>
+                        ${facturesHtml}
+                    </div>
+                `;
+            } else if (activeTab === 'notes_vocales') {
+                let notesHtml = '';
+                if(utilisateurActif.notesVocales && utilisateurActif.notesVocales.length > 0) {
+                    utilisateurActif.notesVocales.forEach(n => {
+                        notesHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #ec4899;"><strong>🎙️ ${n.date}</strong><p style="margin:4px 0 0 0; font-size:13.5px;">${n.texte}</p></div>`;
+                    });
+                } else { notesHtml = '<p style="color:var(--text-secondary);">Aucune note.</p>'; }
+
+                content.innerHTML = `
+                    <div class="card" style="border-color:#ec4899;">
+                        <h3 class="card-title" style="color:#ec4899;">🎙️ Dictaphone & Notes Vocales</h3>
+                        <div style="text-align:center; margin-bottom:15px;">
+                            <button class="btn-action" style="background:linear-gradient(135deg, #ec4899 0%, #db2777 100%); font-size:16px; padding:16px; border-radius:30px;" onclick="enregistrerNoteVocale()">🎙️ Enregistrer une Note</button>
+                        </div>
+                        ${notesHtml}
+                    </div>
+                `;
+            } else if (activeTab === 'economie') {
+                let caissesHtml = '';
+                if(utilisateurActif.journalCaisse && utilisateurActif.journalCaisse.length > 0) {
+                    utilisateurActif.journalCaisse.forEach(c => {
+                        const isEntree = c.type === 'entree';
+                        caissesHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid ${isEntree ? '#10b981' : '#ef4444'};"><strong>${isEntree ? '➕ Entrée' : '➖ Sortie'} : ${c.libelle}</strong> — <span style="color:${isEntree ? '#10b981' : '#ef4444'}; font-weight:bold;">${c.montant.toLocaleString()} FCFA</span></div>`;
+                    });
+                } else { caissesHtml = '<p style="color:var(--text-secondary);">Aucun mouvement.</p>'; }
+
+                content.innerHTML = `
+                    <div class="card" style="border-color:var(--accent);">
+                        <h3 class="card-title">🪙 Journal de Caisse & Trésorerie</h3>
+                        <div style="font-size:26px; font-weight:800; color:var(--accent); text-align:center; padding:10px; background:var(--bg-color); border-radius:10px; margin-bottom:15px;">${utilisateurActif.solde.toLocaleString()} FCFA</div>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                            <div style="display:flex; gap:6px; margin-bottom:8px; flex-wrap:wrap;">
+                                <button class="btn-top" onclick="appliquerSuggestionCaisse('Vente prestation')">⚡ Vente prestation</button>
+                                <button class="btn-top" onclick="appliquerSuggestionCaisse('Achat matériel')">⚡ Achat matériel</button>
+                                <button class="btn-top" onclick="appliquerSuggestionCaisse('Transport')">⚡ Transport</button>
+                            </div>
+                            <input type="text" id="caisseLib" class="input" placeholder="Libellé *" style="margin-bottom:8px;">
+                            <input type="number" id="caisseMontant" class="input" placeholder="Montant en FCFA *" style="margin-bottom:10px;">
+                            <div style="display:flex; gap:8px;">
+                                <button class="btn-action" style="background:#10b981;" onclick="ajouterMouvementCaisse('entree')">➕ Entrée</button>
+                                <button class="btn-action" style="background:#ef4444;" onclick="ajouterMouvementCaisse('sortie')">➖ Sortie</button>
+                            </div>
+                        </div>
+                        ${caissesHtml}
+                    </div>
+                `;
+            } else if (activeTab === 'sauvegarde') {
+                content.innerHTML = `
+                    <div class="card" style="border-color:#3b82f6;">
+                        <h3 class="card-title" style="color:#3b82f6;">💾 Sauvegarde & Sécurité</h3>
+                        <div style="display:flex; flex-direction:column; gap:12px; margin-top:15px;">
+                            <button class="btn-action" style="background:#3b82f6;" onclick="exporterDonneesJSON()">📥 Exporter (JSON)</button>
+                            <div style="background:var(--bg-color); padding:15px; border-radius:10px; border:1px solid var(--border-color); text-align:center;">
+                                <label style="font-size:13px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:8px;">📤 Restaurer :</label>
+                                <input type="file" id="fileRestaurer" accept=".json" onchange="importerDonneesJSON(event)" style="font-size:12px; color:var(--text-main);">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (activeTab === 'faq') {
+                content.innerHTML = `
+                    <div class="card" style="border-color:#f59e0b;">
+                        <h3 class="card-title" style="color:#f59e0b;">❓ Guide & FAQ Immersif</h3>
+                        <div class="faq-item" onclick="toggleFaqItem(this)">
+                            <div class="faq-question">1. Comment fonctionne le Score de Productivité ? <span>▼</span></div>
+                            <div class="faq-answer">Le score augmente à chaque facture créée, note vocale dictée ou rendez-vous planifié pour rendre l'utilisation quotidienne ludique et motivante.</div>
+                        </div>
+                        <div class="faq-item" onclick="toggleFaqItem(this)">
+                            <div class="faq-question">2. Y a-t-il des effets sonores ? <span>▼</span></div>
+                            <div class="faq-answer">Oui ! Un son discret et mélodieux confirme chaque validation (encaissement, sauvegarde, facture) pour une expérience utilisateur haut de gamme.</div>
+                        </div>
+                    </div>
+                `;
+            }
         }
 
+        function switchTab(t) { activeTab = t; document.getElementById('sideMenu').classList.remove('open'); render(); window.scrollTo(0, 0); }
         render();
     </script>
 </body>
