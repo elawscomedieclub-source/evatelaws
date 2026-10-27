@@ -201,7 +201,7 @@
             text-align: left;
         }
         .metier-card-widget:hover { border-color: var(--accent); transform: translateY(-2px); }
-        .metier-card-widget.active { border-color: var(--accent); background: rgba(5, 150, 105, 0.1); }
+        .metier-card-widget.active { border-color: var(--accent); background: rgba(5, 150, 105, 0.15); box-shadow: 0 0 10px rgba(5,150,105,0.2); }
         .input-group { display: flex; gap: 10px; margin-bottom: 10px; }
         .input {
             flex: 1;
@@ -215,7 +215,6 @@
             transition: border-color 0.2s;
         }
         .input:focus { border-color: var(--accent); }
-        select.input { width: 100%; margin-bottom: 10px; }
         .btn-action {
             background: var(--accent-gradient);
             color: white;
@@ -238,7 +237,7 @@
 </head>
 <body data-theme="dark">
 
-    <div id="toastNotification">✨ <span id="toastText">Action exécutée avec succès</span></div>
+    <div id="toastNotification">✨ <span id="toastText">Action exécutée</span></div>
 
     <header>
         <div class="header-left">
@@ -251,7 +250,7 @@
         </div>
     </header>
 
-    <div class="badge-info">⚡ Écosystème Souverain | Menu & Navigation Fluide</div>
+    <div class="badge-info">🌟 Gestionnaire de Profils en Évidence | Souveraineté Totale</div>
 
     <div id="installBanner" class="card" style="display:none; border-color:var(--accent); background:rgba(5,150,105,0.12);">
         <h3 class="card-title" style="color:var(--accent);">📲 Installer E.V.A.T. & ELAWS</h3>
@@ -261,8 +260,8 @@
 
     <div id="sideMenu" class="sidebar">
         <h3>📂 Navigation Globale E.V.A.T.</h3>
-        <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Hub Modulable</button>
-        <button class="menu-item" onclick="switchTab('camera')">📸 Caméra & Analyse de Sol/Documents (Menu)</button>
+        <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Profils</button>
+        <button class="menu-item" onclick="switchTab('camera')">📸 Caméra & Analyse de Sol/Documents</button>
         <button class="menu-item" onclick="switchTab('gps')">🧭 Géolocalisation & Itinéraire (Chauffeur)</button>
         <button class="menu-item" onclick="switchTab('simulateur')">🧮 Calculateurs & Outils Métiers</button>
         <button class="menu-item" onclick="switchTab('stocks')">📦 Stocks, Récoltes & Matériel</button>
@@ -278,6 +277,12 @@
 
     <script>
         let activeTab = 'accueil';
+        let listeMetiers = [
+            { nom: 'Conducteur / Chauffeur', icone: '🚕', desc: 'GPS & Transport' },
+            { nom: 'Agriculteur', icone: '🌾', desc: 'Récoltes & Sols' },
+            { nom: 'Artisan / Couturier', icone: '✂️', desc: 'Devis & Matériel' },
+            { nom: 'Étudiant / Jeune', icone: '📚', desc: 'Apprentissage' }
+        ];
         let metierActif = 'Conducteur / Chauffeur';
         let themeIndex = 0;
         const themes = ['dark', 'light', 'eco'];
@@ -327,8 +332,30 @@
 
         function selectionnerMetier(nom) {
             metierActif = nom;
-            showToast(`Profil basculé sur : ${nom}`);
+            showToast(`Profil actif : ${nom}`);
             render();
+        }
+
+        function ajouterNouveauMetier() {
+            const input = document.getElementById('inputNouveauProfil');
+            const val = input.value.trim();
+            if (val) {
+                // Vérifier si le profil existe déjà
+                if (!listeMetiers.some(m => m.nom.toLowerCase() === val.toLowerCase())) {
+                    listeMetiers.push({ nom: val, icone: '💼', desc: 'Profil Personnalisé' });
+                    metierActif = val;
+                    input.value = '';
+                    showToast(`Nouveau profil "${val}" créé et activé !`);
+                    render();
+                } else {
+                    metierActif = val;
+                    input.value = '';
+                    showToast(`Profil "${val}" sélectionné.`);
+                    render();
+                }
+            } else {
+                showToast("Veuillez saisir un nom de profil valide.");
+            }
         }
 
         function handleImageCapture(event) {
@@ -337,10 +364,7 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     capturedImageSrc = e.target.result;
-                    analysisResult = `🔍 <strong>Analyse ELAWS de l'image :</strong><br>` +
-                        `- Type détecté : Échantillon de sol / Végétation / Document.<br>` +
-                        `- Indice de fertilité / intégrité : Optimal.<br>` +
-                        `- Statut : Enregistré avec succès dans le système.`;
+                    analysisResult = `🔍 <strong>Analyse ELAWS de l'image :</strong><br>- Type détecté : Échantillon / Document.<br>- Statut : Enregistré avec succès.`;
                     showToast("Photo analysée avec succès !");
                     render();
                 };
@@ -354,7 +378,7 @@
                 return;
             }
             if (navigator.geolocation) {
-                showToast("Recherche de position GPS en cours...");
+                showToast("Recherche GPS en cours...");
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         const lat = position.coords.latitude;
@@ -380,49 +404,51 @@
             content.innerHTML = '';
 
             if (activeTab === 'accueil') {
-                content.innerHTML = `
-                    <div class="card">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                            <div>
-                                <span style="font-size:12px; color:var(--text-secondary);">Souveraineté Hybride Active</span>
-                                <div style="font-size:18px; font-weight:800;">Bonjour, Bienvenue !</div>
-                            </div>
-                            <span style="background:rgba(5,150,105,0.15); color:var(--accent); padding:6px 12px; border-radius:20px; font-size:12px; font-weight:700;">💼 ${metierActif}</span>
+                let cartesMetiersHtml = '';
+                listeMetiers.forEach(m => {
+                    const isActive = m.nom === metierActif ? 'active' : '';
+                    cartesMetiersHtml += `
+                        <div class="metier-card-widget ${isActive}" onclick="selectionnerMetier('${m.nom}')">
+                            <div style="font-size:20px; margin-bottom:4px;">${m.icone}</div>
+                            <div style="font-weight:700; font-size:13px;">${m.nom}</div>
+                            <div style="font-size:11px; color:var(--text-secondary);">${m.desc}</div>
                         </div>
-                        <p class="text">Sélectionnez votre espace d'activité instantané :</p>
+                    `;
+                });
+
+                content.innerHTML = `
+                    <div class="card" style="border-color: var(--accent);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                            <div>
+                                <span style="font-size:11px; color:var(--accent); font-weight:700;">✨ HUB CENTRAL DES PROFILS</span>
+                                <div style="font-size:17px; font-weight:800;">Choisissez ou créez votre profil :</div>
+                            </div>
+                            <span style="background:rgba(5,150,105,0.2); color:var(--accent); padding:5px 10px; border-radius:20px; font-size:11px; font-weight:700;">Actif : ${metierActif}</span>
+                        </div>
+                        <p class="text" style="margin-bottom:12px;">Sélectionnez un profil ci-dessous ou ajoutez instantanément une nouvelle activité (métier, passion, rôle) :</p>
                         
-                        <div class="grid-metiers">
-                            <div class="metier-card-widget ${metierActif === 'Conducteur / Chauffeur' ? 'active' : ''}" onclick="selectionnerMetier('Conducteur / Chauffeur')">
-                                <div style="font-size:20px; margin-bottom:4px;">🚕</div>
-                                <div style="font-weight:700; font-size:13px;">Conducteur / Pilote</div>
-                                <div style="font-size:11px; color:var(--text-secondary);">GPS & Transport</div>
-                            </div>
-                            <div class="metier-card-widget ${metierActif === 'Agriculteur' ? 'active' : ''}" onclick="selectionnerMetier('Agriculteur')">
-                                <div style="font-size:20px; margin-bottom:4px;">🌾</div>
-                                <div style="font-weight:700; font-size:13px;">Agriculteur</div>
-                                <div style="font-size:11px; color:var(--text-secondary);">Récoltes & Sols</div>
-                            </div>
-                            <div class="metier-card-widget ${metierActif === 'Artisan / Couturier' ? 'active' : ''}" onclick="selectionnerMetier('Artisan / Couturier')">
-                                <div style="font-size:20px; margin-bottom:4px;">✂️</div>
-                                <div style="font-weight:700; font-size:13px;">Artisan / Couturier</div>
-                                <div style="font-size:11px; color:var(--text-secondary);">Devis & Matériel</div>
-                            </div>
-                            <div class="metier-card-widget ${metierActif === 'Étudiant / Jeune' ? 'active' : ''}" onclick="selectionnerMetier('Étudiant / Jeune')">
-                                <div style="font-size:20px; margin-bottom:4px;">📚</div>
-                                <div style="font-weight:700; font-size:13px;">Étudiant / Jeune</div>
-                                <div style="font-size:11px; color:var(--text-secondary);">Apprentissage</div>
-                            </div>
+                        <!-- Formulaire d'ajout rapide de profil personnalisé -->
+                        <div class="input-group" style="margin-bottom:12px;">
+                            <input type="text" id="inputNouveauProfil" class="input" placeholder="Ajouter un nouveau profil (ex: Pilote, Mécanicien...)">
+                            <button class="btn-action" style="width:auto; padding:0 15px;" onclick="ajouterNouveauMetier()">+ Créer</button>
                         </div>
 
-                        <!-- Widget Quick Route GPS -->
-                        <div class="tool-card" style="border-left-color: var(--accent); margin-bottom:12px;">
+                        <!-- Grille des profils disponibles -->
+                        <div class="grid-metiers">
+                            ${cartesMetiersHtml}
+                        </div>
+                    </div>
+
+                    <!-- Widget Quick Route GPS -->
+                    <div class="card">
+                        <div class="tool-card" style="border-left-color: var(--accent); margin-bottom:10px;">
                             🧭 <strong>QUICK ROUTE • GPS & ITINÉRAIRE</strong><br>
                             <span style="font-size:12px; color:var(--text-secondary);">${gpsStatus}</span><br><br>
                             <button class="btn-action" style="padding:8px; font-size:12px;" onclick="switchTab('gps')">Ouvrir le Module GPS</button>
                         </div>
 
                         <!-- Widget Sommaire Financier -->
-                        <div class="tool-card" style="border-left-color: #3b82f6;">
+                        <div class="tool-card" style="border-left-color: #3b82f6; margin-bottom:0;">
                             🪙 <strong>SOMMAIRE FINANCIER & CAISSE</strong><br>
                             <div style="font-size:18px; font-weight:800; color:var(--accent); margin:4px 0;">${soldeCaisse.toLocaleString()} FCFA</div>
                             <div style="font-size:11px; color:var(--text-secondary);">Entrées : 67,500 FCFA | Sorties : 22,300 FCFA</div>
