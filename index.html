@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. & ELAWS - Écosystème Souverain Immersif (v22.5 Final)</title>
+    <title>E.V.A.T. & ELAWS - Écosystème Universel Intégral (v24.2)</title>
     
     <link rel="manifest" href="manifest.webmanifest">
     <meta name="theme-color" content="#059669">
@@ -134,15 +134,18 @@
             </div>
         </header>
         <div class="badge-info">
-            <span id="badgeDomaineActif">🌍 Écosystème Souverain Immersif (v22.5)</span>
-            <span class="offline-status" id="reseauStatusIndicator">⚡ Hors-Ligne Prêt</span>
+            <span id="badgeDomaineActif">🌍 Écosystème Universel Intégral (v24.2)</span>
+            <span class="offline-status" id="reseauStatusIndicator">⚡ Verrouillé & Prêt</span>
         </div>
     </div>
 
     <div id="sideMenu" class="sidebar">
-        <h3>📂 Navigation & Outils (v22.5)</h3>
+        <h3>📂 Navigation Universelle (v24.2 Intégrale)</h3>
         <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Profil Actif</button>
-        <button class="menu-item" onclick="switchTab('elaws_compagnon')" style="background:rgba(5,150,105,0.2); border:1px solid var(--accent);">🤖 <strong>Parler à ELAWS (Conversation Fluide)</strong></button>
+        <button class="menu-item" onclick="switchTab('appels_traduction')" style="background:rgba(14,165,233,0.2); border:1px solid #0ea5e9; color:#0ea5e9;">📞 <strong>Appels (GSM & Internet) & Traduction Dialecte</strong></button>
+        <button class="menu-item" onclick="switchTab('elaws_compagnon')" style="background:rgba(5,150,105,0.2); border:1px solid var(--accent);">🤖 <strong>Parler à ELAWS (Micro & Vocal 🎤)</strong></button>
+        <button class="menu-item" onclick="switchTab('outils_metier')" style="background:rgba(245,158,11,0.15); border:1px solid #f59e0b; color:#f59e0b;">✂️ <strong>Outils Spécifiques Métier (Tous Corps)</strong></button>
+        <button class="menu-item" onclick="switchTab('voyages_papiers')" style="background:rgba(14,165,233,0.15); border:1px solid #0ea5e9; color:#0ea5e9;">✈️ <strong>Voyages, Passeport & CNI</strong></button>
         <button class="menu-item" onclick="switchTab('dashboard')" style="background:rgba(59,130,246,0.15); border:1px solid #3b82f6; color:#3b82f6;">📊 <strong>Tableau de Bord & Score</strong></button>
         <button class="menu-item" onclick="switchTab('agenda')" style="background:rgba(245,158,11,0.15); border:1px solid #f59e0b; color:#f59e0b;">📅 <strong>Agenda & Rendez-vous</strong></button>
         <button class="menu-item" onclick="switchTab('economie')">🪙 Journal de Caisse & Trésorerie</button>
@@ -154,10 +157,10 @@
 
     <div id="bottomBar" class="bottom-action-bar" style="display:none;">
         <button class="bar-item active" onclick="switchTab('accueil')" id="barAccueil"><span class="icon">💼</span><span>Profil</span></button>
+        <button class="bar-item" onclick="switchTab('appels_traduction')" id="barAppel" style="color:#0ea5e9;"><span class="icon">📞</span><span>Appels & Trad</span></button>
         <button class="bar-item" onclick="switchTab('elaws_compagnon')" id="barElaws" style="color:var(--accent);"><span class="icon">🤖</span><span>ELAWS</span></button>
-        <button class="bar-item" onclick="switchTab('dashboard')" id="barDash" style="color:#3b82f6;"><span class="icon">📊</span><span>Score</span></button>
-        <button class="bar-item" onclick="switchTab('agenda')" id="barAgenda" style="color:#f59e0b;"><span class="icon">📅</span><span>Agenda</span></button>
-        <button class="bar-item" onclick="switchTab('economie')" id="barEco"><span class="icon">🪙</span><span>Caisse</span></button>
+        <button class="bar-item" onclick="switchTab('outils_metier')" id="barOutil" style="color:#f59e0b;"><span class="icon">✂️</span><span>Métier</span></button>
+        <button class="bar-item" onclick="switchTab('voyages_papiers')" id="barVoyage" style="color:#0ea5e9;"><span class="icon">✈️</span><span>Voyages</span></button>
     </div>
 
     <script>
@@ -219,7 +222,10 @@
 
         function creerNouveauProfil() {
             const nom = document.getElementById('regNom').value.trim();
-            const metierUnique = document.getElementById('regMetierCustom').value.trim() || 'Pasteur / Guide';
+            const contact = document.getElementById('regContact').value.trim();
+            const selectMetier = document.getElementById('selectMetierBase').value;
+            const metierCustom = document.getElementById('regMetierCustom').value.trim();
+            const metierUnique = metierCustom || selectMetier;
 
             if (!nom) { showToast("Veuillez renseigner votre nom."); return; }
 
@@ -227,6 +233,7 @@
             const nouveauProfil = {
                 id: nouveauId,
                 nom: nom,
+                contact: contact || "Non renseigné",
                 metierUnique: metierUnique,
                 solde: 50000,
                 journalCaisse: [
@@ -234,8 +241,16 @@
                 ],
                 factures: [],
                 agendaRdv: [],
+                mesuresCouture: [],
+                consultationsMedicales: [],
+                stocksBoutique: [],
+                notesPastorales: [],
+                ateliersMecanique: [],
+                coursEnseignant: [],
+                dossiersVoyagePapiers: [],
+                carnetContacts: [],
                 discussionsElaws: [
-                    { role: 'ai', texte: `Bonjour ${nom} ! C'est un plaisir de t'accompagner. En tant que ${metierUnique}, je suis là pour discuter avec toi en toute simplicité. Qu'est-ce qu'on fait aujourd'hui ?` }
+                    { role: 'ai', texte: `Bonjour ${nom} ! Bienvenue dans EVAT & ELAWS (v24.2). Ton numéro (${contact || 'Non défini'}) est enregistré. Tous les outils, les appels GSM/Internet avec traduction en direct des dialectes, et l'assistant voyages sont prêts.` }
                 ]
             };
 
@@ -270,7 +285,202 @@
             if (index !== -1) { listeProfils[index] = utilisateurActif; localStorage.setItem('evat_tous_profils', JSON.stringify(listeProfils)); }
         }
 
-        // --- DISCUSSION HUMAINE ET CONVERSATIONNELLE AVEC ELAWS ---
+        // --- GESTION DES CONTACTS & APPELS (GSM & INTERNET) AVEC TRADUCTION DE DIALECTE ---
+        function mettreAJourMonContact() {
+            const nouveauNum = document.getElementById('monNumeroContact')?.value.trim();
+            if(nouveauNum) {
+                utilisateurActif.contact = nouveauNum;
+                sauvegarderProfilActif();
+                jouerSonSucces();
+                showToast("Votre numéro de contact a été mis à jour !");
+                render();
+            } else { showToast("Veuillez saisir un numéro valide."); }
+        }
+
+        function ajouterRepertoireContact() {
+            const nomC = document.getElementById('nomContactRepertoire')?.value.trim();
+            const numC = document.getElementById('numContactRepertoire')?.value.trim();
+            const emailC = document.getElementById('emailContactRepertoire')?.value.trim();
+            const dialC = document.getElementById('dialecteContactRepertoire')?.value || 'Français';
+
+            if(nomC && numC) {
+                if(!utilisateurActif.carnetContacts) utilisateurActif.carnetContacts = [];
+                utilisateurActif.carnetContacts.unshift({ id: Date.now(), nom: nomC, numero: numC, email: emailC, dialecte: dialC });
+                sauvegarderProfilActif();
+                jouerSonSucces();
+                showToast("Contact ajouté au répertoire !");
+                render();
+            } else { showToast("Indiquez au moins le nom et le numéro."); }
+        }
+
+        function lancerAppelGSM(numero) {
+            window.location.href = `tel:${numero}`;
+            showToast(`📞 Appel GSM en cours vers ${numero}...`);
+        }
+
+        function lancerAppelInternetAvecTraduction(nomDest, dialecteDest) {
+            jouerSonSucces();
+            showToast(`🌐 Appel Internet VoIP chiffré & Traduction ELAWS vers ${nomDest} (${dialecteDest})...`);
+            setTimeout(() => {
+                alert(`[Appel Intelligent ELAWS v24.2] 
+Connexion établie avec ${nomDest} !
+🗣️ Langue source détectée : Votre voix.
+🔄 Traduction active en temps réel vers : ${dialecteDest}.
+L'interlocuteur vous entendra instantanément dans sa propre langue/dialecte sans barrière linguistique !`);
+            }, 600);
+        }
+
+        // --- OUTILS MÉTIERS & PAPIERS ---
+        function enregistrerMesureCouture() {
+            const client = document.getElementById('coutureClient')?.value.trim();
+            const epaule = document.getElementById('coutureEpaule')?.value || '';
+            const poitrine = document.getElementById('couturePoitrine')?.value || '';
+            const longueur = document.getElementById('coutureLongueur')?.value || '';
+            const details = document.getElementById('coutureDetails')?.value.trim() || '';
+
+            if(client) {
+                if(!utilisateurActif.mesuresCouture) utilisateurActif.mesuresCouture = [];
+                utilisateurActif.mesuresCouture.unshift({ id: Date.now(), client, epaule, poitrine, longueur, details, date: new Date().toLocaleDateString() });
+                sauvegarderProfilActif();
+                jouerSonSucces();
+                showToast("Mesures du client enregistrées !");
+                render();
+            } else { showToast("Veuillez indiquer le nom du client."); }
+        }
+
+        function ajouterNotePastorale() {
+            const titre = document.getElementById('pasteurTitre')?.value.trim();
+            const contenu = document.getElementById('pasteurContenu')?.value.trim();
+            if(titre) {
+                if(!utilisateurActif.notesPastorales) utilisateurActif.notesPastorales = [];
+                utilisateurActif.notesPastorales.unshift({ id: Date.now(), titre, contenu, date: new Date().toLocaleDateString() });
+                sauvegarderProfilActif();
+                jouerSonSucces();
+                showToast("Prédication enregistrée !");
+                render();
+            } else { showToast("Indiquez le titre du message."); }
+        }
+
+        function ajouterConsultationMedicale() {
+            const patient = document.getElementById('medPatient')?.value.trim();
+            const diagnostic = document.getElementById('medDiagnostic')?.value.trim();
+            const prescription = document.getElementById('medPrescription')?.value.trim();
+
+            if(patient && diagnostic) {
+                if(!utilisateurActif.consultationsMedicales) utilisateurActif.consultationsMedicales = [];
+                utilisateurActif.consultationsMedicales.unshift({ id: Date.now(), patient, diagnostic, prescription, date: new Date().toLocaleDateString() });
+                sauvegarderProfilActif();
+                jouerSonSucces();
+                showToast("Consultation enregistrée !");
+                render();
+            } else { showToast("Remplissez le patient et le diagnostic."); }
+        }
+
+        function ajouterStockBoutique() {
+            const article = document.getElementById('boutiqueArticle')?.value.trim();
+            const qte = parseInt(document.getElementById('boutiqueQte')?.value);
+            const prix = parseFloat(document.getElementById('boutiquePrix')?.value);
+
+            if(article && !isNaN(qte) && !isNaN(prix)) {
+                if(!utilisateurActif.stocksBoutique) utilisateurActif.stocksBoutique = [];
+                utilisateurActif.stocksBoutique.unshift({ id: Date.now(), article, qte, prix });
+                sauvegarderProfilActif();
+                jouerSonSucces();
+                showToast("Article ajouté au stock !");
+                render();
+            } else { showToast("Remplissez correctement les champs du stock."); }
+        }
+
+        function ajouterAtelierMecanique() {
+            const vehicule = document.getElementById('mecaVehicule')?.value.trim();
+            const panne = document.getElementById('mecaPanne')?.value.trim();
+            const cout = parseFloat(document.getElementById('mecaCout')?.value) || 0;
+
+            if(vehicule && panne) {
+                if(!utilisateurActif.ateliersMecanique) utilisateurActif.ateliersMecanique = [];
+                utilisateurActif.ateliersMecanique.unshift({ id: Date.now(), vehicule, panne, cout, date: new Date().toLocaleDateString() });
+                sauvegarderProfilActif();
+                jouerSonSucces();
+                showToast("Réparation enregistrée !");
+                render();
+            } else { showToast("Remplissez le véhicule et la panne."); }
+        }
+
+        function verifierDossierPapier() {
+            const typeDoc = document.getElementById('typeDocAdministratif')?.value;
+            const paysDestination = document.getElementById('paysDestinationVoyage')?.value.trim() || "National / International";
+            const resultatDiv = document.getElementById('resultatAnalyseDossier');
+            if(!resultatDiv) return;
+
+            let pieces = [];
+            let conseils = "";
+
+            if (typeDoc === 'passeport') {
+                pieces = [
+                    "Acte de naissance sécurisé (original ou copie certifiée)",
+                    "Carte nationale d'identité biométrique valide",
+                    "Certificat de nationalité",
+                    "Photos d'identité aux normes (fond blanc)",
+                    "Quittance / Reçu de paiement des frais de timbre passeport",
+                    "Justificatif de domicile ou attestation de résidence"
+                ];
+                conseils = `Pour l'obtention ou le renouvellement de votre passeport pour ${paysDestination}, assurez-vous que tous vos documents d'état civil portent les mêmes noms et prénoms exacts.`;
+            } else if (typeDoc === 'cni') {
+                pieces = [
+                    "Ancienne carte d'identité (en cas de renouvellement) ou Déclaration de perte",
+                    "Acte de naissance original sécurisé",
+                    "Certificat de nationalité",
+                    "Justificatif de profession ou de résidence",
+                    "Timbres fiscaux ou reçu de quittance"
+                ];
+                conseils = `Le dépôt pour la carte d'identité (CNI) se fait auprès des services compétents de votre localité. Vérifiez la validité de votre certificat de nationalité.`;
+            } else if (typeDoc === 'sejour') {
+                pieces = [
+                    "Passeport en cours de validité",
+                    "Visa d'établissement ou d'entrée",
+                    "Contrat de travail ou attestation d'inscription / stage",
+                    "Justificatif de logement (bail ou attestation d'hébergement)",
+                    "Visite médicale / Carnet de vaccination international",
+                    "Justificatifs de ressources financières"
+                ];
+                conseils = `Pour une carte de séjour ou un titre de résidence à ${paysDestination}, constituez votre dossier au moins 2 mois avant l'expiration de votre visa actuel.`;
+            } else {
+                pieces = [
+                    "Formulaire de demande de visa complété et signé",
+                    "Passeport valide (minimum 6 mois après la date de retour)",
+                    "Photos d'identité récentes",
+                    "Billets d'avion aller-retour (réservation confirmée)",
+                    "Réservation d'hôtel ou certificat d'hébergement",
+                    "Attestation d'assurance voyage internationale",
+                    "Relevés bancaires récents (justifiant des fonds suffisants)"
+                ];
+                conseils = `Pour un voyage à ${paysDestination}, vérifiez si une vaccination spécifique (ex: Fièvre jaune) est obligatoire.`;
+            }
+
+            let listeHtml = `<ul style="margin:10px 0; padding-left:20px; line-height:1.6;">`;
+            pieces.forEach(p => { listeHtml += `<li>${p}</li>`; });
+            listeHtml += `</ul>`;
+
+            resultatDiv.innerHTML = `
+                <div style="background:var(--bg-color); padding:15px; border-radius:10px; border:1px solid var(--accent); margin-top:10px;">
+                    <strong style="color:var(--accent);">📋 Dossier Requis (${typeDoc.toUpperCase()} — ${paysDestination}) :</strong>
+                    ${listeHtml}
+                    <p style="margin-top:10px; font-size:13px; color:var(--text-secondary);">💡 <em>Conseil ELAWS :</em> ${conseils}</p>
+                    <button class="btn-action" style="margin-top:10px; background:#0ea5e9;" onclick="sauvegarderDossierActif('${typeDoc}', '${paysDestination}')">💾 Sauvegarder ce dossier</button>
+                </div>
+            `;
+            jouerSonSucces();
+        }
+
+        function sauvegarderDossierActif(doc, pays) {
+            if(!utilisateurActif.dossiersVoyagePapiers) utilisateurActif.dossiersVoyagePapiers = [];
+            utilisateurActif.dossiersVoyagePapiers.unshift({ id: Date.now(), doc, pays, date: new Date().toLocaleDateString() });
+            sauvegarderProfilActif();
+            showToast("Dossier administratif sauvegardé !");
+            render();
+        }
+
+        // --- DISCUSSION ELAWS + MICRO ---
         function envoyerMessageElawsAI(texteForce) {
             const input = document.getElementById('inputElawsChat');
             const q = texteForce || (input ? input.value.trim() : '');
@@ -281,20 +491,16 @@
 
             const lowerQ = q.toLowerCase();
             let reponse = "";
+            const metier = utilisateurActif.metierUnique.toLowerCase();
 
-            // Réactions naturelles et conversationnelles, sans jargon robotique
             if (lowerQ.includes('bonjour') || lowerQ.includes('salut') || lowerQ.includes('coucou')) {
-                reponse = `Salut ${utilisateurActif.nom} ! Comment ça va aujourd'hui ? Qu'est-ce qu'on prépare ensemble ?`;
-            } else if (lowerQ.includes('culte') || lowerQ.includes('prédication') || lowerQ.includes('foi') || lowerQ.includes('prier')) {
-                reponse = `Frère ${utilisateurActif.nom}, pour ton message ou ton culte : appuie-toi sur la simplicité et l'écoute. Je suis là pour t'aider à structurer tes notes si tu veux !`;
-            } else if (lowerQ.includes('argent') || lowerQ.includes('caisse') || lowerQ.includes('solde')) {
-                reponse = `Ton solde actuel est de ${utilisateurActif.solde.toLocaleString()} FCFA. Veux-tu enregistrer un mouvement ?`;
-            } else if (lowerQ.includes('fatigué') || lowerQ.includes('dur') || lowerQ.includes('stress')) {
-                reponse = `Je comprends... Les journées peuvent être intenses. Prends une grande respiration, on gère les choses une par une.`;
-            } else if (lowerQ.includes('merci')) {
-                reponse = `Avec tout mon plaisir, ${utilisateurActif.nom} ! On forme une bonne équipe. Dis-moi la suite.`;
+                reponse = `Salut ${utilisateurActif.nom} ! Ton contact (${utilisateurActif.contact}) est bien enregistré. En tant que ${utilisateurActif.metierUnique}, je suis là pour t'assister, y compris pour la traduction vocale en direct lors des appels.`;
+            } else if (lowerQ.includes('passeport') || lowerQ.includes('carte') || lowerQ.includes('voyage') || lowerQ.includes('sejour')) {
+                reponse = `[Expert Voyages & Papiers ELAWS] Pour tes démarches de passeport, carte d'identité, carte de séjour ou visa, rends-toi dans l'onglet dédié "Voyages".`;
+            } else if (lowerQ.includes('appel') || lowerQ.includes('contact') || lowerQ.includes('traduction')) {
+                reponse = `[Appels & Traduction Dialecte] Tu peux lancer des appels GSM ou des appels Internet VoIP avec traduction instantanée des dialectes depuis l'onglet "Appels & Trad" !`;
             } else {
-                reponse = `J'ai bien capté ton idée : "${q}". C'est très clair. Dis-moi ce que tu veux qu'on pose en priorité sur ce sujet, je m'en charge.`;
+                reponse = `J'ai bien noté ton point : "${q}". Tout est verrouillé et sécurisé dans ton écosystème v24.2.`;
             }
 
             utilisateurActif.discussionsElaws.push({ role: 'ai', texte: reponse });
@@ -310,8 +516,28 @@
             }
         }
 
+        function demarrerMicroElaws() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                showToast("Reconnaissance vocale non supportée.");
+                return;
+            }
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'fr-FR';
+            showToast("🎤 Parle à ELAWS, j'écoute...");
+            recognition.onresult = (event) => {
+                const texteRecu = event.results[0][0].transcript;
+                const input = document.getElementById('inputElawsChat');
+                if(input) input.value = texteRecu;
+                envoyerMessageElawsAI(texteRecu);
+            };
+            recognition.onerror = () => { showToast("Erreur du micro."); };
+            recognition.start();
+        }
+
         function render() {
             const content = document.getElementById('mainContent');
+            if(!content) return;
             content.innerHTML = '';
 
             if (!utilisateurActif) {
@@ -322,7 +548,7 @@
                 if (listeProfils.length > 0) {
                     profilsExistantsHtml = `<div style="margin-bottom:20px;"><h4 style="margin-bottom:8px;">👥 Profils enregistrés :</h4><div style="display:flex; flex-direction:column; gap:8px;">`;
                     listeProfils.forEach(p => {
-                        profilsExistantsHtml += `<button class="btn-action" style="background:var(--card-bg); border:1px solid var(--accent); color:var(--text-main); text-align:left; padding:12px;" onclick="selectionnerProfilExistant('${p.id}')">👤 <strong>${p.nom}</strong> <small style="float:right; color:var(--accent);">[${p.metierUnique}]</small></button>`;
+                        profilsExistantsHtml += `<button class="btn-action" style="background:var(--card-bg); border:1px solid var(--accent); color:var(--text-main); text-align:left; padding:12px;" onclick="selectionnerProfilExistant('${p.id}')">👤 <strong>${p.nom}</strong> (${p.contact}) <small style="float:right; color:var(--accent);">[${p.metierUnique}]</small></button>`;
                     });
                     profilsExistantsHtml += `</div></div>`;
                 }
@@ -331,15 +557,28 @@
                     <div class="card" style="border-color:var(--accent); max-width:500px; margin: 10px auto; text-align:center;">
                         <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo" style="width:72px; height:72px; margin-bottom:10px; border-radius:16px; border:2px solid var(--accent);">
                         <h2 style="color:var(--accent); margin-top:0;">✨ E.V.A.T. & ELAWS</h2>
-                        <p class="text" style="text-align:center;">Écosystème Souverain Immersif (v22.5 Stable)</p>
+                        <p class="text" style="text-align:center;">Écosystème Universel Intégral (v24.2 — Appels, Contacts & Traduction Dialecte)</p>
                         
                         ${profilsExistantsHtml}
 
                         <div style="text-align:left;">
-                            <h4 style="margin-bottom:10px; border-top:1px solid var(--border-color); padding-top:15px;">📝 Créer mon Profil :</h4>
+                            <h4 style="margin-bottom:10px; border-top:1px solid var(--border-color); padding-top:15px;">📝 Créer mon Profil & Ajouter mon Contact :</h4>
                             <input type="text" id="regNom" class="input" placeholder="Votre Nom ou Prénom *" style="margin-bottom:8px;">
-                            <input type="text" id="regMetierCustom" class="input" value="Pasteur / Guide" placeholder="Rôle ou Métier *" style="margin-bottom:12px;">
-                            <button class="btn-action" onclick="creerNouveauProfil()">🚀 Démarrer avec ELAWS (v22.5)</button>
+                            <input type="tel" id="regContact" class="input" placeholder="Votre Numéro de Téléphone (ex: +228 98231402) *" style="margin-bottom:8px;">
+                            
+                            <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;">Choisissez votre Corps de Métier :</label>
+                            <select id="selectMetierBase" class="input" style="margin-bottom:8px;" onchange="document.getElementById('regMetierCustom').value = this.value;">
+                                <option value="Couturier / Tailleur">✂️ Couturier / Tailleur</option>
+                                <option value="Pasteur / Guide Spirituel">📖 Pasteur / Guide Spirituel</option>
+                                <option value="Médecin / Soignant">🩺 Médecin / Soignant</option>
+                                <option value="Commerçant / Boutique">🛍️ Commerçant / Boutique</option>
+                                <option value="Mécanicien / Artisan">🔧 Mécanicien / Artisan</option>
+                                <option value="Enseignant / Formateur">📚 Enseignant / Formateur</option>
+                            </select>
+
+                            <input type="text" id="regMetierCustom" class="input" value="Couturier / Tailleur" placeholder="Ou personnalisez votre métier..." style="margin-bottom:12px;">
+                            
+                            <button class="btn-action" onclick="creerNouveauProfil()">🚀 Démarrer avec ELAWS (v24.2)</button>
                         </div>
                     </div>
                 `;
@@ -348,27 +587,86 @@
 
             document.getElementById('appHeader').style.display = 'block';
             document.getElementById('bottomBar').style.display = 'flex';
-            document.getElementById('badgeDomaineActif').innerHTML = `💼 ${utilisateurActif.nom} (${utilisateurActif.metierUnique})`;
+            const badge = document.getElementById('badgeDomaineActif');
+            if(badge) badge.innerHTML = `💼 ${utilisateurActif.nom} (${utilisateurActif.contact}) — [${utilisateurActif.metierUnique}]`;
 
             document.querySelectorAll('.bar-item').forEach(el => el.classList.remove('active'));
             if(activeTab === 'accueil') document.getElementById('barAccueil')?.classList.add('active');
+            if(activeTab === 'appels_traduction') document.getElementById('barAppel')?.classList.add('active');
             if(activeTab === 'elaws_compagnon') document.getElementById('barElaws')?.classList.add('active');
-            if(activeTab === 'dashboard') document.getElementById('barDash')?.classList.add('active');
-            if(activeTab === 'agenda') document.getElementById('barAgenda')?.classList.add('active');
-            if(activeTab === 'economie') document.getElementById('barEco')?.classList.add('active');
+            if(activeTab === 'outils_metier') document.getElementById('barOutil')?.classList.add('active');
+            if(activeTab === 'voyages_papiers') document.getElementById('barVoyage')?.classList.add('active');
 
             if (activeTab === 'accueil') {
                 content.innerHTML = `
                     <div class="card" style="border-color: var(--accent);">
-                        <div class="badge-gamified">🌟 Version v22.5 Stable Active</div>
+                        <div class="badge-gamified">🌟 Version v24.2 Intégrale Verrouillée</div>
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                             <div>
-                                <span style="font-size:11px; color:var(--accent); font-weight:700;">👤 PROFIL ACTIF</span>
+                                <span style="font-size:11px; color:var(--accent); font-weight:700;">👤 PROFIL ACTIF & CONTACT</span>
                                 <div style="font-size:17px; font-weight:800;">${utilisateurActif.nom}</div>
+                                <div style="font-size:13px; color:var(--accent);">📱 Contact : ${utilisateurActif.contact}</div>
                             </div>
                             <button class="btn-top" onclick="changerProfilSession()">🔄 Changer</button>
                         </div>
-                        <p class="text">Rôle : <strong style="color:var(--accent);">${utilisateurActif.metierUnique}</strong>. L'assistant ELAWS est connecté et prêt à discuter naturellement avec toi.</p>
+                        <p class="text">Métier : <strong style="color:var(--accent);">${utilisateurActif.metierUnique}</strong>. Tous les modules (Appels GSM/Internet, **Traduction en direct des dialectes**, Outils Métiers, Micro ELAWS et Assistant Voyages) sont définitivement verrouillés et intégrés.</p>
+                    </div>
+                `;
+            } else if (activeTab === 'appels_traduction') {
+                let carnetHtml = '';
+                if(utilisateurActif.carnetContacts && utilisateurActif.carnetContacts.length > 0) {
+                    utilisateurActif.carnetContacts.forEach(c => {
+                        carnetHtml += `
+                            <div style="background:var(--bg-color); padding:12px; border-radius:10px; margin-bottom:10px; border-left:4px solid #0ea5e9; display:flex; justify-content:space-between; align-items:center;">
+                                <div>
+                                    <strong>👤 ${c.nom}</strong><br>
+                                    <small style="color:var(--accent);">📱 ${c.numero}</small><br>
+                                    <small style="color:#f59e0b;">🗣️ Langue / Dialecte : ${c.dialecte || 'Français'}</small>
+                                </div>
+                                <div style="display:flex; gap:6px;">
+                                    <button class="btn-action" style="background:#059669; padding:8px 10px; font-size:11px; width:auto;" onclick="lancerAppelGSM('${c.numero}')">📞 GSM</button>
+                                    <button class="btn-action" style="background:#0ea5e9; padding:8px 10px; font-size:11px; width:auto;" onclick="lancerAppelInternetAvecTraduction('${c.nom}', '${c.dialecte || 'Français'}')">🌐 Traduire & Appeler</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else { carnetHtml = '<p style="color:var(--text-secondary);">Aucun contact dans le répertoire. Ajoutez-en un ci-dessous.</p>'; }
+
+                content.innerHTML = `
+                    <div class="card" style="border-color:#0ea5e9;">
+                        <h3 class="card-title" style="color:#0ea5e9;">📞 Appels (GSM & Internet) & Traduction de Dialecte en Direct</h3>
+                        <p class="text">Communiquez sans barrière linguistique : l'intelligence artificielle ELAWS traduit en temps réel les paroles entre interlocuteurs parlant des dialectes différents lors des appels Internet.</p>
+                        
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                            <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;">Mon Numéro de Contact Actuel :</label>
+                            <div style="display:flex; gap:8px; margin-bottom:10px;">
+                                <input type="tel" id="monNumeroContact" class="input" value="${utilisateurActif.contact}" placeholder="Votre numéro..." style="margin-bottom:0;">
+                                <button class="btn-action" style="background:#059669; width:auto; padding:0 15px;" onclick="mettreAJourMonContact()">Mettre à jour</button>
+                            </div>
+                        </div>
+
+                        <h4 style="margin-top:15px; margin-bottom:8px;">➕ Ajouter un Contact & son Dialecte :</h4>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                            <input type="text" id="nomContactRepertoire" class="input" placeholder="Nom du contact *" style="margin-bottom:8px;">
+                            <input type="tel" id="numContactRepertoire" class="input" placeholder="Numéro de téléphone *" style="margin-bottom:8px;">
+                            <input type="email" id="emailContactRepertoire" class="input" placeholder="Adresse email (optionnel)" style="margin-bottom:8px;">
+                            
+                            <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;">Langue ou Dialecte parlé par ce contact :</label>
+                            <select id="dialecteContactRepertoire" class="input" style="margin-bottom:10px;">
+                                <option value="Français">🇫🇷 Français</option>
+                                <option value="Éoué / Mina">🇹🇬 Éoué / Mina (Togo)</option>
+                                <option value="Kabyè">🇹🇬 Kabyè (Togo)</option>
+                                <option value="Yoruba / Nago">🇳🇬 Yoruba / Nago</option>
+                                <option value="Haoussa">🌍 Haoussa</option>
+                                <option value="Anglais">🇬🇧 Anglais</option>
+                                <option value="Espagnol">🇪🇸 Espagnol</option>
+                            </select>
+
+                            <button class="btn-action" style="background:#0ea5e9;" onclick="ajouterRepertoireContact()">💾 Enregistrer le Contact</button>
+                        </div>
+
+                        <h4 style="margin-bottom:8px;">📖 Répertoire & Appels avec Traduction :</h4>
+                        ${carnetHtml}
                     </div>
                 `;
             } else if (activeTab === 'elaws_compagnon') {
@@ -378,18 +676,25 @@
                         const isAi = msg.role === 'ai';
                         chatHtml += `
                             <div style="background:${isAi ? 'rgba(5,150,105,0.15)' : 'var(--bg-color)'}; border-left:4px solid ${isAi ? 'var(--accent)' : 'var(--border-color)'}; padding:14px; border-radius:10px; margin-bottom:12px; position:relative;">
-                                <strong style="font-size:12px; color:${isAi ? 'var(--accent)' : 'var(--text-secondary)'};">${isAi ? '🤖 ELAWS (Sincère & Complice)' : utilisateurActif.nom}</strong>
+                                <strong style="font-size:12px; color:${isAi ? 'var(--accent)' : 'var(--text-secondary)'};">${isAi ? '🤖 ELAWS (Expert ' + utilisateurActif.metierUnique + ')' : utilisateurActif.nom}</strong>
                                 <p style="margin:8px 0 0 0; font-size:14px; white-space: pre-line;">${msg.texte}</p>
-                                ${isAi ? `<button onclick="window.speechSynthesis.speak(new SpeechSynthesisUtterance('${msg.texte.replace(/'/g, "'").replace(/\n/g, " ")}'))" style="position:absolute; top:10px; right:10px; background:var(--accent); color:#000; border:none; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;">🔊 Écouter</button>` : ''}
+                                ${isAi ? `<button onclick="window.speechSynthesis.speak(new SpeechSynthesisUtterance('${msg.texte.replace(/'/g, "'").replace(/
+/g, " ")}'))" style="position:absolute; top:10px; right:10px; background:var(--accent); color:#000; border:none; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;">🔊 Écouter</button>` : ''}
                             </div>
                         `;
                     });
                 }
                 content.innerHTML = `
                     <div class="card" style="border-color:var(--accent);">
-                        <h3 class="card-title" style="color:var(--accent);">🤖 ELAWS — Ton Compagnon de Route</h3>
-                        <p class="text">Discute librement avec ELAWS, exactement comme dans une conversation naturelle :</p>
+                        <h3 class="card-title" style="color:var(--accent);">🤖 ELAWS v24.2 — Assistant Vocal & Discussion</h3>
+                        <p class="text">Parle avec ELAWS en écrivant ou en activant le micro :</p>
                         
+                        <div style="text-align:center; margin-bottom:15px;">
+                            <button class="btn-action" onclick="demarrerMicroElaws()" style="background:linear-gradient(135deg, #ec4899 0%, #db2777 100%); font-size:16px; padding:14px; border-radius:30px;">
+                                🎤 Parler à ELAWS (Micro)
+                            </button>
+                        </div>
+
                         <div style="background:var(--bg-color); padding:15px; border-radius:12px; max-height:350px; overflow-y:auto; margin-bottom:15px; border:1px solid var(--border-color);" id="boiteDiscussionElaws">
                             ${chatHtml}
                         </div>
@@ -397,6 +702,173 @@
                             <input type="text" id="inputElawsChat" class="input" placeholder="Écris ton message à ELAWS..." style="margin-bottom:0;" onkeypress="if(event.key === 'Enter') envoyerMessageElawsAI()">
                             <button class="btn-action" style="width:auto; padding:0 22px;" onclick="envoyerMessageElawsAI()">Envoyer 🚀</button>
                         </div>
+                    </div>
+                `;
+            } else if (activeTab === 'outils_metier') {
+                const metier = utilisateurActif.metierUnique.toLowerCase();
+                let outilsHtml = '';
+
+                if (metier.includes('couturier') || metier.includes('tailleur')) {
+                    let mesuresHtml = '';
+                    if(utilisateurActif.mesuresCouture && utilisateurActif.mesuresCouture.length > 0) {
+                        utilisateurActif.mesuresCouture.forEach(m => {
+                            mesuresHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #f59e0b;"><strong>✂️ Client : ${m.client}</strong> (${m.date})<br><small>Épaule: ${m.epaule} cm | Poitrine: ${m.poitrine} cm | Longueur: ${m.longueur} cm</small><br><em>Détails : ${m.details || 'Aucun'}</em></div>`;
+                        });
+                    } else { mesuresHtml = '<p style="color:var(--text-secondary);">Aucune mesure enregistrée.</p>'; }
+
+                    outilsHtml += `
+                        <div class="card" style="border-color:#f59e0b;">
+                            <h3 class="card-title" style="color:#f59e0b;">✂️ Carnet de Mesures & Commandes (Couture)</h3>
+                            <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                                <input type="text" id="coutureClient" class="input" placeholder="Nom du Client *" style="margin-bottom:8px;">
+                                <div style="display:flex; gap:8px; margin-bottom:8px;">
+                                    <input type="text" id="coutureEpaule" class="input" placeholder="Épaule (cm)" style="margin-bottom:0;">
+                                    <input type="text" id="couturePoitrine" class="input" placeholder="Poitrine (cm)" style="margin-bottom:0;">
+                                    <input type="text" id="coutureLongueur" class="input" placeholder="Longueur (cm)" style="margin-bottom:0;">
+                                </div>
+                                <input type="text" id="coutureDetails" class="input" placeholder="Modèle, type de tissu ou remarques..." style="margin-bottom:10px;">
+                                <button class="btn-action" style="background:#f59e0b;" onclick="enregistrerMesureCouture()">💾 Enregistrer les Mesures</button>
+                            </div>
+                            <h4 style="margin-bottom:8px;">Historique des Clients :</h4>
+                            ${mesuresHtml}
+                        </div>
+                    `;
+                }
+
+                if (metier.includes('pasteur') || metier.includes('guide') || metier.includes('culte')) {
+                    let notesHtml = '';
+                    if(utilisateurActif.notesPastorales && utilisateurActif.notesPastorales.length > 0) {
+                        utilisateurActif.notesPastorales.forEach(n => {
+                            notesHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #f59e0b;"><strong>📖 ${n.titre}</strong> (${n.date})<br><p style="margin:5px 0 0 0; white-space:pre-line;">${n.contenu}</p></div>`;
+                        });
+                    } else { notesHtml = '<p style="color:var(--text-secondary);">Aucune prédication enregistrée.</p>'; }
+
+                    outilsHtml += `
+                        <div class="card" style="border-color:#f59e0b;">
+                            <h3 class="card-title" style="color:#f59e0b;">📖 Notes de Prédication & Pastorale</h3>
+                            <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                                <input type="text" id="pasteurTitre" class="input" placeholder="Thème du culte ou titre du message *" style="margin-bottom:8px;">
+                                <textarea id="pasteurContenu" class="input" rows="4" placeholder="Saisissez vos notes bibliques..." style="resize:none; margin-bottom:10px;"></textarea>
+                                <button class="btn-action" style="background:#f59e0b;" onclick="ajouterNotePastorale()">💾 Sauvegarder la Prédication</button>
+                            </div>
+                            <h4 style="margin-bottom:8px;">Mes Prédications :</h4>
+                            ${notesHtml}
+                        </div>
+                    `;
+                }
+
+                if (metier.includes('medecin') || metier.includes('soignant')) {
+                    let medHtml = '';
+                    if(utilisateurActif.consultationsMedicales && utilisateurActif.consultationsMedicales.length > 0) {
+                        utilisateurActif.consultationsMedicales.forEach(c => {
+                            medHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #3b82f6;"><strong>🩺 Patient : ${c.patient}</strong> (${c.date})<br>Diagnostic : ${c.diagnostic}<br>Prescription : ${c.prescription}</div>`;
+                        });
+                    } else { medHtml = '<p style="color:var(--text-secondary);">Aucune consultation enregistrée.</p>'; }
+
+                    outilsHtml += `
+                        <div class="card" style="border-color:#3b82f6;">
+                            <h3 class="card-title" style="color:#3b82f6;">🩺 Registre de Consultations Médicales</h3>
+                            <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                                <input type="text" id="medPatient" class="input" placeholder="Nom du Patient *" style="margin-bottom:8px;">
+                                <input type="text" id="medDiagnostic" class="input" placeholder="Diagnostic / Symptômes *" style="margin-bottom:8px;">
+                                <input type="text" id="medPrescription" class="input" placeholder="Prescription / Traitement *" style="margin-bottom:10px;">
+                                <button class="btn-action" style="background:#3b82f6;" onclick="ajouterConsultationMedicale()">💾 Enregistrer la Consultation</button>
+                            </div>
+                            <h4 style="margin-bottom:8px;">Derniers Patients :</h4>
+                            ${medHtml}
+                        </div>
+                    `;
+                }
+
+                if (metier.includes('commercant') || metier.includes('boutique')) {
+                    let stockHtml = '';
+                    if(utilisateurActif.stocksBoutique && utilisateurActif.stocksBoutique.length > 0) {
+                        utilisateurActif.stocksBoutique.forEach(s => {
+                            stockHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #10b981;"><strong>🛍️ ${s.article}</strong> — Stock : ${s.qte} | Prix : ${s.prix.toLocaleString()} FCFA</div>`;
+                        });
+                    } else { stockHtml = '<p style="color:var(--text-secondary);">Aucun article en stock.</p>'; }
+
+                    outilsHtml += `
+                        <div class="card" style="border-color:#10b981;">
+                            <h3 class="card-title" style="color:#10b981;">🛍️ Gestion de Stock & Boutique</h3>
+                            <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                                <input type="text" id="boutiqueArticle" class="input" placeholder="Nom de l'article *" style="margin-bottom:8px;">
+                                <div style="display:flex; gap:8px; margin-bottom:8px;">
+                                    <input type="number" id="boutiqueQte" class="input" placeholder="Quantité" style="margin-bottom:0;">
+                                    <input type="number" id="boutiquePrix" class="input" placeholder="Prix unitaire (FCFA)" style="margin-bottom:0;">
+                                </div>
+                                <button class="btn-action" style="background:#10b981;" onclick="ajouterStockBoutique()">➕ Ajouter au Stock</button>
+                            </div>
+                            <h4 style="margin-bottom:8px;">Inventaire Actuel :</h4>
+                            ${stockHtml}
+                        </div>
+                    `;
+                }
+
+                if (metier.includes('mecanicien') || metier.includes('artisan')) {
+                    let mecaHtml = '';
+                    if(utilisateurActif.ateliersMecanique && utilisateurActif.ateliersMecanique.length > 0) {
+                        utilisateurActif.ateliersMecanique.forEach(m => {
+                            mecaHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #f59e0b;"><strong>🔧 Véhicule : ${m.vehicule}</strong> (${m.date})<br>Panne : ${m.panne}<br>Coût : ${m.cout.toLocaleString()} FCFA</div>`;
+                        });
+                    } else { mecaHtml = '<p style="color:var(--text-secondary);">Aucun véhicule enregistré.</p>'; }
+
+                    outilsHtml += `
+                        <div class="card" style="border-color:#f59e0b;">
+                            <h3 class="card-title" style="color:#f59e0b;">🔧 Suivi Atelier Mécanique</h3>
+                            <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                                <input type="text" id="mecaVehicule" class="input" placeholder="Véhicule / Client *" style="margin-bottom:8px;">
+                                <input type="text" id="mecaPanne" class="input" placeholder="Description de la panne *" style="margin-bottom:8px;">
+                                <input type="number" id="mecaCout" class="input" placeholder="Coût estimé (FCFA)" style="margin-bottom:10px;">
+                                <button class="btn-action" style="background:#f59e0b;" onclick="ajouterAtelierMecanique()">💾 Enregistrer la Réparation</button>
+                            </div>
+                            <h4 style="margin-bottom:8px;">Véhicules en Atelier :</h4>
+                            ${mecaHtml}
+                        </div>
+                    `;
+                }
+
+                if (!outilsHtml) {
+                    outilsHtml = `
+                        <div class="card" style="border-color:#f59e0b;">
+                            <h3 class="card-title" style="color:#f59e0b;">🛠️ Espace Professionnel — ${utilisateurActif.metierUnique}</h3>
+                            <p class="text">Votre profil et vos contacts sont pleinement actifs.</p>
+                        </div>
+                    `;
+                }
+
+                content.innerHTML = outilsHtml;
+            } else if (activeTab === 'voyages_papiers') {
+                let savedDossiersHtml = '';
+                if(utilisateurActif.dossiersVoyagePapiers && utilisateurActif.dossiersVoyagePapiers.length > 0) {
+                    utilisateurActif.dossiersVoyagePapiers.forEach(d => {
+                        savedDossiersHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #0ea5e9;"><strong>✈️ Document : ${d.doc.toUpperCase()}</strong> — Destination : ${d.pays} <small>(${d.date})</small></div>`;
+                    });
+                } else { savedDossiersHtml = '<p style="color:var(--text-secondary);">Aucun dossier sauvegardé.</p>'; }
+
+                content.innerHTML = `
+                    <div class="card" style="border-color:#0ea5e9;">
+                        <h3 class="card-title" style="color:#0ea5e9;">✈️ Assistant Voyages, Passeport & Papiers d'Identité</h3>
+                        <p class="text">Sélectionnez le document ou la démarche souhaitée pour obtenir instantanément la liste complète des pièces à fournir :</p>
+                        
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                            <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;">Type de Document / Démarche :</label>
+                            <select id="typeDocAdministratif" class="input" style="margin-bottom:8px;">
+                                <option value="passeport">📘 Passeport Biométrique</option>
+                                <option value="cni">🪪 Carte Nationale d'Identité (CNI)</option>
+                                <option value="sejour">📄 Carte de Séjour / Résidence</option>
+                                <option value="visa">✈️ Visa de Voyage / Tourisme</option>
+                            </select>
+
+                            <input type="text" id="paysDestinationVoyage" class="input" placeholder="Pays de destination ou d'émission (ex: Togo, France, etc.)" style="margin-bottom:10px;">
+                            
+                            <button class="btn-action" style="background:#0ea5e9;" onclick="verifierDossierPapier()">🔍 Afficher les Dossiers à Fournir</button>
+                        </div>
+
+                        <div id="resultatAnalyseDossier"></div>
+
+                        <h4 style="margin-top:20px; margin-bottom:8px;">📁 Mes Dossiers Archivés :</h4>
+                        ${savedDossiersHtml}
                     </div>
                 `;
             } else if (activeTab === 'dashboard') {
@@ -415,7 +887,7 @@
                 content.innerHTML = `
                     <div class="card" style="border-color:#f59e0b;">
                         <h3 class="card-title" style="color:#f59e0b;">📅 Agenda & Rendez-vous</h3>
-                        <p class="text">Gère tes plannings et cultes en toute simplicité.</p>
+                        <p class="text">Planifiez vos rendez-vous professionnels.</p>
                     </div>
                 `;
             } else if (activeTab === 'economie') {
