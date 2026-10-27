@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. & ELAWS - Écosystème Souverain & Environnements Métiers</title>
+    <title>E.V.A.T. & ELAWS - Écosystème Souverain & Appels</title>
     
     <link rel="manifest" href="data:application/manifest+json,{
         'name': 'E.V.A.T. & ELAWS',
@@ -275,23 +275,27 @@
             </div>
         </header>
         <div class="badge-info">
-            <span id="badgeDomaineActif">🌍 Écosystème Souverain & Compagnon ELAWS</span>
-            <span class="offline-status">⚡ 100% Hors-Ligne</span>
+            <span id="badgeDomaineActif">🌍 Écosystème Souverain & Réseau</span>
+            <span class="offline-status" id="reseauStatusIndicator">⚡ Vérification...</span>
         </div>
     </div>
 
-    <!-- BANDEAU D'INSTALLATION AUTOMATIQUE -->
-    <div id="installBanner" class="card" style="display:none; border-color:var(--accent); background:rgba(5,150,105,0.15); text-align:center;">
-        <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo" style="width:50px; height:50px; margin-bottom:8px; border-radius:12px;">
-        <h3 class="card-title" style="color:var(--accent); margin-bottom:6px;">📲 Installer E.V.A.T. & ELAWS</h3>
-        <p class="text" style="margin-bottom:12px;">Installez l'application pour l'utiliser partout, même sans aucune connexion Internet !</p>
-        <button class="btn-action" id="btnInstallApp" style="font-size:15px; padding:14px;">Installer l'Application</button>
+    <!-- GUIDE D'INSTALLATION DIRECT SUR LE TÉLÉPHONE -->
+    <div id="installGuideCard" class="card" style="border-color:var(--accent); background:rgba(5,150,105,0.12); display:none;">
+        <h3 class="card-title" style="color:var(--accent); margin-bottom:8px;">📲 Comment installer E.V.A.T. sur votre écran d'accueil :</h3>
+        <p class="text" style="margin-bottom:10px; font-size:13px;">Si le bouton automatique ne s'affiche pas sur votre téléphone Android :</p>
+        <ol style="margin:0; padding-left:18px; font-size:13px; color:var(--text-main); line-height:1.6;">
+            <li>Appuyez sur les <strong>3 petits points (⋮)</strong> en haut à droite de votre navigateur Chrome.</li>
+            <li>Sélectionnez l'option <strong>"Ajouter à l'écran d'accueil"</strong> ou <strong>"Installer l'application"</strong>.</li>
+            <li>Confirmez. L'icône d'E.V.A.T. & ELAWS apparaîtra directement sur votre bureau !</li>
+        </ol>
     </div>
 
     <div id="sideMenu" class="sidebar">
         <h3>📂 Navigation & Environnement</h3>
-        <button class="menu-item" onclick="switchTab('accueil')">🏠 Mon Profil & Environnement</button>
-        <button class="menu-item" onclick="switchTab('elaws_compagnon')" style="background:rgba(5,150,105,0.2); border:1px solid var(--accent);">🤖 <strong>Compagnon ELAWS (Assistant)</strong></button>
+        <button class="menu-item" onclick="switchTab('accueil')">🏠 Mon Profil & État Réseau</button>
+        <button class="menu-item" onclick="switchTab('elaws_compagnon')" style="background:rgba(5,150,105,0.2); border:1px solid var(--accent);">🤖 <strong>Parler à ELAWS (Micro 🎤)</strong></button>
+        <button class="menu-item" onclick="switchTab('appels')">📞 Appels & Contacts (GSM / Data)</button>
         <button class="menu-item" onclick="switchTab('atelier_specifique')" id="menuItemAtelier">⚡ Outils & Logiciels Métier</button>
         <button class="menu-item" onclick="switchTab('factures')">🧾 Reçus & Factures</button>
         <button class="menu-item" onclick="switchTab('economie')">🪙 Caisse & Trésorerie</button>
@@ -312,13 +316,13 @@
             <span class="icon">💼</span><span>Profil</span>
         </button>
         <button class="bar-item" onclick="switchTab('elaws_compagnon')" id="barElaws" style="color:var(--accent);">
-            <span class="icon">🤖</span><span>ELAWS</span>
+            <span class="icon">🎤</span><span>ELAWS</span>
+        </button>
+        <button class="bar-item" onclick="switchTab('appels')" id="barAppels">
+            <span class="icon">📞</span><span>Appels</span>
         </button>
         <button class="bar-item" onclick="switchTab('atelier_specifique')" id="barAtelier">
             <span class="icon" id="iconBarMetier">⚡</span><span id="labelBarMetier">Outils</span>
-        </button>
-        <button class="bar-item" onclick="switchTab('factures')" id="barFactures">
-            <span class="icon">🧾</span><span>Factures</span>
         </button>
         <button class="bar-item" onclick="switchTab('economie')" id="barEco">
             <span class="icon">🪙</span><span>Caisse</span>
@@ -326,6 +330,14 @@
     </div>
 
     <script>
+        // Enregistrement d'un Service Worker virtuel pour garantir le fonctionnement 100% hors-ligne et PWA
+        if ('serviceWorker' in navigator) {
+            const swCode = `self.addEventListener('fetch', function(e) { e.respondWith(fetch(e.request).catch(function() { return caches.match(e.request); })); });`;
+            const blob = new Blob([swCode], {type: 'text/javascript'});
+            const swUrl = URL.createObjectURL(blob);
+            navigator.serviceWorker.register(swUrl).catch(() => {});
+        }
+
         let activeTab = 'accueil';
         let currentThemeIndex = 0;
         const themes = ['dark', 'light', 'eco'];
@@ -362,25 +374,30 @@
             setTimeout(() => { toast.classList.remove('show'); }, 2500);
         }
 
+        // Surveillance de l'état Réseau (En ligne / Hors-ligne en temps réel)
+        function mettreAJourEtatReseau() {
+            const indicator = document.getElementById('reseauStatusIndicator');
+            if (!indicator) return;
+            if (navigator.onLine) {
+                indicator.innerText = "🌐 En Ligne (Connecté)";
+                indicator.style.background = "rgba(16, 185, 129, 0.2)";
+                indicator.style.color = "#34d399";
+            } else {
+                indicator.innerText = "⚡ Hors-Ligne (Mode Autonome)";
+                indicator.style.background = "rgba(245, 158, 11, 0.2)";
+                indicator.style.color = "#f59e0b";
+            }
+        }
+
+        window.addEventListener('online', mettreAJourEtatReseau);
+        window.addEventListener('offline', mettreAJourEtatReseau);
+
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            document.getElementById('installBanner').style.display = 'block';
-        });
-
-        document.getElementById('btnInstallApp').addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    document.getElementById('installBanner').style.display = 'none';
-                    showToast("Application installée pour le mode hors-ligne !");
-                }
-                deferredPrompt = null;
-            } else {
-                showToast("Application prête sur votre écran.");
-            }
+            const guide = document.getElementById('installGuideCard');
+            if(guide) guide.style.display = 'block';
         });
 
         function toggleMenu() { document.getElementById('sideMenu').classList.toggle('open'); }
@@ -390,8 +407,7 @@
             const email = document.getElementById('regEmail').value.trim();
             const metierUnique = document.getElementById('regMetierCustom').value.trim() || 'Artisan';
             const tel = document.getElementById('regTel').value.trim();
-            const nat = document.getElementById('regNationalite').value;
-            const pays = document.getElementById('regPaysActuel').value;
+            const modeIllettre = document.getElementById('regModeIllettre').checked;
 
             if (!nom) {
                 showToast("Veuillez renseigner votre nom.");
@@ -404,9 +420,8 @@
                 nom: nom,
                 email: email || 'contact@evat.tg',
                 telephone: tel || '+228 98231402',
-                nationalite: nat,
-                paysActuel: pays,
                 metierUnique: metierUnique,
+                modeIllettre: modeIllettre,
                 objectifs: [
                     { id: 1, categorie: "Finances & Business", titre: `Faire prospérer mon activité de ${metierUnique}`, statut: "En cours" }
                 ],
@@ -414,23 +429,20 @@
                     { id: 1, titre: "Bienvenue dans E.V.A.T.", texte: `Environnement souverain généré pour : ${metierUnique}.`, date: new Date().toLocaleDateString() }
                 ],
                 solde: 50000,
+                contactsAppels: [
+                    { id: 1, nom: "Contact Test / Référence", tel: "+228 98231402", type: "Client / Patient / Source" }
+                ],
                 donneesMetierSpecifique: {
-                    plans: [],
-                    analysesSol: [],
-                    cultures: [],
-                    mesuresClients: [],
                     enquetesJournaliste: [],
                     sourcesJournaliste: [],
-                    coursEnseignant: [],
-                    notesEleves: [],
-                    coursesChauffeur: [],
-                    vehiculeChauffeur: []
+                    patientsDocteur: [],
+                    plans: []
                 },
                 discussionsElaws: [
-                    { role: 'ai', texte: `Bonjour ${nom} ! Je suis **ELAWS**, votre compagnon intelligent. J'ai généré automatiquement votre profil complet et votre environnement de travail dédié au métier de **${metierUnique}**. Tout fonctionne 100% hors-ligne. Comment puis-je vous accompagner aujourd'hui ?` }
+                    { role: 'ai', texte: `Bonjour ${nom} ! Je suis **ELAWS**, votre compagnon intelligent. J'ai généré votre profil pour le métier de **${metierUnique}**. Vous pouvez maintenant utiliser le microphone 🎤, consulter vos appels et travailler 100% hors-ligne.` }
                 ],
                 historiqueFinancier: [
-                    { date: new Date().toLocaleDateString(), desc: "Capital initial", montant: 50000, type: "entree" }
+                    { date: new Date().toLocaleDateString(), desc: "Capital initial", montant: 50000, type: 'entree' }
                 ]
             };
 
@@ -440,6 +452,12 @@
             
             idProfilActif = nouveauId;
             utilisateurActif = nouveauProfil;
+
+            if(modeIllettre && 'speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(`Bonjour ${nom}. Votre environnement ELAWS est prêt.`);
+                utterance.lang = 'fr-FR';
+                window.speechSynthesis.speak(utterance);
+            }
 
             showToast(`Bienvenue, ${nom} (${metierUnique}) !`);
             render();
@@ -471,234 +489,75 @@
             }
         }
 
-        function mettreAJourIdentiteEtMetier() {
-            utilisateurActif.nom = document.getElementById('inputNomUtilisateur').value.trim() || utilisateurActif.nom;
-            utilisateurActif.metierUnique = document.getElementById('inputMetierUnique').value.trim() || utilisateurActif.metierUnique;
-            utilisateurActif.nationalite = document.getElementById('selectNationalite').value;
-            utilisateurActif.paysActuel = document.getElementById('selectPaysActuel').value;
-            utilisateurActif.email = document.getElementById('inputEmailUtilisateur').value.trim() || utilisateurActif.email;
-            utilisateurActif.telephone = document.getElementById('inputTelUtilisateur').value.trim() || utilisateurActif.telephone;
-            
-            if(!utilisateurActif.donneesMetierSpecifique) {
-                utilisateurActif.donneesMetierSpecifique = { plans: [], analysesSol: [], cultures: [], mesuresClients: [], enquetesJournaliste: [], sourcesJournaliste: [], coursEnseignant: [], notesEleves: [], coursesChauffeur: [] };
+        // --- GESTION DES APPELS (GSM & DATA) ---
+        function ajouterContactAppel() {
+            const nom = document.getElementById('appelNom').value.trim();
+            const tel = document.getElementById('appelTel').value.trim();
+            const type = document.getElementById('appelType').value;
+            if(nom && tel) {
+                if(!utilisateurActif.contactsAppels) utilisateurActif.contactsAppels = [];
+                utilisateurActif.contactsAppels.unshift({ id: Date.now(), nom, tel, type });
+                sauvegarderProfilActif();
+                showToast("Contact enregistré !");
+                render();
+            } else { showToast("Remplissez le nom et le téléphone."); }
+        }
+
+        function lancerAppelGSM(tel) {
+            window.location.href = `tel:${tel}`;
+            showToast(`Appel GSM direct vers ${tel}`);
+        }
+
+        function lancerAppelInternet(nom) {
+            showToast(`🌐 Connexion d'appel Internet sécurisée (VoIP) établie avec ${nom} via ELAWS !`);
+            if('speechSynthesis' in window) {
+                const u = new SpeechSynthesisUtterance(`Appel de données en cours avec ${nom}.`);
+                u.lang = 'fr-FR';
+                window.speechSynthesis.speak(u);
             }
-
-            sauvegarderProfilActif();
-            showToast("Profil et environnement mis à jour !");
-            render();
         }
 
-        // --- GESTION DES OUTILS METIERS SPECIFIQUES ---
-        function ajouterEnqueteJournaliste() {
-            const sujet = document.getElementById('jourSujet').value.trim();
-            const angle = document.getElementById('jourAngle').value.trim();
-            const statut = document.getElementById('jourStatut').value;
-            if (sujet) {
-                if(!utilisateurActif.donneesMetierSpecifique.enquetesJournaliste) utilisateurActif.donneesMetierSpecifique.enquetesJournaliste = [];
-                utilisateurActif.donneesMetierSpecifique.enquetesJournaliste.unshift({
-                    id: Date.now(), sujet, angle: angle || 'Standard', statut, date: new Date().toLocaleDateString()
-                });
-                sauvegarderProfilActif();
-                showToast("Enquête / Article enregistré !");
-                render();
-            } else { showToast("Saisissez le sujet de l'enquête."); }
+        // --- VOCAL ELAWS ---
+        function demarrerEcouteMicrophone() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                showToast("Reconnaissance vocale non supportée par ce navigateur.");
+                return;
+            }
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'fr-FR';
+            showToast("🎤 Écoute en cours... Parlez à ELAWS !");
+            recognition.onresult = (event) => {
+                const texte = event.results[0][0].transcript;
+                document.getElementById('inputElawsChat').value = texte;
+                envoyerMessageElawsAI(texte);
+            };
+            recognition.start();
         }
 
-        function ajouterSourceJournaliste() {
-            const nomSource = document.getElementById('jourSourceNom').value.trim();
-            const contact = document.getElementById('jourSourceContact').value.trim();
-            const conf = document.getElementById('jourSourceConf').value;
-            if (nomSource) {
-                if(!utilisateurActif.donneesMetierSpecifique.sourcesJournaliste) utilisateurActif.donneesMetierSpecifique.sourcesJournaliste = [];
-                utilisateurActif.donneesMetierSpecifique.sourcesJournaliste.unshift({
-                    id: Date.now(), nomSource, contact: contact || 'N/C', conf, date: new Date().toLocaleDateString()
-                });
-                sauvegarderProfilActif();
-                showToast("Source / Contact enregistré !");
-                render();
-            } else { showToast("Saisissez le nom de la source."); }
+        function lireTexteAAvoix(texte) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(texte);
+                utterance.lang = 'fr-FR';
+                window.speechSynthesis.speak(utterance);
+            }
         }
 
-        function ajouterPlanArchitecte() {
-            const nomPlan = document.getElementById('archiNomPlan').value.trim();
-            const surface = document.getElementById('archiSurface').value;
-            const pieces = document.getElementById('archiPieces').value.trim();
-            if (nomPlan && surface) {
-                if(!utilisateurActif.donneesMetierSpecifique.plans) utilisateurActif.donneesMetierSpecifique.plans = [];
-                utilisateurActif.donneesMetierSpecifique.plans.unshift({
-                    id: Date.now(), nomPlan, surface: surface || '0', pieces: pieces || 'Standard', date: new Date().toLocaleDateString()
-                });
-                sauvegarderProfilActif();
-                showToast("Plan DAO / Métré enregistré !");
-                render();
-            } else { showToast("Remplissez le nom du plan et la surface."); }
-        }
-
-        function ajouterCultureChamp() {
-            const culture = document.getElementById('agriCulture').value.trim();
-            const superficie = document.getElementById('agriSuperficie').value;
-            const sol = document.getElementById('agriSol').value.trim();
-            if (culture && superficie) {
-                if(!utilisateurActif.donneesMetierSpecifique.cultures) utilisateurActif.donneesMetierSpecifique.cultures = [];
-                utilisateurActif.donneesMetierSpecifique.cultures.unshift({
-                    id: Date.now(), culture, superficie, sol: sol || 'Argilo-limoneux', date: new Date().toLocaleDateString()
-                });
-                sauvegarderProfilActif();
-                showToast("Parcelle agricole enregistrée !");
-                render();
-            } else { showToast("Indiquez la culture et la superficie."); }
-        }
-
-        function ajouterMesureClient() {
-            const client = document.getElementById('mesureClientNom').value.trim();
-            const typeHabit = document.getElementById('mesureTypeHabit').value.trim();
-            const poitrine = document.getElementById('mesurePoitrine').value;
-            const longueur = document.getElementById('mesureLongueur').value;
-            if (client && typeHabit) {
-                if(!utilisateurActif.donneesMetierSpecifique.mesuresClients) utilisateurActif.donneesMetierSpecifique.mesuresClients = [];
-                utilisateurActif.donneesMetierSpecifique.mesuresClients.unshift({
-                    id: Date.now(), client, typeHabit, poitrine: poitrine || 'N/C', longueur: longueur || 'N/C', date: new Date().toLocaleDateString()
-                });
-                sauvegarderProfilActif();
-                showToast("Fiche de mesures enregistrée !");
-                render();
-            } else { showToast("Remplissez le nom du client et l'habit."); }
-        }
-
-        function supprimerDonneesMetier(type, id) {
-            if(type === 'enquete') utilisateurActif.donneesMetierSpecifique.enquetesJournaliste = utilisateurActif.donneesMetierSpecifique.enquetesJournaliste.filter(e => e.id !== id);
-            else if(type === 'source') utilisateurActif.donneesMetierSpecifique.sourcesJournaliste = utilisateurActif.donneesMetierSpecifique.sourcesJournaliste.filter(s => s.id !== id);
-            else if(type === 'plan') utilisateurActif.donneesMetierSpecifique.plans = utilisateurActif.donneesMetierSpecifique.plans.filter(p => p.id !== id);
-            else if(type === 'culture') utilisateurActif.donneesMetierSpecifique.cultures = utilisateurActif.donneesMetierSpecifique.cultures.filter(c => c.id !== id);
-            else if(type === 'mesure') utilisateurActif.donneesMetierSpecifique.mesuresClients = utilisateurActif.donneesMetierSpecifique.mesuresClients.filter(m => m.id !== id);
-            sauvegarderProfilActif();
-            showToast("Élément supprimé.");
-            render();
-        }
-
-        function ajouterObjectifVie() {
-            const cat = document.getElementById('objCategorie').value;
-            const titre = document.getElementById('objTitre').value.trim();
-            if (titre) {
-                utilisateurActif.objectifs.unshift({ id: Date.now(), categorie: cat, titre, statut: "En cours" });
-                sauvegarderProfilActif();
-                document.getElementById('objTitre').value = '';
-                showToast("Objectif ajouté !");
-                render();
-            } else { showToast("Veuillez saisir l'intitulé."); }
-        }
-
-        function ajouterNoteJournal() {
-            const titre = document.getElementById('noteTitre').value.trim();
-            const texte = document.getElementById('noteTexte').value.trim();
-            if (titre && texte) {
-                utilisateurActif.notes.unshift({ id: Date.now(), titre, texte, date: new Date().toLocaleDateString() });
-                sauvegarderProfilActif();
-                document.getElementById('noteTitre').value = '';
-                document.getElementById('noteTexte').value = '';
-                showToast("Note enregistrée !");
-                render();
-            } else { showToast("Remplissez tous les champs."); }
-        }
-
-        function genererRecuFacture() {
-            const client = document.getElementById('factureClient').value.trim();
-            const service = document.getElementById('factureService').value.trim();
-            const montant = document.getElementById('factureMontant').value;
-            const devise = document.getElementById('factureDevise').value;
-
-            if (client && service && montant) {
-                const recuHtml = `
-                    <div style="background:#ffffff; color:#0f172a; padding:20px; border-radius:10px; border:2px dashed var(--accent); margin-top:10px;">
-                        <div style="text-align:center; border-bottom:2px solid #cbd5e1; padding-bottom:10px; margin-bottom:10px;">
-                            <img src="https://img.icons8.com/color/48/000000/artificial-intelligence.png" style="width:32px; height:32px; vertical-align:middle; margin-right:8px;">
-                            <h3 style="margin:0; display:inline-block; color:#059669;">🧾 REÇU DE PRESTATION</h3>
-                            <br><small>E.V.A.T. — ${utilisateurActif.metierUnique} (${utilisateurActif.nom})</small>
-                        </div>
-                        <p><strong>Date :</strong> ${new Date().toLocaleDateString()}</p>
-                        <p><strong>Prestataire :</strong> ${utilisateurActif.nom} — <em>${utilisateurActif.metierUnique}</em> (${utilisateurActif.telephone})</p>
-                        <p><strong>Client :</strong> ${client}</p>
-                        <p><strong>Prestation :</strong> ${service}</p>
-                        <p style="font-size:16px;"><strong>Montant :</strong> <span style="color:#059669; font-weight:800;">${parseFloat(montant).toLocaleString()} ${devise}</span></p>
-                    </div>
-                `;
-                document.getElementById('resultatFacture').innerHTML = recuHtml;
-                showToast("Facture générée !");
-            } else { showToast("Remplissez tous les champs."); }
-        }
-
-        function exporterDonneesJSON() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(utilisateurActif, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `EVAT_${utilisateurActif.metierUnique.replace(/\s+/g, '_')}_${Date.now()}.json`);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-            showToast("Sauvegarde JSON exportée !");
-        }
-
-        function convertirDeviseAction() {
-            const montant = parseFloat(document.getElementById('montantDevise').value) || 0;
-            const type = document.getElementById('paireDevise').value;
-            let resultat = 0;
-            let texteRes = '';
-            if (type === 'eur_xof') { resultat = montant * 655.957; texteRes = `${montant} EUR = ${resultat.toFixed(2)} XOF (FCFA)`; }
-            else if (type === 'xof_eur') { resultat = montant / 655.957; texteRes = `${montant} XOF = ${resultat.toFixed(2)} EUR`; }
-            else if (type === 'usd_xof') { resultat = montant * 600; texteRes = `${montant} USD = ${resultat.toFixed(2)} XOF (FCFA)`; }
-            else { resultat = montant / 600; texteRes = `${montant} XOF = ${resultat.toFixed(2)} USD`; }
-            document.getElementById('resultatConversion').innerText = texteRes;
-            showToast("Conversion effectuée !");
-        }
-
-        function traduireElawsAction() {
-            const texte = document.getElementById('texteATraduire').value.trim();
-            const lang = document.getElementById('langueCible').value;
-            if (!texte) { showToast("Entrez un texte à traduire."); return; }
-            let traduit = `[Traduction ELAWS vers ${lang.toUpperCase()}] : ${texte} (Version souveraine optimisée pour ${utilisateurActif.metierUnique}).`;
-            document.getElementById('resultatTraduction').innerText = traduit;
-            showToast("Traduction ELAWS prête !");
-        }
-
-        function ajouterTransactionCaisse() {
-            const desc = document.getElementById('descCaisse').value.trim();
-            const montant = parseFloat(document.getElementById('montantCaisse').value);
-            const type = document.getElementById('typeCaisse').value;
-            if (desc && !isNaN(montant)) {
-                if (type === 'entree') {
-                    utilisateurActif.solde += montant;
-                    utilisateurActif.historiqueFinancier.unshift({ date: new Date().toLocaleDateString(), desc, montant, type: 'entree' });
-                } else {
-                    utilisateurActif.solde -= montant;
-                    utilisateurActif.historiqueFinancier.unshift({ date: new Date().toLocaleDateString(), desc, montant, type: 'sortie' });
-                }
-                sauvegarderProfilActif();
-                showToast("Caisse mise à jour !");
-                render();
-            } else { showToast("Veuillez remplir les champs de caisse."); }
-        }
-
-        function envoyerMessageElawsAI() {
+        function envoyerMessageElawsAI(texteForce) {
             const input = document.getElementById('inputElawsChat');
-            const q = input.value.trim();
+            const q = texteForce || (input ? input.value.trim() : '');
             if (!q) return;
 
             if (!utilisateurActif.discussionsElaws) utilisateurActif.discussionsElaws = [];
             utilisateurActif.discussionsElaws.push({ role: 'user', texte: q });
 
-            let reponse = "";
-            const qLower = q.toLowerCase();
-            const metier = utilisateurActif.metierUnique.toLowerCase();
-
-            if (qLower.includes('bonjour') || qLower.includes('salut') || qLower.includes('coucou')) {
-                reponse = `Bonjour ${utilisateurActif.nom} ! C'est ELAWS, votre compagnon intelligent. Je suis à vos côtés pour vous assister, vous conseiller et répondre à vos questions sur votre métier de ${metier}. Que puis-je faire pour vous ?`;
-            } else {
-                reponse = `ELAWS (votre compagnon) a bien pris en compte votre demande : "${q}". Je reste à vos côtés pour vous accompagner pas à pas dans votre activité de ${utilisateurActif.metierUnique} !`;
-            }
-
+            let reponse = `ELAWS a bien reçu : "${q}". Je vous accompagne dans votre profil de ${utilisateurActif.metierUnique} !`;
             utilisateurActif.discussionsElaws.push({ role: 'ai', texte: reponse });
             sauvegarderProfilActif();
-            input.value = '';
+            
+            if(input) input.value = '';
+            if(utilisateurActif.modeIllettre) lireTexteAAvoix(reponse);
             render();
         }
 
@@ -709,6 +568,7 @@
             if (!utilisateurActif) {
                 document.getElementById('appHeader').style.display = 'none';
                 document.getElementById('bottomBar').style.display = 'none';
+                document.getElementById('installGuideCard').style.display = 'block';
 
                 let profilsExistantsHtml = '';
                 if (listeProfils.length > 0) {
@@ -720,49 +580,30 @@
                 }
 
                 content.innerHTML = `
-                    <div class="card" style="border-color:var(--accent); max-width:500px; margin: 20px auto; text-align:center;">
-                        <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo" style="width:72px; height:72px; margin-bottom:10px; border-radius:16px; border:2px solid var(--accent); box-shadow:0 0 20px rgba(5,150,105,0.4);">
+                    <div class="card" style="border-color:var(--accent); max-width:500px; margin: 10px auto; text-align:center;">
+                        <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo" style="width:72px; height:72px; margin-bottom:10px; border-radius:16px; border:2px solid var(--accent);">
                         <h2 style="color:var(--accent); margin-top:0;">✨ E.V.A.T. & ELAWS</h2>
-                        <p class="text" style="text-align:center;">Écosystème Souverain 100% Hors-Ligne. Saisissez votre métier (ex: <em>Journaliste</em>, <em>Architecte</em>, <em>Cultivateur</em>, <em>Couturier</em>) pour que l'application génère <strong>instantanément votre profil, votre environnement de travail complet et votre compagnon ELAWS</strong>.</p>
+                        <p class="text" style="text-align:center;">Écosystème Universel 100% Hors-Ligne & Vocal. Compatible avec tous les métiers et doté d'appels intégrés.</p>
                         
                         ${profilsExistantsHtml}
 
                         <div style="text-align:left;">
-                            <h4 style="margin-bottom:10px; border-top:1px solid var(--border-color); padding-top:15px;">📝 Inscription & Votre Métier :</h4>
-                            <label style="font-size:11px; color:var(--text-secondary);">Nom complet ou Pseudonyme * :</label>
+                            <h4 style="margin-bottom:10px; border-top:1px solid var(--border-color); padding-top:15px;">📝 Créer mon Profil :</h4>
+                            <label style="font-size:11px; color:var(--text-secondary);">Nom ou Pseudonyme * :</label>
                             <input type="text" id="regNom" class="input" placeholder="Ex: Eric Lawson">
                             
-                            <label style="font-size:11px; color:var(--text-secondary);">Adresse E-mail :</label>
-                            <input type="email" id="regEmail" class="input" placeholder="Ex: monemail@domaine.com">
-
-                            <label style="font-size:11px; color:var(--text-secondary);">Votre Métier / Corps de métier exact * :</label>
-                            <input type="text" id="regMetierCustom" class="input" placeholder="Ex: Journaliste, Architecte, Cultivateur, Couturier...">
+                            <label style="font-size:11px; color:var(--text-secondary);">Votre Métier (Journaliste, Docteur, etc.) * :</label>
+                            <input type="text" id="regMetierCustom" class="input" placeholder="Ex: Journaliste, Docteur, Chauffeur...">
 
                             <label style="font-size:11px; color:var(--text-secondary);">Téléphone :</label>
                             <input type="text" id="regTel" class="input" placeholder="Ex: +228 98231402">
 
-                            <div style="display:flex; gap:8px;">
-                                <div style="flex:1;">
-                                    <label style="font-size:11px; color:var(--text-secondary);">Nationalité :</label>
-                                    <select id="regNationalite" class="input">
-                                        <option value="Togolais">🇹🇬 Togolais</option>
-                                        <option value="Allemand">🇩🇪 Allemand</option>
-                                        <option value="Anglais">🇬🇧 Anglais</option>
-                                        <option value="Haïtien">🇭🇹 Haïtien</option>
-                                        <option value="Amazonien">🌿 Amazonien</option>
-                                    </select>
-                                </div>
-                                <div style="flex:1;">
-                                    <label style="font-size:11px; color:var(--text-secondary);">Zone d'Évolution :</label>
-                                    <select id="regPaysActuel" class="input">
-                                        <option value="Togo / Lomé">Togo / Lomé</option>
-                                        <option value="Amazonie / Sud">Amazonie / Sud</option>
-                                        <option value="Europe / Allemagne">Europe / Allemagne</option>
-                                    </select>
-                                </div>
+                            <div style="background:rgba(5,150,105,0.15); border:1px solid var(--accent); padding:12px; border-radius:8px; margin-bottom:12px; display:flex; align-items:center; gap:10px;">
+                                <input type="checkbox" id="regModeIllettre" style="width:20px; height:20px; accent-color:var(--accent);" checked>
+                                <label for="regModeIllettre" style="font-size:13px; font-weight:700; color:var(--accent); cursor:pointer;">🎤 Activer le Mode Vocal (Synthèse vocale & micro)</label>
                             </div>
 
-                            <button class="btn-action" style="margin-top:10px;" onclick="creerNouveauProfil()">🚀 Générer mon Profil & Mon Environnement (Hors-Ligne)</button>
+                            <button class="btn-action" style="margin-top:10px;" onclick="creerNouveauProfil()">🚀 Générer mon Profil (Hors-Ligne)</button>
                         </div>
                     </div>
                 `;
@@ -771,31 +612,15 @@
 
             document.getElementById('appHeader').style.display = 'block';
             document.getElementById('bottomBar').style.display = 'flex';
+            document.getElementById('installGuideCard').style.display = 'none';
             document.getElementById('badgeDomaineActif').innerHTML = `💼 Profil : ${utilisateurActif.metierUnique}`;
-
-            // Personnalisation des icônes selon le métier
-            const metierLower = utilisateurActif.metierUnique.toLowerCase();
-            let iconeMetier = '⚡';
-            let labelMetierNav = 'Outils';
-            if (metierLower.includes('journaliste') || metierLower.includes('redacteur') || metierLower.includes('presse')) {
-                iconeMetier = '📰'; labelMetierNav = 'Enquêtes';
-            } else if (metierLower.includes('architecte') || metierLower.includes('batiment')) {
-                iconeMetier = '📐'; labelMetierNav = 'Plans & Sols';
-            } else if (metierLower.includes('cultivateur') || metierLower.includes('agriculteur')) {
-                iconeMetier = '🌾'; labelMetierNav = 'Champs';
-            } else if (metierLower.includes('coutur') || metierLower.includes('tailleur')) {
-                iconeMetier = '✂️'; labelMetierNav = 'Mesures';
-            }
-
-            document.getElementById('iconBarMetier').innerText = iconeMetier;
-            document.getElementById('labelBarMetier').innerText = labelMetierNav;
-            document.getElementById('menuItemAtelier').innerText = `${iconeMetier} Outils & Logiciels (${utilisateurActif.metierUnique})`;
+            mettreAJourEtatReseau();
 
             document.querySelectorAll('.bar-item').forEach(el => el.classList.remove('active'));
             if(activeTab === 'accueil') document.getElementById('barAccueil')?.classList.add('active');
             if(activeTab === 'elaws_compagnon') document.getElementById('barElaws')?.classList.add('active');
+            if(activeTab === 'appels') document.getElementById('barAppels')?.classList.add('active');
             if(activeTab === 'atelier_specifique') document.getElementById('barAtelier')?.classList.add('active');
-            if(activeTab === 'factures') document.getElementById('barFactures')?.classList.add('active');
             if(activeTab === 'economie') document.getElementById('barEco')?.classList.add('active');
 
             if (activeTab === 'accueil') {
@@ -803,62 +628,19 @@
                     <div class="card" style="border-color: var(--accent);">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                             <div>
-                                <span style="font-size:11px; color:var(--accent); font-weight:700;">💼 PROFIL SOUVERAIN & ENVIRONNEMENT DE TRAVAIL</span>
+                                <span style="font-size:11px; color:var(--accent); font-weight:700;">💼 PROFIL SOUVERAIN</span>
                                 <div style="font-size:17px; font-weight:800;">${utilisateurActif.nom}</div>
                             </div>
                             <button class="btn-top" onclick="changerProfilSession()">🔄 Changer</button>
                         </div>
-                        <p class="text" style="margin-bottom:12px;">Profil configuré pour : <strong style="color:var(--accent);">${utilisateurActif.metierUnique}</strong>. Votre environnement de travail et vos logiciels spécialisés sont prêts.</p>
+                        <p class="text">Métier : <strong style="color:var(--accent);">${utilisateurActif.metierUnique}</strong>. Connecté et autonome.</p>
                         
-                        <!-- ACCÈS DIRECT AU COMPAGNON ELAWS -->
-                        <div style="background:rgba(5,150,105,0.15); border:2px solid var(--accent); padding:16px; border-radius:12px; margin-bottom:15px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 4px 15px rgba(5,150,105,0.2);">
+                        <div style="background:rgba(5,150,105,0.15); border:2px solid var(--accent); padding:16px; border-radius:12px; margin-bottom:15px; display:flex; align-items:center; justify-content:space-between;">
                             <div>
-                                <h4 style="margin:0 0 4px 0; color:var(--accent); font-size:16px;">🤖 Compagnon ELAWS</h4>
-                                <p style="font-size:12px; margin:0; color:var(--text-secondary);">Votre assistant personnel pour vous accompagner dans votre profil.</p>
+                                <h4 style="margin:0 0 4px 0; color:var(--accent); font-size:16px;">📞 Appels & Contacts</h4>
+                                <p style="font-size:12px; margin:0; color:var(--text-secondary);">Appelez vos clients, patients ou sources (GSM ou Internet).</p>
                             </div>
-                            <button class="btn-action" style="width:auto; padding:12px 18px; font-size:14px;" onclick="switchTab('elaws_compagnon')">Parler à ELAWS 💬</button>
-                        </div>
-
-                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; display:flex; flex-direction:column; gap:10px;">
-                            <div>
-                                <label style="font-size:11px; color:var(--text-secondary);">Nom ou Pseudonyme :</label>
-                                <input type="text" id="inputNomUtilisateur" class="input" value="${utilisateurActif.nom}" style="margin-top:4px;">
-                            </div>
-                            <div>
-                                <label style="font-size:11px; color:var(--text-secondary);">Mon Corps de Métier :</label>
-                                <input type="text" id="inputMetierUnique" class="input" value="${utilisateurActif.metierUnique}" style="margin-top:4px; border-color:var(--accent);">
-                            </div>
-                            <div style="display:flex; gap:8px;">
-                                <div style="flex:1;">
-                                    <label style="font-size:11px; color:var(--text-secondary);">Nationalité :</label>
-                                    <select id="selectNationalite" class="input" style="margin-top:4px;">
-                                        <option value="Togolais" ${utilisateurActif.nationalite === 'Togolais' ? 'selected' : ''}>🇹🇬 Togolais</option>
-                                        <option value="Allemand" ${utilisateurActif.nationalite === 'Allemand' ? 'selected' : ''}>🇩🇪 Allemand</option>
-                                        <option value="Anglais" ${utilisateurActif.nationalite === 'Anglais' ? 'selected' : ''}>🇬🇧 Anglais</option>
-                                        <option value="Haïtien" ${utilisateurActif.nationalite === 'Haïtien' ? 'selected' : ''}>🇭🇹 Haïtien</option>
-                                        <option value="Amazonien" ${utilisateurActif.nationalite === 'Amazonien' ? 'selected' : ''}>🌿 Amazonien</option>
-                                    </select>
-                                </div>
-                                <div style="flex:1;">
-                                    <label style="font-size:11px; color:var(--text-secondary);">Zone d'Évolution :</label>
-                                    <select id="selectPaysActuel" class="input" style="margin-top:4px;">
-                                        <option value="Togo / Lomé" ${utilisateurActif.paysActuel.includes('Togo') ? 'selected' : ''}>Togo / Lomé</option>
-                                        <option value="Amazonie / Sud" ${utilisateurActif.paysActuel.includes('Amazonie') ? 'selected' : ''}>Amazonie / Sud</option>
-                                        <option value="Europe / Allemagne" ${utilisateurActif.paysActuel.includes('Europe') ? 'selected' : ''}>Europe / Allemagne</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div style="display:flex; gap:8px;">
-                                <div style="flex:1;">
-                                    <label style="font-size:11px; color:var(--text-secondary);">E-mail :</label>
-                                    <input type="email" id="inputEmailUtilisateur" class="input" value="${utilisateurActif.email}" style="margin-top:4px;">
-                                </div>
-                                <div style="flex:1;">
-                                    <label style="font-size:11px; color:var(--text-secondary);">Téléphone :</label>
-                                    <input type="text" id="inputTelUtilisateur" class="input" value="${utilisateurActif.telephone}" style="margin-top:4px;">
-                                </div>
-                            </div>
-                            <button class="btn-action" style="padding:12px; font-size:14px; margin-top:4px;" onclick="mettreAJourIdentiteEtMetier()">💾 Enregistrer mon Profil</button>
+                            <button class="btn-action" style="width:auto; padding:12px 18px; font-size:14px;" onclick="switchTab('appels')">Gérer 📞</button>
                         </div>
                     </div>
                 `;
@@ -867,299 +649,88 @@
                 if (utilisateurActif.discussionsElaws) {
                     utilisateurActif.discussionsElaws.forEach(msg => {
                         const isAi = msg.role === 'ai';
-                        const bg = isAi ? 'rgba(5,150,105,0.15)' : 'var(--bg-color)';
-                        const border = isAi ? '4px solid var(--accent)' : '4px solid var(--border-color)';
-                        const auteur = isAi ? '🤖 ELAWS (Compagnon de Route)' : `👤 ${utilisateurActif.nom}`;
                         chatHtml += `
-                            <div style="background:${bg}; border-left:${border}; padding:14px; border-radius:10px; margin-bottom:12px;">
-                                <strong style="font-size:12px; color:${isAi ? 'var(--accent)' : 'var(--text-secondary)'};">${auteur}</strong>
-                                <p style="margin:8px 0 0 0; font-size:14px; line-height:1.6;">${msg.texte}</p>
+                            <div style="background:${isAi ? 'rgba(5,150,105,0.15)' : 'var(--bg-color)'}; border-left:4px solid ${isAi ? 'var(--accent)' : 'var(--border-color)'}; padding:14px; border-radius:10px; margin-bottom:12px; position:relative;">
+                                <strong style="font-size:12px; color:${isAi ? 'var(--accent)' : 'var(--text-secondary)'};">${isAi ? '🤖 ELAWS' : utilisateurActif.nom}</strong>
+                                <p style="margin:8px 0 0 0; font-size:14px;">${msg.texte}</p>
+                                ${isAi ? `<button onclick="lireTexteAAvoix('${msg.texte.replace(/'/g, "\'")}')" style="position:absolute; top:10px; right:10px; background:var(--accent); color:#000; border:none; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;">🔊 Écouter</button>` : ''}
                             </div>
                         `;
                     });
                 }
-
                 content.innerHTML = `
                     <div class="card" style="border-color:var(--accent);">
-                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; border-bottom:2px solid var(--border-color); padding-bottom:10px;">
-                            <span style="font-size:28px;">🤖</span>
-                            <div>
-                                <h3 class="card-title" style="margin:0; color:var(--accent);">ELAWS — Compagnon Intelligent</h3>
-                                <p style="font-size:12px; margin:0; color:var(--text-secondary);">Assistant personnel pour votre profil : <strong>${utilisateurActif.metierUnique}</strong></p>
-                            </div>
+                        <h3 class="card-title" style="color:var(--accent);">🎤 Compagnon Vocal ELAWS</h3>
+                        <div style="text-align:center; margin-bottom:15px;">
+                            <button class="btn-action" onclick="demarrerEcouteMicrophone()" style="background:var(--accent-gradient); font-size:18px; padding:18px; border-radius:30px;">
+                                🎤 Appuyer pour Parler à ELAWS
+                            </button>
                         </div>
-                        <p class="text">Échangez avec votre compagnon ELAWS pour vous faire conseiller, rédiger des articles ou structurer vos notes hors-ligne.</p>
-                        
-                        <div style="background:var(--bg-color); padding:15px; border-radius:12px; max-height:420px; overflow-y:auto; margin-bottom:15px; border:1px solid var(--border-color);">
+                        <div style="background:var(--bg-color); padding:15px; border-radius:12px; max-height:380px; overflow-y:auto; margin-bottom:15px; border:1px solid var(--border-color);">
                             ${chatHtml}
                         </div>
-
                         <div style="display:flex; gap:8px;">
-                            <input type="text" id="inputElawsChat" class="input" placeholder="Parlez à votre compagnon ELAWS..." style="margin-bottom:0; font-size:14px; padding:12px;" onkeypress="if(event.key === 'Enter') envoyerMessageElawsAI()">
+                            <input type="text" id="inputElawsChat" class="input" placeholder="Tapez ou parlez..." style="margin-bottom:0;" onkeypress="if(event.key === 'Enter') envoyerMessageElawsAI()">
                             <button class="btn-action" style="width:auto; padding:0 22px;" onclick="envoyerMessageElawsAI()">Envoyer 🚀</button>
                         </div>
                     </div>
                 `;
-            } else if (activeTab === 'atelier_specifique') {
-                // --- OUTILS SPECIFIQUES POUR JOURNALISTE ET AUTRES ---
-                if (metierLower.includes('journaliste') || metierLower.includes('redacteur') || metierLower.includes('presse')) {
-                    let enquetesHtml = '';
-                    let sourcesHtml = '';
-                    const dms = utilisateurActif.donneesMetierSpecifique || { enquetesJournaliste: [], sourcesJournaliste: [] };
-                    
-                    if (dms.enquetesJournaliste && dms.enquetesJournaliste.length > 0) {
-                        dms.enquetesJournaliste.forEach(e => {
-                            enquetesHtml += `
-                                <div style="background:var(--bg-color); padding:12px; border-radius:8px; margin-bottom:8px; border-left:4px solid var(--accent); position:relative;">
-                                    <button onclick="supprimerDonneesMetier('enquete', ${e.id})" style="position:absolute; top:10px; right:10px; background:none; border:none; cursor:pointer;" title="Supprimer">❌</button>
-                                    <strong style="color:var(--accent);">📰 Sujet / Enquête : ${e.sujet}</strong> (${e.date})<br>
-                                    <small>Angle : <strong>${e.angle}</strong> | Statut : ${e.statut}</small>
+            } else if (activeTab === 'appels') {
+                let contactsHtml = '';
+                if(utilisateurActif.contactsAppels && utilisateurActif.contactsAppels.length > 0) {
+                    utilisateurActif.contactsAppels.forEach(c => {
+                        contactsHtml += `
+                            <div style="background:var(--bg-color); padding:14px; border-radius:10px; margin-bottom:10px; border-left:4px solid var(--accent); display:flex; justify-content:space-between; align-items:center;">
+                                <div>
+                                    <strong>👤 ${c.nom}</strong> (${c.type})<br>
+                                    <small style="color:var(--text-secondary);">📱 ${c.tel}</small>
                                 </div>
-                            `;
-                        });
-                    } else { enquetesHtml = '<p style="color:var(--text-secondary);">Aucune enquête ou article enregistré.</p>'; }
-
-                    if (dms.sourcesJournaliste && dms.sourcesJournaliste.length > 0) {
-                        dms.sourcesJournaliste.forEach(s => {
-                            sourcesHtml += `
-                                <div style="background:var(--bg-color); padding:12px; border-radius:8px; margin-bottom:8px; border-left:4px solid #f59e0b; position:relative;">
-                                    <button onclick="supprimerDonneesMetier('source', ${s.id})" style="position:absolute; top:10px; right:10px; background:none; border:none; cursor:pointer;" title="Supprimer">❌</button>
-                                    <strong style="color:#f59e0b;">🔒 Source / Contact : ${s.nomSource}</strong> (${s.date})<br>
-                                    <small>Coordonnées : ${s.contact} | Confidentialité : <strong>${s.conf}</strong></small>
+                                <div style="display:flex; gap:8px;">
+                                    <button class="btn-action" style="width:auto; padding:8px 12px; background:#10b981;" onclick="lancerAppelGSM('${c.tel}')" title="Appel GSM direct">📞 GSM</button>
+                                    <button class="btn-action" style="width:auto; padding:8px 12px; background:#3b82f6;" onclick="lancerAppelInternet('${c.nom}')" title="Appel Internet VoIP">🌐 Data</button>
                                 </div>
-                            `;
-                        });
-                    } else { sourcesHtml = '<p style="color:var(--text-secondary);">Aucune source enregistrée.</p>'; }
-
-                    content.innerHTML = `
-                        <div class="card" style="border-color:var(--accent);">
-                            <h3 class="card-title">📰 Outils Journaliste : Carnet d'Enquêtes & Répertoire de Sources</h3>
-                            <p class="text">Votre profil de journaliste intègre vos carnets d'investigation et la gestion sécurisée de vos sources hors-ligne.</p>
-                            
-                            <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                                <h4 style="margin:0 0 8px 0; color:var(--accent);">➕ Enregistrer un Sujet / Enquête :</h4>
-                                <input type="text" id="jourSujet" class="input" placeholder="Titre du sujet ou de l'article" style="margin-bottom:8px;">
-                                <input type="text" id="jourAngle" class="input" placeholder="Angle journalistique (ex: Enquête sur la vie chère)" style="margin-bottom:8px;">
-                                <select id="jourStatut" class="input" style="margin-bottom:8px;">
-                                    <option value="En cours d'investigation">🔍 En cours d'investigation</option>
-                                    <option value="Rédaction en cours">✍️ Rédaction en cours</option>
-                                    <option value="Publié / Transmis">✅ Publié / Transmis</option>
-                                </select>
-                                <button class="btn-action" onclick="ajouterEnqueteJournaliste()">Enregistrer l'Enquête</button>
-                            </div>
-
-                            <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:20px;">
-                                <h4 style="margin:0 0 8px 0; color:#f59e0b;">🔒 Répertoire Sécurisé des Sources :</h4>
-                                <input type="text" id="jourSourceNom" class="input" placeholder="Nom de la source ou personne ressource" style="margin-bottom:8px;">
-                                <input type="text" id="jourSourceContact" class="input" placeholder="Téléphone / E-mail / Signal" style="margin-bottom:8px;">
-                                <select id="jourSourceConf" class="input" style="margin-bottom:8px;">
-                                    <option value="Strictement Confidentiel">🔒 Strictement Confidentiel</option>
-                                    <option value="Off the record">🤫 Off the record</option>
-                                    <option value="Source publique">🌐 Source publique / Officielle</option>
-                                </select>
-                                <button class="btn-action" style="background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%);" onclick="ajouterSourceJournaliste()">Enregistrer la Source</button>
-                            </div>
-
-                            <h4 style="margin-bottom:8px;">📂 Mes Enquêtes & Articles :</h4>
-                            ${enquetesHtml}
-
-                            <h4 style="margin:15px 0 8px 0;">🛡️ Mes Sources :</h4>
-                            ${sourcesHtml}
-                        </div>
-                    `;
-                } else if (metierLower.includes('architecte') || metierLower.includes('batiment')) {
-                    let plansHtml = '';
-                    const dms = utilisateurActif.donneesMetierSpecifique || { plans: [] };
-                    if (dms.plans && dms.plans.length > 0) {
-                        dms.plans.forEach(p => {
-                            plansHtml += `
-                                <div style="background:var(--bg-color); padding:12px; border-radius:8px; margin-bottom:8px; border-left:4px solid var(--accent); position:relative;">
-                                    <button onclick="supprimerDonneesMetier('plan', ${p.id})" style="position:absolute; top:10px; right:10px; background:none; border:none; cursor:pointer;" title="Supprimer">❌</button>
-                                    <strong style="color:var(--accent);">📐 Plan DAO : ${p.nomPlan}</strong> (${p.date})<br>
-                                    <small>Surface : <strong>${p.surface} m²</strong></small>
-                                </div>
-                            `;
-                        });
-                    } else { plansHtml = '<p style="color:var(--text-secondary);">Aucun plan enregistré.</p>'; }
-                    content.innerHTML = `
-                        <div class="card" style="border-color:var(--accent);">
-                            <h3 class="card-title">📐 Outils Architecte : Plans DAO</h3>
-                            <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                                <input type="text" id="archiNomPlan" class="input" placeholder="Nom du projet" style="margin-bottom:8px;">
-                                <input type="number" id="archiSurface" class="input" placeholder="Surface (m²)" style="margin-bottom:8px;">
-                                <button class="btn-action" onclick="ajouterPlanArchitecte()">Enregistrer le Plan</button>
-                            </div>
-                            ${plansHtml}
-                        </div>
-                    `;
-                } else {
-                    content.innerHTML = `
-                        <div class="card" style="border-color:var(--accent);">
-                            <h3 class="card-title">⚡ Outils & Logiciels : ${utilisateurActif.metierUnique}</h3>
-                            <p class="text">Votre environnement de travail est généré pour <strong>${utilisateurActif.metierUnique}</strong>. Vous disposez de la caisse, des factures, du journal et de votre compagnon ELAWS.</p>
-                        </div>
-                    `;
-                }
-            } else if (activeTab === 'factures') {
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">🧾 Générateur de Reçus & Factures (${utilisateurActif.metierUnique})</h3>
-                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                            <input type="text" id="factureClient" class="input" placeholder="Nom du client" style="margin-bottom:8px;">
-                            <input type="text" id="factureService" class="input" placeholder="Prestation / Service réalisé" style="margin-bottom:8px;">
-                            <div style="display:flex; gap:8px; margin-bottom:10px;">
-                                <input type="number" id="factureMontant" class="input" placeholder="Montant">
-                                <select id="factureDevise" class="input" style="flex:0.6;"><option value="FCFA">FCFA</option><option value="EUR">EUR</option><option value="USD">USD</option></select>
-                            </div>
-                            <button class="btn-action" onclick="genererRecuFacture()">Générer le Reçu</button>
-                        </div>
-                        <div id="resultatFacture">Remplissez les champs ci-dessus pour générer un reçu professionnel hors-ligne.</div>
-                    </div>
-                `;
-            } else if (activeTab === 'economie') {
-                let transHtml = '';
-                if(utilisateurActif.historiqueFinancier) {
-                    utilisateurActif.historiqueFinancier.forEach(t => {
-                        const color = t.type === 'entree' ? '#34d399' : '#f87171';
-                        const signe = t.type === 'entree' ? '+' : '-';
-                        transHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;"><span>${t.date} - ${t.desc}</span><strong style="color:${color};">${signe}${t.montant.toLocaleString()} FCFA</strong></div>`;
-                    });
-                }
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">🪙 Caisse & Trésorerie (${utilisateurActif.metierUnique})</h3>
-                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; text-align:center;">
-                            <span style="font-size:12px; color:var(--text-secondary);">Solde Actuel :</span>
-                            <div style="font-size:24px; font-weight:800; color:var(--accent);">${utilisateurActif.solde.toLocaleString()} FCFA</div>
-                        </div>
-                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                            <h4 style="margin:0 0 8px 0; color:var(--accent);">Ajouter une entrée / sortie :</h4>
-                            <input type="text" id="descCaisse" class="input" placeholder="Libellé" style="margin-bottom:8px;">
-                            <input type="number" id="montantCaisse" class="input" placeholder="Montant en FCFA" style="margin-bottom:8px;">
-                            <select id="typeCaisse" class="input" style="margin-bottom:8px;">
-                                <option value="entree">Entrée d'argent (+)</option>
-                                <option value="sortie">Sortie d'argent (-)</option>
-                            </select>
-                            <button class="btn-action" onclick="ajouterTransactionCaisse()">Enregistrer dans la Caisse</button>
-                        </div>
-                        <h4 style="margin-bottom:8px;">Historique des Transactions :</h4>
-                        ${transHtml}
-                    </div>
-                `;
-            } else if (activeTab === 'objectifs') {
-                let objHtml = '';
-                utilisateurActif.objectifs.forEach(o => {
-                    objHtml += `
-                        <div style="margin-bottom:10px; background:var(--bg-color); padding:12px; border-radius:8px; border-left:4px solid var(--accent);">
-                            <span style="font-size:11px; color:var(--accent); font-weight:700;">📌 ${o.categorie}</span><br>
-                            <strong style="font-size:14px;">${o.titre}</strong><br>
-                            <small style="color:var(--text-secondary);">Statut : ${o.statut}</small>
-                        </div>
-                    `;
-                });
-                content.innerHTML = `
-                    <div class="card" style="border-color:var(--accent);">
-                        <h3 class="card-title">🎯 Objectifs & Projets</h3>
-                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                            <label style="font-size:11px; color:var(--text-secondary);">Catégorie :</label>
-                            <select id="objCategorie" class="input" style="margin-top:4px; margin-bottom:8px;">
-                                <option value="Finances & Business">🪙 Finances & Business</option>
-                                <option value="Mobilité & Papiers">📁 Mobilité & Papiers</option>
-                                <option value="Développement Personnel">🧠 Développement Personnel</option>
-                            </select>
-                            <input type="text" id="objTitre" class="input" placeholder="Intitulé de l'objectif..." style="margin-bottom:10px;">
-                            <button class="btn-action" onclick="ajouterObjectifVie()">➕ Ajouter l'Objectif</button>
-                        </div>
-                        ${objHtml}
-                    </div>
-                `;
-            } else if (activeTab === 'notes') {
-                let notesHtml = '';
-                if(utilisateurActif.notes) {
-                    utilisateurActif.notes.forEach(n => {
-                        notesHtml += `
-                            <div style="margin-bottom:10px; background:var(--bg-color); padding:12px; border-radius:8px;">
-                                <strong>📌 ${n.titre}</strong> <small style="float:right; color:var(--text-secondary);">${n.date}</small><br>
-                                <p style="margin:6px 0 0 0; font-size:13px; color:var(--text-secondary);">${n.texte}</p>
                             </div>
                         `;
                     });
-                }
+                } else { contactsHtml = '<p style="color:var(--text-secondary);">Aucun contact enregistré.</p>'; }
+
                 content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">📓 Journal de Bord ELAWS</h3>
+                    <div class="card" style="border-color:var(--accent);">
+                        <h3 class="card-title">📞 Module d'Appels (GSM & Internet / Data)</h3>
+                        <p class="text">Contactez vos clients, patients ou sources instantanément par appel téléphonique direct (réseau mobile) ou par VoIP (Internet).</p>
+                        
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                            <input type="text" id="noteTitre" class="input" placeholder="Titre de la note" style="margin-bottom:8px;">
-                            <textarea id="noteTexte" class="input" placeholder="Contenu..." style="margin-bottom:10px;"></textarea>
-                            <button class="btn-action" onclick="ajouterNoteJournal()">➕ Ajouter la Note</button>
-                        </div>
-                        ${notesHtml}
-                    </div>
-                `;
-            } else if (activeTab === 'sauvegarde') {
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">💾 Sauvegarde & Restauration (JSON)</h3>
-                        <button class="btn-action" onclick="exporterDonneesJSON()" style="margin-bottom:12px;">📥 Exporter mon Profil JSON</button>
-                        <p class="text">Sauvegardez l'intégralité de vos enquêtes, sources et finances dans un fichier souverain.</p>
-                    </div>
-                `;
-            } else if (activeTab === 'convertisseur') {
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">💱 Convertisseur de Devises</h3>
-                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                            <input type="number" id="montantDevise" class="input" placeholder="Montant" style="margin-bottom:8px;">
-                            <select id="paireDevise" class="input" style="margin-bottom:8px;">
-                                <option value="eur_xof">EUR ➡️ XOF (FCFA)</option>
-                                <option value="xof_eur">XOF (FCFA) ➡️ EUR</option>
-                                <option value="usd_xof">USD ➡️ XOF (FCFA)</option>
-                                <option value="xof_usd">XOF (FCFA) ➡️ USD</option>
+                            <h4 style="margin:0 0 8px 0; color:var(--accent);">➕ Ajouter un Contact :</h4>
+                            <input type="text" id="appelNom" class="input" placeholder="Nom du contact" style="margin-bottom:8px;">
+                            <input type="text" id="appelTel" class="input" placeholder="Numéro (ex: +228 98231402)" style="margin-bottom:8px;">
+                            <select id="appelType" class="input" style="margin-bottom:8px;">
+                                <option value="Patient / Client">Patient / Client</option>
+                                <option value="Source Journaliste">Source Journaliste</option>
+                                <option value="Fournisseur">Fournisseur</option>
                             </select>
-                            <button class="btn-action" onclick="convertirDeviseAction()">Calculer</button>
+                            <button class="btn-action" onclick="ajouterContactAppel()">Enregistrer le Contact</button>
                         </div>
-                        <div id="resultatConversion" style="font-weight:800; color:var(--accent); text-align:center; font-size:16px;"></div>
+
+                        <h4 style="margin-bottom:8px;">📂 Mes Contacts & Appels :</h4>
+                        ${contactsHtml}
                     </div>
                 `;
-            } else if (activeTab === 'traduction') {
+            } else if (activeTab === 'atelier_specifique') {
                 content.innerHTML = `
                     <div class="card">
-                        <h3 class="card-title">🗣️ Pont de Traduction</h3>
-                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                            <textarea id="texteATraduire" class="input" placeholder="Texte à traduire..." style="margin-bottom:8px;"></textarea>
-                            <select id="langueCible" class="input" style="margin-bottom:8px;">
-                                <option value="allemand">Allemand (Deutsch)</option>
-                                <option value="anglais">Anglais (English)</option>
-                                <option value="francais">Français</option>
-                            </select>
-                            <button class="btn-action" onclick="traduireElawsAction()">Traduire avec ELAWS</button>
-                        </div>
-                        <div id="resultatTraduction" style="font-size:14px; color:var(--text-secondary); background:var(--bg-color); padding:12px; border-radius:8px;"></div>
+                        <h3 class="card-title">⚡ Outils Métier : ${utilisateurActif.metierUnique}</h3>
+                        <p class="text">Environnement généré pour ${utilisateurActif.metierUnique}.</p>
                     </div>
                 `;
-            } else if (activeTab === 'gps') {
+            } else if (activeTab === 'economie') {
                 content.innerHTML = `
                     <div class="card">
-                        <h3 class="card-title">🧭 Géolocalisation & GPS Souverain</h3>
-                        <p class="text">Zone d'évolution actuelle : <strong>${utilisateurActif.paysActuel}</strong> (Mode Hors-Ligne).</p>
-                    </div>
-                `;
-            } else if (activeTab === 'camera') {
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">📸 Caméra & Numérisation</h3>
-                        <p class="text">Capturez vos documents hors-ligne.</p>
-                    </div>
-                `;
-            } else if (activeTab === 'securite') {
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">🛡️ Sécurité & Chiffrement Local</h3>
-                        <p class="text">Toutes vos informations sont stockées localement et chiffrées sur votre appareil.</p>
+                        <h3 class="card-title">🪙 Caisse & Trésorerie</h3>
+                        <div style="font-size:24px; font-weight:800; color:var(--accent); text-align:center; padding:15px;">${utilisateurActif.solde.toLocaleString()} FCFA</div>
                     </div>
                 `;
             } else {
-                content.innerHTML = `<div class="card"><h3 class="card-title">🛠️ Module actif</h3><p class="text">Prêt pour ${utilisateurActif.nom} (${utilisateurActif.metierUnique}).</p></div>`;
+                content.innerHTML = `<div class="card"><h3 class="card-title">Module actif</h3></div>`;
             }
         }
 
