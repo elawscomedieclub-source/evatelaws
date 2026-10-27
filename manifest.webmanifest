@@ -1,9 +1,1 @@
-{
-  "name": "E.V.A.T. et ELAWS",
-  "short_name": "EVAT",
-  "start_url": "index.html",
-  "display": "standalone",
-  "background_color": "#0b0f19",
-  "theme_color": "#059669",
-  "icons": []
-}
+{"name": "EVAT v22", "short_name": "EVAT", "start_url": "index.html", "display": "standalone"}

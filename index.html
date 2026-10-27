@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. & ELAWS - Écosystème Universel (v24.1)</title>
+    <title>E.V.A.T. & ELAWS - Version 22 Stable</title>
     <style>
         :root {
             --bg-color: #0b0f19;
@@ -12,14 +12,6 @@
             --text-secondary: #94a3b8;
             --accent: #34d399;
             --border-color: #334155;
-        }
-        [data-theme="light"] {
-            --bg-color: #f1f5f9;
-            --card-bg: #ffffff;
-            --text-main: #0f172a;
-            --text-secondary: #64748b;
-            --accent: #059669;
-            --border-color: #e2e8f0;
         }
         * { box-sizing: border-box; }
         body {
@@ -75,7 +67,7 @@
         }
     </style>
 </head>
-<body data-theme="dark">
+<body>
     <div id="toast" class="toast">Action réussie</div>
     <div id="app"></div>
 
@@ -87,14 +79,14 @@
             setTimeout(() => t.style.display = 'none', 2500);
         }
 
-        let profil = JSON.parse(localStorage.getItem('evat_profil')) || null;
-        let messagesElaws = JSON.parse(localStorage.getItem('evat_messages')) || [
-            { role: 'ai', texte: "Bonjour ! Je suis ELAWS, ton assistant personnel sincère et direct. Comment puis-je t'aider aujourd'hui ?" }
+        let profil = JSON.parse(localStorage.getItem('evat_v22_profil')) || null;
+        let messages = JSON.parse(localStorage.getItem('evat_v22_msg')) || [
+            { role: 'ai', texte: "Bonjour ! Je suis ELAWS, ton assistant personnel. Comment puis-je t'aider aujourd'hui ?" }
         ];
 
         function sauvegarder() {
-            localStorage.setItem('evat_profil', JSON.stringify(profil));
-            localStorage.setItem('evat_messages', JSON.stringify(messagesElaws));
+            localStorage.setItem('evat_v22_profil', JSON.stringify(profil));
+            localStorage.setItem('evat_v22_msg', JSON.stringify(messages));
         }
 
         function creerProfil() {
@@ -103,39 +95,40 @@
             if (!nom) { showToast("Veuillez entrer un nom."); return; }
             profil = { nom, role: role || 'Pasteur / Guide', solde: 50000 };
             sauvegarder();
-            showToast("Profil créé !");
+            showToast("Profil enregistré !");
             render();
         }
 
-        function envoyerElaws() {
+        function envoyerMessage() {
             const input = document.getElementById('inputChat');
             const txt = input.value.trim();
             if(!txt) return;
 
-            messagesElaws.push({ role: 'user', texte: txt });
+            messages.push({ role: 'user', texte: txt });
             
-            let reponse = "J'ai bien reçu ton message. En tant que ton compagnon, je suis là pour t'épauler avec fluidité et sincérité.";
+            let reponse = "J'ai bien reçu ton message. Je suis là pour t'épauler avec fluidité et sincérité.";
             const lower = txt.toLowerCase();
-            if(lower.includes('culte') || lower.includes('predication') || lower.includes('foi')) {
-                reponse = `[Ministère / Pastorale — ELAWS]\nFrère ${profil.nom}, pour ton message ou ton culte : appuie-toi sur la simplicité, l'écoute et l'amour du prochain. Je peux t'aider à structurer tes notes si tu veux !`;
+            if(lower.includes('culte') || lower.includes('predication') || lower.includes('foi') || lower.includes('prier')) {
+                reponse = `[Ministère / Pastorale — ELAWS]\n${profil.nom}, pour ton message ou ton culte : appuie-toi sur la simplicité, l'écoute et l'amour du prochain.`;
             } else if(lower.includes('argent') || lower.includes('caisse') || lower.includes('solde')) {
-                reponse = `Ton solde actuel est de ${profil.solde.toLocaleString()} FCFA. Veux-tu enregistrer une entrée ou une sortie ?`;
+                reponse = `Ton solde actuel est de ${profil.solde.toLocaleString()} FCFA.`;
             }
 
-            messagesElaws.push({ role: 'ai', texte: reponse });
+            messages.push({ role: 'ai', texte: reponse });
             sauvegarder();
             input.value = '';
             render();
+            
             if('speechSynthesis' in window) {
                 window.speechSynthesis.speak(new SpeechSynthesisUtterance(reponse.replace(/[\[\]]/g, '')));
             }
         }
 
-        function reinitialiserProfil() {
-            if(confirm("Voulez-vous réinitialiser le profil ?")) {
+        function reinitialiser() {
+            if(confirm("Réinitialiser l'application ?")) {
                 localStorage.clear();
                 profil = null;
-                messagesElaws = [{ role: 'ai', texte: "Bonjour ! Je suis ELAWS." }];
+                messages = [{ role: 'ai', texte: "Bonjour ! Je suis ELAWS." }];
                 render();
             }
         }
@@ -146,7 +139,7 @@
                 app.innerHTML = `
                     <div class="card" style="max-width:400px; margin: 40px auto; text-align:center;">
                         <h2>✨ E.V.A.T. & ELAWS</h2>
-                        <p style="color:var(--text-secondary);">Écosystème Universel Sincère (v24.1)</p>
+                        <p style="color:var(--text-secondary);">Version 22 Stable</p>
                         <input type="text" id="nom" class="input" placeholder="Votre Nom *">
                         <input type="text" id="role" class="input" value="Pasteur / Guide">
                         <button class="btn" onclick="creerProfil()">Démarrer 🚀</button>
@@ -156,7 +149,7 @@
             }
 
             let chatHtml = '';
-            messagesElaws.forEach(m => {
+            messages.forEach(m => {
                 const isAi = m.role === 'ai';
                 chatHtml += `
                     <div style="background:${isAi ? 'rgba(16,185,129,0.1)' : 'var(--bg-color)'}; border-left:3px solid ${isAi ? '#10b981' : '#334155'}; padding:12px; border-radius:8px; margin-bottom:10px;">
@@ -172,24 +165,24 @@
                         <strong>${profil.nom}</strong><br>
                         <small style="color:var(--accent);">${profil.role}</small>
                     </div>
-                    <button onclick="reinitialiserProfil()" style="background:#ef4444; color:white; border:none; padding:6px 10px; border-radius:6px; font-size:11px; cursor:pointer;">Réinitialiser</button>
+                    <button onclick="reinitialiser()" style="background:#ef4444; color:white; border:none; padding:6px 10px; border-radius:6px; font-size:11px; cursor:pointer;">Réinitialiser</button>
                 </header>
 
                 <div class="card">
-                    <h3 style="margin-top:0; color:#10b981;">🤖 Assistant ELAWS (Sincère & Fluide)</h3>
+                    <h3 style="margin-top:0; color:#10b981;">🤖 Assistant ELAWS</h3>
                     <div style="max-height:300px; overflow-y:auto; margin-bottom:15px; padding-right:5px;">
                         ${chatHtml}
                     </div>
                     <div style="display:flex; gap:8px;">
-                        <input type="text" id="inputChat" class="input" placeholder="Écris ton message..." style="margin-bottom:0;" onkeypress="if(event.key==='Enter') envoyerElaws()">
-                        <button class="btn" style="width:auto; padding:0 20px;" onclick="envoyerElaws()">Envoyer</button>
+                        <input type="text" id="inputChat" class="input" placeholder="Écris ton message..." style="margin-bottom:0;" onkeypress="if(event.key==='Enter') envoyerMessage()">
+                        <button class="btn" style="width:auto; padding:0 20px;" onclick="envoyerMessage()">Envoyer</button>
                     </div>
                 </div>
 
                 <div class="card">
-                    <h3 style="margin-top:0; color:#3b82f6;">🪙 Trésorerie & Solde</h3>
+                    <h3 style="margin-top:0; color:#3b82f6;">🪙 Caisse & Trésorerie</h3>
                     <p style="font-size:22px; font-weight:bold; color:#10b981; margin:5px 0;">${profil.solde.toLocaleString()} FCFA</p>
-                    <button class="btn" style="background:#3b82f6; margin-top:8px;" onclick="profil.solde += 5000; sauvegarder(); render(); showToast('+5 000 FCFA ajoutés');">➕ Ajouter une entrée</button>
+                    <button class="btn" style="background:#3b82f6; margin-top:8px;" onclick="profil.solde += 5000; sauvegarder(); render(); showToast('+5 000 FCFA ajoutés');">➕ Ajouter 5 000 FCFA</button>
                 </div>
             `;
         }
