@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. & ELAWS - Écosystème Souverain Immersif (v19)</title>
+    <title>E.V.A.T. & ELAWS - Écosystème Souverain Immersif (v22 Stable)</title>
     
     <link rel="manifest" href="manifest.webmanifest">
     <meta name="theme-color" content="#059669">
@@ -139,12 +139,11 @@
             </div>
         </header>
         <div class="badge-info">
-            <span id="badgeDomaineActif">🌍 Écosystème Souverain Immersif (v19)</span>
+            <span id="badgeDomaineActif">🌍 Écosystème Souverain Immersif (v22 Stable)</span>
             <span class="offline-status" id="reseauStatusIndicator">⚡ Vérification...</span>
         </div>
     </div>
 
-    <!-- BOUTON D'INSTALLATION DIRECTE AUTOMATIQUE -->
     <div id="installCardContainer" class="card" style="border-color:var(--accent); background:rgba(5,150,105,0.15); display:none; text-align:center;">
         <h3 class="card-title" style="color:var(--accent);">📲 Installation Automatique Prête</h3>
         <p class="text">Installez E.V.A.T. directement sur votre téléphone en un seul clic !</p>
@@ -152,7 +151,7 @@
     </div>
 
     <div id="sideMenu" class="sidebar">
-        <h3>📂 Navigation & Outils Immersifs (v19)</h3>
+        <h3>📂 Navigation & Outils Immersifs (v22)</h3>
         <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Paramètres Vocaux</button>
         <button class="menu-item" onclick="switchTab('dashboard')" style="background:rgba(59,130,246,0.15); border:1px solid #3b82f6; color:#3b82f6;">📊 <strong>Tableau de Bord & Score</strong></button>
         <button class="menu-item" onclick="switchTab('agenda')" style="background:rgba(245,158,11,0.15); border:1px solid #f59e0b; color:#f59e0b;">📅 <strong>Agenda & Rendez-vous</strong></button>
@@ -193,8 +192,8 @@
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
                 osc.type = 'triangle';
-                osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
-                osc.frequency.setValueAtTime(880, ctx.currentTime + 0.1); // A5
+                osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+                osc.frequency.setValueAtTime(880, ctx.currentTime + 0.1);
                 gain.gain.setValueAtTime(0.1, ctx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
                 osc.connect(gain);
@@ -338,7 +337,7 @@
                 agendaRdv: [],
                 contactsAppels: [{ id: 1, nom: "Client Test", tel: "+228 98231402", type: "Client" }],
                 discussionsElaws: [
-                    { role: 'ai', texte: `Bonjour ${nom} ! Je suis **ELAWS**, votre assistant expert en **${metierUnique}**. Tous les modules immersifs (v19) sont prêts.` }
+                    { role: 'ai', texte: `Bonjour ${nom} ! Je suis **ELAWS**, votre assistant expert en **${metierUnique}**. Tous les modules sont prêts.` }
                 ]
             };
 
@@ -378,7 +377,6 @@
             element.classList.toggle('active');
         }
 
-        // --- GESTION CAISSE ---
         function ajouterMouvementCaisse(type) {
             const libelle = document.getElementById('caisseLib').value.trim();
             const montant = parseFloat(document.getElementById('caisseMontant').value);
@@ -401,7 +399,6 @@
             showToast(`Suggéré : ${texte}`);
         }
 
-        // --- FACTURATION ---
         function genererFacturePDF() {
             const client = document.getElementById('factClient').value.trim();
             const desc = document.getElementById('factDesc').value.trim();
@@ -434,7 +431,6 @@
             } else { showToast("Remplissez tous les champs de la facture."); }
         }
 
-        // --- NOTES VOCALES ---
         function enregistrerNoteVocale() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) {
@@ -466,7 +462,6 @@
             recognition.start();
         }
 
-        // --- AGENDA & RENDEZ-VOUS ---
         function ajouterRdvAgenda() {
             const titre = document.getElementById('rdvTitre').value.trim();
             const date = document.getElementById('rdvDate').value;
@@ -482,7 +477,6 @@
             } else { showToast("Veuillez remplir tous les champs du rendez-vous."); }
         }
 
-        // --- CALCULATRICE DE MARGE & PRIX ---
         function calculerMargeBeneficiaire() {
             const cout = parseFloat(document.getElementById('calcCout').value);
             const margePourcent = parseFloat(document.getElementById('calcMarge').value);
@@ -502,7 +496,6 @@
             } else { resDiv.innerHTML = '<p style="color:#ef4444; font-size:13px;">Veuillez saisir un coût et un pourcentage valides.</p>'; }
         }
 
-        // --- RECHERCHE GLOBALE ---
         function executerRechercheGlobale() {
             const q = document.getElementById('inputRechercheGlobale').value.trim().toLowerCase();
             const resDiv = document.getElementById('resultatsRechercheDiv');
@@ -545,7 +538,6 @@
             }
         }
 
-        // --- SAUVEGARDE & RESTAURATION ---
         function exporterDonneesJSON() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(listeProfils));
             const downloadAnchor = document.createElement('a');
@@ -577,7 +569,6 @@
             reader.readAsText(file);
         }
 
-        // --- EXPERT & TRADUCTION ---
         function envoyerMessageElawsAI(texteForce) {
             const input = document.getElementById('inputElawsChat');
             const q = texteForce || (input ? input.value.trim() : '');
@@ -587,15 +578,7 @@
             utilisateurActif.discussionsElaws.push({ role: 'user', texte: q });
 
             const metier = utilisateurActif.metierUnique.toLowerCase();
-            let reponse = "";
-
-            if (metier.includes('docteur') || metier.includes('medecin') || metier.includes('sante')) {
-                reponse = `[Assistant Médical ELAWS] Analyse clinique pour "${q}". Recommandation : Examen approfondi et traitement adapté.`;
-            } else if (metier.includes('mecanicien') || metier.includes('meca')) {
-                reponse = `[Expert Technique ELAWS] Diagnostic panne pour "${q}" : Vérification allumage et capteurs OBD.`;
-            } else {
-                reponse = `[Expert Métier ELAWS] En tant qu'expert en ${utilisateurActif.metierUnique}, voici mon conseil pour "${q}" : Structurer l'action et suivre les indicateurs.`;
-            }
+            let reponse = `[Expert Métier ELAWS] En tant qu'expert en ${utilisateurActif.metierUnique}, voici mon conseil pour "${q}" : Structurer l'action et suivre les indicateurs.`;
 
             utilisateurActif.discussionsElaws.push({ role: 'ai', texte: reponse });
             sauvegarderProfilActif();
@@ -680,7 +663,7 @@
                     <div class="card" style="border-color:var(--accent); max-width:500px; margin: 10px auto; text-align:center;">
                         <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo" style="width:72px; height:72px; margin-bottom:10px; border-radius:16px; border:2px solid var(--accent);">
                         <h2 style="color:var(--accent); margin-top:0;">✨ E.V.A.T. & ELAWS</h2>
-                        <p class="text" style="text-align:center;">Écosystème Souverain Immersif (v19)</p>
+                        <p class="text" style="text-align:center;">Écosystème Souverain Immersif (v22 Stable)</p>
                         
                         ${profilsExistantsHtml}
 
@@ -731,7 +714,7 @@
                             </div>
                             <button class="btn-top" onclick="changerProfilSession()">🔄 Changer</button>
                         </div>
-                        <p class="text">Métier actif : <strong style="color:var(--accent);">${utilisateurActif.metierUnique}</strong>. Effets sonores, animations immersives et score activés (v19).</p>
+                        <p class="text">Métier actif : <strong style="color:var(--accent);">${utilisateurActif.metierUnique}</strong>. Effets sonores, animations immersives et score activés (v22).</p>
 
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-top:15px; border:1px solid var(--border-color);">
                             <h4 style="margin:0 0 8px 0; color:var(--accent);">🗣️ Voix d'ELAWS :</h4>
