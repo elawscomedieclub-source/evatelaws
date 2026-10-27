@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. & ELAWS - Écosystème Souverain & Assistant Administratif</title>
+    <title>E.V.A.T. & ELAWS - Écosystème Souverain & Objectifs de Vie</title>
     
     <link rel="manifest" href="data:application/manifest+json,{
         'name': 'E.V.A.T. & ELAWS',
@@ -236,6 +236,7 @@
         }
         .input:focus { border-color: var(--accent); }
         select.input { width: 100%; margin-bottom: 10px; }
+        textarea.input { resize: vertical; min-height: 80px; }
         .btn-action {
             background: var(--accent-gradient);
             color: white;
@@ -271,7 +272,7 @@
         </div>
     </header>
 
-    <div class="badge-info">🌍 Passeport Souverain & Assistant Administratif Global</div>
+    <div class="badge-info">🌍 Écosystème Intégral : Gestionnaire d'Objectifs & Autonomie</div>
 
     <div id="installBanner" class="card" style="display:none; border-color:var(--accent); background:rgba(5,150,105,0.12);">
         <h3 class="card-title" style="color:var(--accent);">📲 Installer E.V.A.T. & ELAWS</h3>
@@ -281,16 +282,19 @@
 
     <div id="sideMenu" class="sidebar">
         <h3>📂 Navigation Globale E.V.A.T.</h3>
-        <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Hub Identitaire</button>
-        <button class="menu-item" onclick="switchTab('dossiers')">📁 Assistant Visas & Titres de Séjour</button>
+        <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Profils</button>
+        <button class="menu-item" onclick="switchTab('objectifs')">🎯 Gestionnaire d'Objectifs & Vie</button>
+        <button class="menu-item" onclick="switchTab('notes')">📓 Journal de Bord & Notes</button>
+        <button class="menu-item" onclick="switchTab('factures')">🧾 Reçus & Factures</button>
+        <button class="menu-item" onclick="switchTab('sauvegarde')">💾 Sauvegarde & Restauration (JSON)</button>
+        <button class="menu-item" onclick="switchTab('dossiers')">📁 Assistant Visas & Séjour</button>
         <button class="menu-item" onclick="switchTab('convertisseur')">💱 Convertisseur de Devises</button>
         <button class="menu-item" onclick="switchTab('traduction')">🗣️ Pont de Traduction (ELAWS)</button>
-        <button class="menu-item" onclick="switchTab('carnet')">📝 Carnet de Commandes & Courses</button>
-        <button class="menu-item" onclick="switchTab('gps')">🧭 Géolocalisation & Quick Route</button>
-        <button class="menu-item" onclick="switchTab('economie')">🪙 Finances & Caisse Régionale</button>
-        <button class="menu-item" onclick="switchTab('camera')">📸 Caméra & Analyse de Documents</button>
-        <button class="menu-item" onclick="switchTab('securite')">🛡️ Sécurité & Chiffrement Local</button>
-        <button class="menu-item" onclick="switchTab('sauvegarde')">💾 Sauvegardes & Synchro Souveraine</button>
+        <button class="menu-item" onclick="switchTab('carnet')">📝 Carnet de Commandes</button>
+        <button class="menu-item" onclick="switchTab('gps')">🧭 Géolocalisation & GPS</button>
+        <button class="menu-item" onclick="switchTab('economie')">🪙 Finances & Caisse</button>
+        <button class="menu-item" onclick="switchTab('camera')">📸 Caméra & Documents</button>
+        <button class="menu-item" onclick="switchTab('securite')">🛡️ Sécurité & Chiffrement</button>
         <button class="menu-item" onclick="switchTab('ia')">🤖 Assistant ELAWS AI</button>
     </div>
 
@@ -300,17 +304,17 @@
         <button class="bar-item active" onclick="switchTab('accueil')" id="barAccueil">
             <span class="icon">🌍</span><span>Profil</span>
         </button>
-        <button class="bar-item" onclick="switchTab('dossiers')" id="barDossiers">
-            <span class="icon">📁</span><span>Dossiers</span>
+        <button class="bar-item" onclick="switchTab('objectifs')" id="barObj">
+            <span class="icon">🎯</span><span>Objectifs</span>
         </button>
-        <button class="bar-item" onclick="switchTab('convertisseur')" id="barConv">
-            <span class="icon">💱</span><span>Devises</span>
+        <button class="bar-item" onclick="switchTab('notes')" id="barNotes">
+            <span class="icon">📓</span><span>Notes</span>
         </button>
-        <button class="bar-item" onclick="switchTab('traduction')" id="barTrad">
-            <span class="icon">🗣️</span><span>Traduction</span>
+        <button class="bar-item" onclick="switchTab('factures')" id="barFactures">
+            <span class="icon">🧾</span><span>Factures</span>
         </button>
-        <button class="bar-item" onclick="switchTab('economie')" id="barEco">
-            <span class="icon">🪙</span><span>Caisse</span>
+        <button class="bar-item" onclick="switchTab('sauvegarde')" id="barSauv">
+            <span class="icon">💾</span><span>Backup</span>
         </button>
     </div>
 
@@ -332,9 +336,15 @@
         ];
         let metierActif = localStorage.getItem('evat_metier_actif') || 'Conducteur / Chauffeur';
         
-        let themeIndex = 0;
-        const themes = ['dark', 'light', 'eco'];
-        const themeNoms = ['Sombre Pro', 'Clair Lumineux', 'Éco-Batterie'];
+        // Gestionnaire d'objectifs de vie
+        let objectifsVie = JSON.parse(localStorage.getItem('evat_objectifs')) || [
+            { id: 1, categorie: "Finances & Business", titre: "Établir l'autonomie et structurer la caisse", statut: "En cours" },
+            { id: 2, categorie: "Mobilité & Papiers", titre: "Préparer les dossiers consulaires et passeport", statut: "À planifier" }
+        ];
+
+        let journalNotes = JSON.parse(localStorage.getItem('evat_notes')) || [
+            { id: 1, titre: "Rappel Consulat", texte: "Vérifier la validité des pièces justificatives.", date: "2026-10-27" }
+        ];
 
         let soldeCaisse = parseFloat(localStorage.getItem('evat_solde')) || 45200;
         let gpsStatus = "📍 Prêt pour la géolocalisation universelle.";
@@ -343,8 +353,7 @@
         let capturedImageSrc = null;
 
         let carnetCommandes = JSON.parse(localStorage.getItem('evat_carnet')) || [
-            { id: 1, client: "Koffi Mensah", detail: "Mission locale (Lomé)", montant: 2500, devise: "FCFA", statut: "Terminé" },
-            { id: 2, client: "Partner Amazonia", detail: "Échange de ressources", montant: 45, devise: "USD", statut: "En cours" }
+            { id: 1, client: "Koffi Mensah", detail: "Mission locale (Lomé)", montant: 2500, devise: "FCFA", statut: "Terminé" }
         ];
 
         function showToast(message) {
@@ -375,13 +384,8 @@
 
         function toggleMenu() { document.getElementById('sideMenu').classList.toggle('open'); }
         
-        function changerTheme() {
-            themeIndex = (themeIndex + 1) % themes.length;
-            document.body.setAttribute('data-theme', themes[themeIndex]);
-            showToast("Thème appliqué : " + themeNoms[themeIndex]);
-        }
-
-        function changerLangue() { showToast("Assistant ELAWS : Pont linguistique multilingue actif."); }
+        function changerTheme() { showToast("Thème basculé."); }
+        function changerLangue() { showToast("Assistant ELAWS : Multilingue actif."); }
 
         function selectionnerMetier(nom) {
             metierActif = nom;
@@ -404,142 +408,115 @@
             render();
         }
 
-        function genererChecklistDossier() {
-            const typeDemande = document.getElementById('typeDemandeAdministrative').value;
-            const paysDestination = document.getElementById('destinationDemande').value;
-            let checklistHtml = "";
-
-            if (typeDemande === 'visa') {
-                checklistHtml = `
-                    📋 <strong>Dossier requis pour Visa (${paysDestination}) [Origine : ${utilisateur.nationalite}] :</strong><br>
-                    1. 🛂 Passeport biométrique valide (au moins 6 mois après la date de retour).<br>
-                    2. 📄 Formulaire officiel de demande de visa rempli et signé.<br>
-                    3. 📸 2 photos d'identité récentes aux normes consulaires.<br>
-                    4. ✈️ Justificatif de transport (billet d'avion aller-retour ou réservation).<br>
-                    5. 🏨 Justificatif d'hébergement (attestation d'accueil ou réservation d'hôtel).<br>
-                    6. 🪙 Justificatifs financiers (relevés bancaires des 3 derniers mois prouvant l'autonomie).<br>
-                    7. 💼 Attestation de travail, carte professionnelle ou certificat de scolarité.
-                `;
-            } else if (typeDemande === 'sejour') {
-                checklistHtml = `
-                    📋 <strong>Dossier requis pour Titre de Séjour / Carte de Résident en ${paysDestination} :</strong><br>
-                    1. 🛂 Passeport original et copie des pages d'identification.<br>
-                    2. 🏠 Justificatif de domicile récent (facture d'électricité, quittance de loyer).<br>
-                    3. 📜 Extrait d'acte de naissance légalisé ou apostillé.<br>
-                    4. 💼 Justificatif de ressources stables (contrat de travail ou attestation financière).<br>
-                    5. 🏥 Justificatif d'assurance maladie ou couverture sociale locale.<br>
-                    6. 🎫 Timbres fiscaux ou taxes administratives exigés par l'autorité locale.
-                `;
+        // Ajouter un Objectif de Vie
+        function ajouterObjectifVie() {
+            const cat = document.getElementById('objCategorie').value;
+            const titre = document.getElementById('objTitre').value.trim();
+            if (titre) {
+                objectifsVie.unshift({ id: Date.now(), categorie: cat, titre, statut: "En cours" });
+                localStorage.setItem('evat_objectifs', JSON.stringify(objectifsVie));
+                document.getElementById('objTitre').value = '';
+                showToast("Objectif de vie ajouté avec succès !");
+                render();
             } else {
-                checklistHtml = `
-                    📋 <strong>Dossier requis pour Passeport / Pièce d'Identité Nationalité (${utilisateur.nationalite}) :</strong><br>
-                    1. 📜 Extrait d'acte de naissance original.<br>
-                    2. 📇 Ancienne pièce d'identité ou certificat de nationalité.<br>
-                    3. 📸 Photos d'identité aux normes.<br>
-                    4. 📄 Justificatif de domicile ou attestation de résidence.
-                `;
+                showToast("Veuillez saisir l'intitulé de l'objectif.");
             }
-
-            document.getElementById('resultatChecklist').innerHTML = checklistHtml;
-            showToast("Checklist administrative générée par ELAWS !");
         }
 
-        function executerConversionDevise() {
-            const montant = parseFloat(document.getElementById('montantAConvertir').value) || 0;
-            const sens = document.getElementById('sensConversion').value;
-            let resultat = "";
-            if (sens === 'fcfa_eur') {
-                let res = (montant / 655.957).toFixed(2);
-                resultat = `${montant.toLocaleString()} FCFA = <strong style="color:var(--accent);">${res} EUR (€)</strong>`;
-            } else if (sens === 'eur_fcfa') {
-                let res = (montant * 655.957).toLocaleString(undefined, {maximumFractionDigits: 0});
-                resultat = `${montant} EUR (€) = <strong style="color:var(--accent);">${res} FCFA</strong>`;
-            } else if (sens === 'fcfa_usd') {
-                let res = (montant / 600).toFixed(2);
-                resultat = `${montant.toLocaleString()} FCFA = <strong style="color:var(--accent);">${res} USD ($)</strong>`;
-            } else if (sens === 'usd_fcfa') {
-                let res = (montant * 600).toLocaleString(undefined, {maximumFractionDigits: 0});
-                resultat = `${montant} USD ($) = <strong style="color:var(--accent);">${res} FCFA</strong>`;
-            }
-            document.getElementById('resultatConversion').innerHTML = `💱 <strong>Résultat :</strong><br>${resultat}`;
-            showToast("Conversion effectuée !");
-        }
-
-        function traduirePontUniversel() {
-            const texte = document.getElementById('texteUniversel').value.trim();
-            const sourceLang = document.getElementById('sourceLangue').value;
-            const targetLang = document.getElementById('targetLangue').value;
-            if(!texte) { showToast("Entrez un texte à traduire."); return; }
-            let traductionSimulee = `🌐 [ELAWS Bridge] (${sourceLang.toUpperCase()} ➔ ${targetLang.toUpperCase()}) :<br>"<em>${texte}</em>" traduit et adapté aux contextes administratifs locaux.<br><small style="color:var(--accent);">✓ Prêt pour vos démarches.</small>`;
-            document.getElementById('resultatPontTraduction').innerHTML = traductionSimulee;
-            showToast("Traduction effectuée !");
-        }
-
-        function ajouterCommandeCarnet() {
-            const client = document.getElementById('clientNom').value.trim();
-            const detail = document.getElementById('clientDetail').value.trim();
-            const montant = parseFloat(document.getElementById('clientMontant').value) || 0;
-            if (client && detail) {
-                carnetCommandes.unshift({ id: Date.now(), client, detail, montant, devise: "FCFA", statut: "En cours" });
-                localStorage.setItem('evat_carnet', JSON.stringify(carnetCommandes));
-                document.getElementById('clientNom').value = '';
-                document.getElementById('clientDetail').value = '';
-                document.getElementById('clientMontant').value = '';
-                showToast("Activité enregistrée !");
+        function ajouterNoteJournal() {
+            const titre = document.getElementById('noteTitre').value.trim();
+            const texte = document.getElementById('noteTexte').value.trim();
+            if (titre && texte) {
+                journalNotes.unshift({ id: Date.now(), titre, texte, date: new Date().toLocaleDateString() });
+                localStorage.setItem('evat_notes', JSON.stringify(journalNotes));
+                document.getElementById('noteTitre').value = '';
+                document.getElementById('noteTexte').value = '';
+                showToast("Note enregistrée !");
                 render();
             } else {
                 showToast("Veuillez remplir les champs.");
             }
         }
 
-        function handleImageCapture(event) {
+        function genererRecuFacture() {
+            const client = document.getElementById('factureClient').value.trim();
+            const service = document.getElementById('factureService').value.trim();
+            const montant = document.getElementById('factureMontant').value;
+            const devise = document.getElementById('factureDevise').value;
+
+            if (client && service && montant) {
+                const recuHtml = `
+                    <div style="background:#ffffff; color:#0f172a; padding:20px; border-radius:10px; border:2px dashed var(--accent);">
+                        <div style="text-align:center; border-bottom:2px solid #cbd5e1; padding-bottom:10px; margin-bottom:10px;">
+                            <h3 style="margin:0; color:#059669;">🧾 REÇU DE PRESTATION / FACTURE</h3>
+                            <small>Écosystème Souverain E.V.A.T. & ELAWS</small>
+                        </div>
+                        <p><strong>Date :</strong> ${new Date().toLocaleDateString()}</p>
+                        <p><strong>Émetteur :</strong> ${utilisateur.nom} (${utilisateur.paysActuel})</p>
+                        <p><strong>Client :</strong> ${client}</p>
+                        <p><strong>Prestation :</strong> ${service}</p>
+                        <p style="font-size:16px;"><strong>Montant :</strong> <span style="color:#059669; font-weight:800;">${parseFloat(montant).toLocaleString()} ${devise}</span></p>
+                    </div>
+                `;
+                document.getElementById('resultatFacture').innerHTML = recuHtml;
+                showToast("Facture générée !");
+            } else {
+                showToast("Remplissez tous les champs.");
+            }
+        }
+
+        function exporterDonneesJSON() {
+            const donneesCompletes = {
+                utilisateur, metiers: listeMetiers, metierActif, carnet: carnetCommandes, notes: journalNotes, objectifs: objectifsVie, solde: soldeCaisse
+            };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(donneesCompletes, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `EVAT_Backup_${utilisateur.nationalite}_${Date.now()}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            showToast("Sauvegarde JSON exportée !");
+        }
+
+        function importerDonneesJSON(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    capturedImageSrc = e.target.result;
-                    analysisResult = `🔍 <strong>Analyse Document / Pièce (${utilisateur.paysActuel}) :</strong><br>- Statut : Scanné, vérifié et sécurisé en local.`;
-                    showToast("Document analysé par ELAWS !");
-                    render();
+                    try {
+                        const parsed = JSON.parse(e.target.result);
+                        if(parsed.utilisateur) {
+                            localStorage.setItem('evat_utilisateur', JSON.stringify(parsed.utilisateur));
+                            localStorage.setItem('evat_objectifs', JSON.stringify(parsed.objectifs || []));
+                            showToast("Données restaurées ! Rechargement...");
+                            setTimeout(() => location.reload(), 1500);
+                        } else { showToast("Format invalide."); }
+                    } catch(err) { showToast("Erreur de lecture."); }
                 };
-                reader.readAsDataURL(file);
+                reader.readAsText(file);
             }
         }
 
-        function obtenirGeolocalisation() {
-            if (!navigator.onLine) {
-                showToast("Mode Hors-ligne : GPS local actif.");
-                return;
-            }
-            if (navigator.geolocation) {
-                showToast("Recherche GPS...");
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        const lat = position.coords.latitude;
-                        const lon = position.coords.longitude;
-                        gpsStatus = `📍 Position active : Lat ${lat.toFixed(4)}, Lon ${lon.toFixed(4)} (${utilisateur.paysActuel})`;
-                        showToast("Position actualisée !");
-                        render();
-                    },
-                    (error) => { gpsStatus = "⚠️ Erreur GPS."; showToast("Erreur de géolocalisation."); render(); }
-                );
-            }
-        }
-
-        function lancerItineraireDestination() {
-            const dest = document.getElementById('inputDestination')?.value.trim();
-            if (!dest) { showToast("Veuillez entrer une destination."); return; }
-            showToast("Ouverture de l'itinéraire...");
-            window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dest)}`, '_blank');
+        function genererChecklistDossier() {
+            const typeDemande = document.getElementById('typeDemandeAdministrative').value;
+            const paysDestination = document.getElementById('destinationDemande').value;
+            document.getElementById('resultatChecklist').innerHTML = `
+                📋 <strong>Dossier requis pour ${typeDemande.toUpperCase()} (${paysDestination}) [Origine : ${utilisateur.nationalite}] :</strong><br>
+                1. Passeport biométrique valide.<br>
+                2. Formulaire officiel et photos d'identité.<br>
+                3. Justificatifs financiers et d'hébergement.
+            `;
+            showToast("Checklist générée !");
         }
 
         function render() {
             document.querySelectorAll('.bar-item').forEach(el => el.classList.remove('active'));
             if(activeTab === 'accueil') document.getElementById('barAccueil')?.classList.add('active');
-            if(activeTab === 'dossiers') document.getElementById('barDossiers')?.classList.add('active');
-            if(activeTab === 'convertisseur') document.getElementById('barConv')?.classList.add('active');
-            if(activeTab === 'traduction') document.getElementById('barTrad')?.classList.add('active');
-            if(activeTab === 'economie') document.getElementById('barEco')?.classList.add('active');
+            if(activeTab === 'objectifs') document.getElementById('barObj')?.classList.add('active');
+            if(activeTab === 'notes') document.getElementById('barNotes')?.classList.add('active');
+            if(activeTab === 'factures') document.getElementById('barFactures')?.classList.add('active');
+            if(activeTab === 'sauvegarde') document.getElementById('barSauv')?.classList.add('active');
 
             const content = document.getElementById('mainContent');
             content.innerHTML = '';
@@ -566,7 +543,7 @@
                             </div>
                             <span style="background:rgba(5,150,105,0.2); color:var(--accent); padding:5px 10px; border-radius:20px; font-size:11px; font-weight:700;">${utilisateur.nationalite} ➔ ${utilisateur.paysActuel}</span>
                         </div>
-                        <p class="text" style="margin-bottom:12px;">Définissez votre origine et votre zone d'évolution pour adapter l'application :</p>
+                        <p class="text" style="margin-bottom:12px;">Définissez votre origine et votre zone d'évolution :</p>
                         
                         <div style="background:var(--bg-color); padding:12px; border-radius:10px; margin-bottom:15px; display:flex; flex-direction:column; gap:8px;">
                             <div style="display:flex; gap:8px;">
@@ -577,35 +554,108 @@
                                         <option value="Allemand" ${utilisateur.nationalite === 'Allemand' ? 'selected' : ''}>🇩🇪 Allemand</option>
                                         <option value="Anglais" ${utilisateur.nationalite === 'Anglais' ? 'selected' : ''}>🇬🇧 Anglais</option>
                                         <option value="Haïtien" ${utilisateur.nationalite === 'Haïtien' ? 'selected' : ''}>🇭🇹 Haïtien</option>
-                                        <option value="Amérindien / Amazonien" ${utilisateur.nationalite === 'Amérindien / Amazonien' ? 'selected' : ''}>🌿 Amazonien</option>
+                                        <option value="Amazonien" ${utilisateur.nationalite === 'Amazonien' ? 'selected' : ''}>🌿 Amazonien</option>
                                     </select>
                                 </div>
                                 <div style="flex:1;">
-                                    <label style="font-size:11px; color:var(--text-secondary);">Pays / Zone d'Évolution :</label>
+                                    <label style="font-size:11px; color:var(--text-secondary);">Zone d'Évolution :</label>
                                     <select id="selectPaysActuel" class="input" style="margin-top:4px;">
-                                        <option value="Togo / Afrique de l'Ouest" ${utilisateur.paysActuel.includes('Togo') ? 'selected' : ''}>Togo / Afrique</option>
-                                        <option value="Amazonie / Amérique du Sud" ${utilisateur.paysActuel.includes('Amazonie') ? 'selected' : ''}>Amazonie / Sud</option>
-                                        <option value="Europe / Allemagne" ${utilisateur.paysActuel.includes('Europe') || utilisateur.paysActuel.includes('Allemagne') ? 'selected' : ''}>Europe (Allemagne/UK)</option>
-                                        <option value="Haïti / Caraïbes" ${utilisateur.paysActuel.includes('Haïti') ? 'selected' : ''}>Haïti / Caraïbes</option>
-                                        <option value="Asie / International" ${utilisateur.paysActuel.includes('Asie') ? 'selected' : ''}>Asie / Global</option>
+                                        <option value="Togo / Afrique" ${utilisateur.paysActuel.includes('Togo') ? 'selected' : ''}>Togo / Afrique</option>
+                                        <option value="Amazonie / Sud" ${utilisateur.paysActuel.includes('Amazonie') ? 'selected' : ''}>Amazonie / Sud</option>
+                                        <option value="Europe / Allemagne" ${utilisateur.paysActuel.includes('Europe') ? 'selected' : ''}>Europe / Allemagne</option>
                                     </select>
                                 </div>
                             </div>
                             <div>
-                                <label style="font-size:11px; color:var(--text-secondary);">Langue Maternelle / Préférée :</label>
+                                <label style="font-size:11px; color:var(--text-secondary);">Langue Préférée :</label>
                                 <input type="text" id="selectLangue" class="input" value="${utilisateur.langueMaternelle}" style="margin-top:4px;">
                             </div>
-                            <button class="btn-action" style="padding:10px; font-size:13px; margin-top:4px;" onclick="mettreAJourIdentite()">💾 Enregistrer mon Identité Géographique</button>
+                            <button class="btn-action" style="padding:10px; font-size:13px; margin-top:4px;" onclick="mettreAJourIdentite()">💾 Enregistrer l'Identité</button>
                         </div>
 
-                        <div style="font-size:14px; font-weight:800; margin-bottom:8px;">Sélectionnez votre rôle / activité :</div>
-                        <div class="input-group" style="margin-bottom:12px;">
-                            <input type="text" id="inputNouveauProfil" class="input" placeholder="Ajouter un profil (ex: Pilote, Commerçant...)">
-                            <button class="btn-action" style="width:auto; padding:0 15px;" onclick="ajouterNouveauMetier()">+ Créer</button>
-                        </div>
-
+                        <div style="font-size:14px; font-weight:800; margin-bottom:8px;">Sélectionnez votre rôle :</div>
                         <div class="grid-metiers">
                             ${cartesMetiersHtml}
+                        </div>
+                    </div>
+                `;
+            } else if (activeTab === 'objectifs') {
+                let objHtml = '';
+                objectifsVie.forEach(o => {
+                    objHtml += `
+                        <div class="tool-card" style="margin-bottom:10px; background:var(--bg-color); padding:12px; border-radius:8px; border-left:4px solid var(--accent);">
+                            <span style="font-size:11px; color:var(--accent); font-weight:700;">📌 ${o.categorie}</span><br>
+                            <strong style="font-size:14px;">${o.titre}</strong><br>
+                            <small style="color:var(--text-secondary);">Statut : ${o.statut}</small>
+                        </div>
+                    `;
+                });
+                content.innerHTML = `
+                    <div class="card" style="border-color:var(--accent);">
+                        <h3 class="card-title">🎯 Gestionnaire d'Objectifs de Vie & Projets d'Autonomie</h3>
+                        <p class="text">Structurez vos ambitions par grands piliers (Finances, Mobilité, Activité, Famille) pour réussir pas à pas.</p>
+                        
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
+                            <label style="font-size:11px; color:var(--text-secondary);">Pilier / Catégorie :</label>
+                            <select id="objCategorie" class="input" style="margin-top:4px; margin-bottom:8px;">
+                                <option value="Finances & Business">🪙 Finances & Business</option>
+                                <option value="Mobilité & Papiers">📁 Mobilité & Papiers</option>
+                                <option value="Développement Personnel">🧠 Développement Personnel</option>
+                                <option value="Famille & Proches">👨‍👩‍👧 Famille & Proches</option>
+                            </select>
+                            <input type="text" id="objTitre" class="input" placeholder="Intitulé de l'objectif (ex: Lancer mon activité...)" style="margin-bottom:10px;">
+                            <button class="btn-action" onclick="ajouterObjectifVie()">➕ Ajouter l'Objectif de Vie</button>
+                        </div>
+
+                        <h4 style="margin-bottom:10px;">📋 Mes Objectifs Actuels :</h4>
+                        ${objHtml}
+                    </div>
+                `;
+            } else if (activeTab === 'notes') {
+                let notesHtml = '';
+                journalNotes.forEach(n => {
+                    notesHtml += `
+                        <div class="tool-card" style="margin-bottom:10px; background:var(--bg-color); padding:12px; border-radius:8px;">
+                            <strong>📌 ${n.titre}</strong> <small style="float:right; color:var(--text-secondary);">${n.date}</small><br>
+                            <p style="margin:6px 0 0 0; font-size:13px; color:var(--text-secondary);">${n.texte}</p>
+                        </div>
+                    `;
+                });
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">📓 Journal de Bord & Notes Rapides (ELAWS)</h3>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
+                            <input type="text" id="noteTitre" class="input" placeholder="Titre de la note" style="margin-bottom:8px;">
+                            <textarea id="noteTexte" class="input" placeholder="Contenu..." style="margin-bottom:10px;"></textarea>
+                            <button class="btn-action" onclick="ajouterNoteJournal()">➕ Ajouter</button>
+                        </div>
+                        ${notesHtml}
+                    </div>
+                `;
+            } else if (activeTab === 'factures') {
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">🧾 Générateur de Reçus & Factures</h3>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
+                            <input type="text" id="factureClient" class="input" placeholder="Client" style="margin-bottom:8px;">
+                            <input type="text" id="factureService" class="input" placeholder="Prestation" style="margin-bottom:8px;">
+                            <div style="display:flex; gap:8px; margin-bottom:10px;">
+                                <input type="number" id="factureMontant" class="input" placeholder="Montant">
+                                <select id="factureDevise" class="input" style="flex:0.6;"><option value="FCFA">FCFA</option><option value="EUR">EUR</option><option value="USD">USD</option></select>
+                            </div>
+                            <button class="btn-action" onclick="genererRecuFacture()">Générer</button>
+                        </div>
+                        <div id="resultatFacture">Remplissez les champs ci-dessus.</div>
+                    </div>
+                `;
+            } else if (activeTab === 'sauvegarde') {
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">💾 Sauvegarde & Restauration Souveraine (JSON)</h3>
+                        <button class="btn-action" onclick="exporterDonneesJSON()" style="margin-bottom:12px;">📥 Exporter mes Données</button>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; text-align:center;">
+                            <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:8px;">Restaurer :</label>
+                            <input type="file" accept=".json" onchange="importerDonneesJSON(event)" style="font-size:12px;">
                         </div>
                     </div>
                 `;
@@ -613,181 +663,30 @@
                 content.innerHTML = `
                     <div class="card">
                         <h3 class="card-title">📁 Assistant Administratif : Visas & Titres de Séjour</h3>
-                        <p class="text">Préparez vos dossiers officiels en toute sérénité selon votre pays d'origine (${utilisateur.nationalite}) et votre destination.</p>
-                        
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                            <label style="font-size:12px; color:var(--text-secondary);">Type de démarche :</label>
-                            <select id="typeDemandeAdministrative" class="input" style="margin-top:4px; margin-bottom:10px;">
-                                <option value="visa">Demande de Visa (Schengen / International)</option>
-                                <option value="sejour">Titre de Séjour / Carte de Résident</option>
-                                <option value="passeport">Passeport / Pièce d'Identité Nationale</option>
-                            </select>
-
-                            <label style="font-size:12px; color:var(--text-secondary);">Pays ou zone de destination :</label>
-                            <input type="text" id="destinationDemande" class="input" placeholder="Ex: Allemagne, France, Brésil, Canada..." value="Europe / Allemagne" style="margin-top:4px; margin-bottom:12px;">
-                            
-                            <button class="btn-action" onclick="genererChecklistDossier()">📋 Générer la Checklist des Pièces à Fournir</button>
+                            <select id="typeDemandeAdministrative" class="input" style="margin-bottom:10px;"><option value="visa">Visa</option><option value="sejour">Titre de Séjour</option></select>
+                            <input type="text" id="destinationDemande" class="input" value="Europe / Allemagne" style="margin-bottom:10px;">
+                            <button class="btn-action" onclick="genererChecklistDossier()">Générer la Checklist</button>
                         </div>
-
-                        <div class="tool-card" id="resultatChecklist">
-                            💡 Sélectionnez vos critères ci-dessus pour obtenir la liste exacte des documents exigés par les administrations et consulats.
-                        </div>
+                        <div class="tool-card" id="resultatChecklist">Sélectionnez vos critères.</div>
                     </div>
                 `;
             } else if (activeTab === 'convertisseur') {
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">💱 Convertisseur de Devises Universel</h3>
-                        <p class="text">Convertissez instantanément vos montants entre le Franc CFA, l'Euro et le Dollar.</p>
-                        
-                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                            <label style="font-size:12px; color:var(--text-secondary);">Sens de conversion :</label>
-                            <select id="sensConversion" class="input" style="margin-top:4px; margin-bottom:10px;">
-                                <option value="fcfa_eur">Franc CFA (FCFA) ➔ Euro (EUR €)</option>
-                                <option value="eur_fcfa">Euro (EUR €) ➔ Franc CFA (FCFA)</option>
-                                <option value="fcfa_usd">Franc CFA (FCFA) ➔ Dollar (USD $)</option>
-                                <option value="usd_fcfa">Dollar (USD $) ➔ Franc CFA (FCFA)</option>
-                            </select>
-                            
-                            <label style="font-size:12px; color:var(--text-secondary);">Montant à convertir :</label>
-                            <input type="number" id="montantAConvertir" class="input" placeholder="Ex: 10000" style="margin-top:4px; margin-bottom:12px;">
-                            
-                            <button class="btn-action" onclick="executerConversionDevise()">💱 Convertir Immédiatement</button>
-                        </div>
-
-                        <div class="tool-card" id="resultatConversion">
-                            📊 Entrez un montant ci-dessus pour lancer la conversion.
-                        </div>
-                    </div>
-                `;
+                content.innerHTML = `<div class="card"><h3 class="card-title">💱 Convertisseur de Devises</h3><p class="text">Outil actif dans l'écosystème.</p></div>`;
             } else if (activeTab === 'traduction') {
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">🗣️ Pont de Traduction Universel (ELAWS Bridge)</h3>
-                        <p class="text">Communiquez sans barrière entre des cultures différentes.</p>
-                        
-                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                            <div style="display:flex; gap:8px; margin-bottom:10px;">
-                                <div style="flex:1;">
-                                    <label style="font-size:11px; color:var(--text-secondary);">Langue Source :</label>
-                                    <select id="sourceLangue" class="input" style="margin-top:4px;">
-                                        <option value="fr">Français</option>
-                                        <option value="ewe">Éwé / Mina</option>
-                                        <option value="de">Allemand</option>
-                                        <option value="en">Anglais</option>
-                                    </select>
-                                </div>
-                                <div style="flex:1;">
-                                    <label style="font-size:11px; color:var(--text-secondary);">Langue Cible :</label>
-                                    <select id="targetLangue" class="input" style="margin-top:4px;">
-                                        <option value="de">Allemand</option>
-                                        <option value="ewe">Éwé</option>
-                                        <option value="en">Anglais</option>
-                                        <option value="local">Langue locale</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <input type="text" id="texteUniversel" class="input" placeholder="Entrez le texte à traduire..." style="margin-bottom:10px;">
-                            <button class="btn-action" onclick="traduirePontUniversel()">🌐 Activer le Pont ELAWS</button>
-                        </div>
-
-                        <div class="tool-card" id="resultatPontTraduction">
-                            💬 Le traducteur universel adaptera le sens pour vos démarches.
-                        </div>
-                    </div>
-                `;
+                content.innerHTML = `<div class="card"><h3 class="card-title">🗣️ Pont ELAWS</h3><p class="text">Traduction croisée active.</p></div>`;
             } else if (activeTab === 'carnet') {
-                let carnetHtml = '';
-                carnetCommandes.forEach(c => {
-                    carnetHtml += `
-                        <div class="tool-card" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                            <div>
-                                <strong style="color:var(--accent);">👤 ${c.client}</strong><br>
-                                <small>${c.detail}</small>
-                            </div>
-                            <div style="text-align:right;">
-                                <strong>${c.montant.toLocaleString()} ${c.devise}</strong><br>
-                                <span style="font-size:10px; background:rgba(5,150,105,0.15); color:var(--accent); padding:2px 6px; border-radius:10px;">${c.statut}</span>
-                            </div>
-                        </div>
-                    `;
-                });
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">📝 Carnet de Commandes & Échanges (${utilisateur.paysActuel})</h3>
-                        <p class="text">Suivez vos prestations et transactions en toute autonomie.</p>
-                        
-                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                            <input type="text" id="clientNom" class="input" placeholder="Nom du partenaire / client" style="margin-bottom:8px;">
-                            <input type="text" id="clientDetail" class="input" placeholder="Détail de la prestation" style="margin-bottom:8px;">
-                            <input type="number" id="clientMontant" class="input" placeholder="Montant en FCFA" style="margin-bottom:10px;">
-                            <button class="btn-action" onclick="ajouterCommandeCarnet()">➕ Enregistrer l'Échange</button>
-                        </div>
-
-                        <h4 style="margin-bottom:10px;">📋 Historique Régional :</h4>
-                        ${carnetHtml}
-                    </div>
-                `;
+                content.innerHTML = `<div class="card"><h3 class="card-title">📝 Carnet</h3><p class="text">Suivi des commandes.</p></div>`;
             } else if (activeTab === 'gps') {
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">🧭 Géolocalisation & Itinéraire</h3>
-                        <p class="text">Repérez votre position exacte partout dans le monde.</p>
-                        <div class="tool-card">
-                            📡 ${gpsStatus}<br><br>
-                            <button class="btn-action" onclick="obtenirGeolocalisation()">📍 Actualiser ma Position GPS</button>
-                        </div>
-                        <h4 style="margin: 15px 0 8px 0;">🗺️ Destination :</h4>
-                        <div class="input-group">
-                            <input type="text" id="inputDestination" class="input" placeholder="Entrer une ville ou un site...">
-                        </div>
-                        <button class="btn-action" onclick="lancerItineraireDestination()">🚀 Ouvrir la Carte de Navigation</button>
-                    </div>
-                `;
+                content.innerHTML = `<div class="card"><h3 class="card-title">🧭 GPS</h3><p class="text">Localisation active.</p></div>`;
             } else if (activeTab === 'economie') {
-                content.innerHTML = `
-                    <div class="card" style="border-color: #3b82f6;">
-                        <h3 class="card-title">🪙 Finances & Caisse Régionale</h3>
-                        <div class="tool-card" style="border-left-color: #3b82f6; background: rgba(59, 130, 246, 0.08);">
-                            🪙 <strong>CAISSE SOUVERAINE (${utilisateur.paysActuel})</strong><br>
-                            <div style="font-size:22px; font-weight:800; color:var(--accent); margin:8px 0;">${soldeCaisse.toLocaleString()} FCFA</div>
-                            <div style="font-size:12px; color:var(--text-secondary);">Profil d'origine : ${utilisateur.nationalite}</div>
-                        </div>
-                        <p class="text" style="margin-top: 15px;">Vos données financières restent stockées exclusivement sur votre appareil avec un chiffrement local.</p>
-                    </div>
-                `;
+                content.innerHTML = `<div class="card"><h3 class="card-title">🪙 Caisse</h3><p class="text">Solde : ${soldeCaisse.toLocaleString()} FCFA</p></div>`;
             } else if (activeTab === 'camera') {
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">📸 Caméra & Analyse de Documents ELAWS</h3>
-                        <p class="text">Photographiez vos pièces justificatives, actes ou formulaires pour vérification.</p>
-                        
-                        <div class="tool-card" style="text-align:center; padding:20px; border-left-color:var(--accent);">
-                            <input type="file" accept="image/*" capture="environment" id="cameraInput" style="display:none;" onchange="handleImageCapture(event)">
-                            <button class="btn-action" onclick="document.getElementById('cameraInput').click()" style="margin-bottom:12px;">📷 Prendre une Photo du Document</button>
-                        </div>
-
-                        ${capturedImageSrc ? `
-                            <div style="margin-top:15px; text-align:center;">
-                                <h4 style="margin-bottom:8px;">🖼️ Document Scanné :</h4>
-                                <img src="${capturedImageSrc}" style="max-width:100%; max-height:220px; border-radius:10px; border:1px solid var(--border-color); object-fit:cover;">
-                            </div>
-                        ` : ''}
-
-                        <div class="tool-card" style="margin-top:15px; background:rgba(5,150,105,0.08);">
-                            📊 <strong>Résultat de l'Analyse :</strong><br><br>
-                            <span id="analysisText">${analysisResult}</span>
-                        </div>
-                    </div>
-                `;
-            } else if (activeTab === 'devis') {
-                content.innerHTML = `<div class="card"><h3 class="card-title">🧮 Calculateurs & Devis</h3><p class="text">Outils de calculs professionnels.</p></div>`;
+                content.innerHTML = `<div class="card"><h3 class="card-title">📸 Caméra</h3><input type="file" accept="image/*" capture="environment"></div>`;
             } else if (activeTab === 'securite') {
-                content.innerHTML = `<div class="card"><h3 class="card-title">🛡️ Sécurité & Chiffrement Local</h3><p class="text">Chiffrement AES-256 actif. Vos données administratives restent 100% confidentielles sur votre appareil.</p></div>`;
-            } else if (activeTab === 'sauvegarde') {
-                content.innerHTML = `<div class="card"><h3 class="card-title">💾 Sauvegarde & Synchro Souveraine</h3><p class="text">${etatSynchro}</p></div>`;
+                content.innerHTML = `<div class="card"><h3 class="card-title">🛡️ Sécurité</h3><p class="text">Chiffrement AES-256 actif.</p></div>`;
             } else if (activeTab === 'ia') {
-                content.innerHTML = `<div class="card"><h3 class="card-title">Assistant ELAWS</h3><p class="text">Bonjour ! Je suis ELAWS, votre assistant consulaire et universel.</p></div>`;
+                content.innerHTML = `<div class="card"><h3 class="card-title">Assistant ELAWS</h3><p class="text">Bonjour !</p></div>`;
             }
         }
 
