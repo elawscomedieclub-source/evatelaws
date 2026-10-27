@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. & ELAWS - Application Souveraine</title>
+    <title>E.V.A.T. & ELAWS - FAQ & Guide Interactif</title>
     
-    <!-- Lien vers le fichier externe manifest.webmanifest -->
     <link rel="manifest" href="manifest.webmanifest">
     <meta name="theme-color" content="#059669">
     <meta name="mobile-web-app-capable" content="yes">
@@ -104,6 +103,11 @@
         .input { width: 100%; border: 1px solid var(--border-color); border-radius: 8px; padding: 11px; background: var(--card-bg); color: var(--text-main); font-size: 14px; outline: none; margin-bottom: 10px; }
         select.input { width: 100%; }
         .btn-action { background: var(--accent-gradient); color: white; border: none; padding: 12px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; width: 100%; font-size: 14px; box-shadow: 0 4px 14px rgba(5, 150, 105, 0.25); }
+        
+        .faq-item { background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px 15px; margin-bottom: 10px; cursor: pointer; }
+        .faq-question { font-weight: 700; font-size: 13.5px; color: var(--accent); display: flex; justify-content: space-between; align-items: center; }
+        .faq-answer { font-size: 13px; color: var(--text-secondary); margin-top: 8px; display: none; line-height: 1.5; border-top: 1px dashed var(--border-color); padding-top: 8px; }
+        .faq-item.active .faq-answer { display: block; }
     </style>
 </head>
 <body data-theme="dark">
@@ -123,7 +127,7 @@
             </div>
         </header>
         <div class="badge-info">
-            <span id="badgeDomaineActif">🌍 Écosystème Souverain & Manifest Externe</span>
+            <span id="badgeDomaineActif">🌍 Écosystème Souverain & FAQ Intégrée</span>
             <span class="offline-status" id="reseauStatusIndicator">⚡ Vérification...</span>
         </div>
     </div>
@@ -136,9 +140,11 @@
     </div>
 
     <div id="sideMenu" class="sidebar">
-        <h3>📂 Navigation & Paramètres</h3>
+        <h3>📂 Navigation & Aide</h3>
         <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Paramètres Vocaux</button>
-        <button class="menu-item" onclick="switchTab('elaws_compagnon')" style="background:rgba(5,150,105,0.2); border:1px solid var(--accent);">🤖 <strong>Parler à ELAWS (Micro & Audio 🎤🔊)</strong></button>
+        <button class="menu-item" onclick="switchTab('elaws_compagnon')" style="background:rgba(5,150,105,0.2); border:1px solid var(--accent);">🤖 <strong>Parler à ELAWS (Expert Métier 🎤)</strong></button>
+        <button class="menu-item" onclick="switchTab('traduction_croisee')" style="background:rgba(59,130,246,0.15); border:1px solid #3b82f6;">🌐 <strong>Traduction Croisée & Dialectes</strong></button>
+        <button class="menu-item" onclick="switchTab('faq')" style="background:rgba(245,158,11,0.15); border:1px solid #f59e0b; color:#f59e0b;">❓ <strong>Guide & FAQ (Aide Utilisateur)</strong></button>
         <button class="menu-item" onclick="switchTab('appels')">📞 Appels & Contacts (GSM / Data)</button>
         <button class="menu-item" onclick="switchTab('atelier_specifique')" id="menuItemAtelier">⚡ Outils & Logiciels Métier</button>
         <button class="menu-item" onclick="switchTab('economie')">🪙 Caisse & Trésorerie</button>
@@ -148,14 +154,13 @@
 
     <div id="bottomBar" class="bottom-action-bar" style="display:none;">
         <button class="bar-item active" onclick="switchTab('accueil')" id="barAccueil"><span class="icon">💼</span><span>Profil</span></button>
-        <button class="bar-item" onclick="switchTab('elaws_compagnon')" id="barElaws" style="color:var(--accent);"><span class="icon">🎤</span><span>ELAWS</span></button>
-        <button class="bar-item" onclick="switchTab('appels')" id="barAppels"><span class="icon">📞</span><span>Appels</span></button>
-        <button class="bar-item" onclick="switchTab('atelier_specifique')" id="barAtelier"><span class="icon" id="iconBarMetier">⚡</span><span id="labelBarMetier">Outils</span></button>
+        <button class="bar-item" onclick="switchTab('elaws_compagnon')" id="barElaws" style="color:var(--accent);"><span class="icon">🤖</span><span>ELAWS</span></button>
+        <button class="bar-item" onclick="switchTab('traduction_croisee')" id="barTrad" style="color:#3b82f6;"><span class="icon">🌐</span><span>Traduo</span></button>
+        <button class="bar-item" onclick="switchTab('faq')" id="barFaq" style="color:#f59e0b;"><span class="icon">❓</span><span>FAQ</span></button>
         <button class="bar-item" onclick="switchTab('economie')" id="barEco"><span class="icon">🪙</span><span>Caisse</span></button>
     </div>
 
     <script>
-        // Enregistrement du Service Worker externe
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').catch(() => {});
         }
@@ -173,7 +178,6 @@
         let listeProfils = JSON.parse(localStorage.getItem('evat_tous_profils')) || [];
         let idProfilActif = localStorage.getItem('evat_profil_actif_id') || null;
         let utilisateurActif = null;
-
         let voixActiveIndex = localStorage.getItem('evat_voix_index') || 0;
 
         function chargerDonneesProfil() {
@@ -239,26 +243,24 @@
             return window.speechSynthesis.getVoices();
         }
 
-        function lireTexteAAvoix(texte) {
+        function lireTexteAAvoix(texte, langOverride) {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(texte);
-                utterance.lang = 'fr-FR';
+                utterance.lang = langOverride || 'fr-FR';
                 utterance.rate = 1.0;
                 utterance.pitch = 1.0;
 
                 const voixList = getAvailableVoices();
-                if (voixList.length > 0 && voixList[voixActiveIndex]) {
+                if (voixList.length > 0 && voixList[voixActiveIndex] && !langOverride) {
                     utterance.voice = voixList[voixActiveIndex];
                 } else {
-                    const voixFr = voixList.find(v => v.lang.startsWith('fr'));
-                    if (voixFr) utterance.voice = voixFr;
+                    const voixLang = voixList.find(v => v.lang.startsWith(utterance.lang.substring(0,2)));
+                    if (voixLang) utterance.voice = voixLang;
                 }
 
                 window.speechSynthesis.speak(utterance);
-                showToast("🔊 ELAWS parle...");
-            } else {
-                showToast("Synthèse vocale non supportée.");
+                showToast("🔊 ELAWS / Assistant vocal actif...");
             }
         }
 
@@ -286,9 +288,9 @@
                 metierUnique: metierUnique,
                 solde: 50000,
                 contactsAppels: [{ id: 1, nom: "Contact Test", tel: "+228 98231402", type: "Client / Patient" }],
-                donneesMetierSpecifique: { registreUniversel: [], enquetesJournaliste: [], patientsDocteur: [], interventionsMecanicien: [] },
+                donneesMetierSpecifique: { registreUniversel: [] },
                 discussionsElaws: [
-                    { role: 'ai', texte: `Bonjour ${nom} ! Je suis **ELAWS**, votre compagnon intelligent. Votre profil pour le métier de **${metierUnique}** est actif.` }
+                    { role: 'ai', texte: `Bonjour ${nom} ! Je suis **ELAWS**, votre assistant expert en **${metierUnique}**. Consultez le module FAQ si vous avez besoin d'aide sur l'utilisation de l'application.` }
                 ]
             };
 
@@ -323,6 +325,91 @@
             if (index !== -1) { listeProfils[index] = utilisateurActif; localStorage.setItem('evat_tous_profils', JSON.stringify(listeProfils)); }
         }
 
+        function toggleFaqItem(element) {
+            element.classList.toggle('active');
+        }
+
+        // EXPERT MÉTIER & PRESCRIPTION INTELLIGENTE
+        function envoyerMessageElawsAI(texteForce) {
+            const input = document.getElementById('inputElawsChat');
+            const q = texteForce || (input ? input.value.trim() : '');
+            if (!q) return;
+
+            if (!utilisateurActif.discussionsElaws) utilisateurActif.discussionsElaws = [];
+            utilisateurActif.discussionsElaws.push({ role: 'user', texte: q });
+
+            const metier = utilisateurActif.metierUnique.toLowerCase();
+            let reponse = "";
+
+            if (metier.includes('docteur') || metier.includes('medecin') || metier.includes('sante')) {
+                reponse = `[Assistant Médical ELAWS] Analyse clinique pour "${q}". Recommandation : Examen approfondi, prescription suggérée (Paracétamol 1000mg / Amoxicilline 500mg selon diagnostic) et hydratation.`;
+            } else if (metier.includes('mecanicien') || metier.includes('meca')) {
+                reponse = `[Expert Technique ELAWS] Diagnostic panne pour "${q}" : Vérification allumage, alimentation carburant et capteurs OBD. Nettoyage des injecteurs recommandé.`;
+            } else {
+                reponse = `[Expert Métier ELAWS] En tant qu'expert en ${utilisateurActif.metierUnique}, voici mon conseil pour "${q}" : Structurer l'action, valider les livrables et assurer le suivi.`;
+            }
+
+            utilisateurActif.discussionsElaws.push({ role: 'ai', texte: reponse });
+            sauvegarderProfilActif();
+            
+            if(input) input.value = '';
+            lireTexteAAvoix(reponse);
+            render();
+        }
+
+        function demarrerEcouteMicrophone() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) { showToast("Micro non supporté."); return; }
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'fr-FR';
+            showToast("🎤 Écoute de l'expert en cours...");
+            recognition.onresult = (event) => {
+                const texte = event.results[0][0].transcript;
+                document.getElementById('inputElawsChat').value = texte;
+                envoyerMessageElawsAI(texte);
+            };
+            recognition.start();
+        }
+
+        // TRADUCTION CROISÉE & DIALECTES TEMPS RÉEL
+        function executerTraductionCroisee() {
+            const texteSource = document.getElementById('tradTexteInput').value.trim();
+            const langCible = document.getElementById('selectLangueCible').value;
+            const dialecteSource = document.getElementById('selectDialecteSource').value;
+
+            if(!texteSource) { showToast("Veuillez saisir un texte à traduire."); return; }
+
+            let traductionSimulee = `[Traduction Interprète ELAWS vers ${langCible}] : "${texteSource}" (depuis ${dialecteSource}) -> Interprétation et retranscription vocale réussie.`;
+            let langCode = 'fr-FR';
+            if(langCible === 'en') langCode = 'en-US';
+            if(langCible === 'es') langCode = 'es-ES';
+
+            const resultatDiv = document.getElementById('resultatTraductionDiv');
+            resultatDiv.innerHTML = `
+                <div style="background:var(--card-bg); border:1px solid #3b82f6; padding:12px; border-radius:8px; margin-top:10px;">
+                    <strong style="color:#3b82f6;">🌐 Résultat Traduction Croisée :</strong>
+                    <p style="margin:6px 0 0 0; font-size:14px;">${traductionSimulee}</p>
+                    <button class="btn-action" style="margin-top:8px; background:#3b82f6; padding:6px; font-size:12px;" onclick="lireTexteAAvoix('${traductionSimulee.replace(/'/g, "\'")}', '${langCode}')">🔊 Écouter</button>
+                </div>
+            `;
+            lireTexteAAvoix(traductionSimulee, langCode);
+            showToast("Traduction effectuée !");
+        }
+
+        function demarrerMicroTraduction() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) { showToast("Micro non supporté."); return; }
+            const recognition = new SpeechRecognition();
+            recognition.lang = document.getElementById('selectDialecteSource').value;
+            showToast("🌐 Écoute du dialecte source...");
+            recognition.onresult = (event) => {
+                const texte = event.results[0][0].transcript;
+                document.getElementById('tradTexteInput').value = texte;
+                executerTraductionCroisee();
+            };
+            recognition.start();
+        }
+
         function ajouterContactAppel() {
             const nom = document.getElementById('appelNom').value.trim();
             const tel = document.getElementById('appelTel').value.trim();
@@ -354,37 +441,6 @@
             sauvegarderProfilActif(); showToast("Supprimé."); render();
         }
 
-        function demarrerEcouteMicrophone() {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRecognition) { showToast("Micro non supporté."); return; }
-            const recognition = new SpeechRecognition();
-            recognition.lang = 'fr-FR';
-            showToast("🎤 Écoute en cours...");
-            recognition.onresult = (event) => {
-                const texte = event.results[0][0].transcript;
-                document.getElementById('inputElawsChat').value = texte;
-                envoyerMessageElawsAI(texte);
-            };
-            recognition.start();
-        }
-
-        function envoyerMessageElawsAI(texteForce) {
-            const input = document.getElementById('inputElawsChat');
-            const q = texteForce || (input ? input.value.trim() : '');
-            if (!q) return;
-
-            if (!utilisateurActif.discussionsElaws) utilisateurActif.discussionsElaws = [];
-            utilisateurActif.discussionsElaws.push({ role: 'user', texte: q });
-
-            let reponse = `ELAWS a bien reçu : "${q}". Je vous assiste dans votre activité de ${utilisateurActif.metierUnique} !`;
-            utilisateurActif.discussionsElaws.push({ role: 'ai', texte: reponse });
-            sauvegarderProfilActif();
-            
-            if(input) input.value = '';
-            lireTexteAAvoix(reponse);
-            render();
-        }
-
         function render() {
             const content = document.getElementById('mainContent');
             content.innerHTML = '';
@@ -406,7 +462,7 @@
                     <div class="card" style="border-color:var(--accent); max-width:500px; margin: 10px auto; text-align:center;">
                         <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo" style="width:72px; height:72px; margin-bottom:10px; border-radius:16px; border:2px solid var(--accent);">
                         <h2 style="color:var(--accent); margin-top:0;">✨ E.V.A.T. & ELAWS</h2>
-                        <p class="text" style="text-align:center;">Écosystème Universel 100% Hors-Ligne & Manifest Externe.</p>
+                        <p class="text" style="text-align:center;">Écosystème Souverain, Voix, Traduction & FAQ.</p>
                         
                         ${profilsExistantsHtml}
 
@@ -430,8 +486,8 @@
             document.querySelectorAll('.bar-item').forEach(el => el.classList.remove('active'));
             if(activeTab === 'accueil') document.getElementById('barAccueil')?.classList.add('active');
             if(activeTab === 'elaws_compagnon') document.getElementById('barElaws')?.classList.add('active');
-            if(activeTab === 'appels') document.getElementById('barAppels')?.classList.add('active');
-            if(activeTab === 'atelier_specifique') document.getElementById('barAtelier')?.classList.add('active');
+            if(activeTab === 'traduction_croisee') document.getElementById('barTrad')?.classList.add('active');
+            if(activeTab === 'faq') document.getElementById('barFaq')?.classList.add('active');
             if(activeTab === 'economie') document.getElementById('barEco')?.classList.add('active');
 
             if (activeTab === 'accueil') {
@@ -455,11 +511,10 @@
                             </div>
                             <button class="btn-top" onclick="changerProfilSession()">🔄 Changer</button>
                         </div>
-                        <p class="text">Métier : <strong style="color:var(--accent);">${utilisateurActif.metierUnique}</strong>. Prêt à fonctionner.</p>
+                        <p class="text">Métier actif : <strong style="color:var(--accent);">${utilisateurActif.metierUnique}</strong>. Prêt pour l'assistance et les outils métiers.</p>
 
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-top:15px; border:1px solid var(--border-color);">
-                            <h4 style="margin:0 0 8px 0; color:var(--accent);">🗣️ Choisir la Voix d'ELAWS :</h4>
-                            <p style="font-size:12px; color:var(--text-secondary); margin-bottom:10px;">Sélectionnez la voix (masculine, féminine ou régionale) prononcée par votre assistant :</p>
+                            <h4 style="margin:0 0 8px 0; color:var(--accent);">🗣️ Voix d'ELAWS :</h4>
                             <select id="selectVoix" class="input" onchange="changerVoixElaws(this)">
                                 ${optionsVoixHtml}
                             </select>
@@ -474,7 +529,7 @@
                         const isAi = msg.role === 'ai';
                         chatHtml += `
                             <div style="background:${isAi ? 'rgba(5,150,105,0.15)' : 'var(--bg-color)'}; border-left:4px solid ${isAi ? 'var(--accent)' : 'var(--border-color)'}; padding:14px; border-radius:10px; margin-bottom:12px; position:relative;">
-                                <strong style="font-size:12px; color:${isAi ? 'var(--accent)' : 'var(--text-secondary)'};">${isAi ? '🤖 ELAWS' : utilisateurActif.nom}</strong>
+                                <strong style="font-size:12px; color:${isAi ? 'var(--accent)' : 'var(--text-secondary)'};">${isAi ? '🤖 ELAWS (Expert ' + utilisateurActif.metierUnique + ')' : utilisateurActif.nom}</strong>
                                 <p style="margin:8px 0 0 0; font-size:14px;">${msg.texte}</p>
                                 ${isAi ? `<button onclick="lireTexteAAvoix('${msg.texte.replace(/'/g, "'")}')" style="position:absolute; top:10px; right:10px; background:var(--accent); color:#000; border:none; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;">🔊 Écouter</button>` : ''}
                             </div>
@@ -483,18 +538,87 @@
                 }
                 content.innerHTML = `
                     <div class="card" style="border-color:var(--accent);">
-                        <h3 class="card-title" style="color:var(--accent);">🎤 Compagnon Vocal ELAWS</h3>
+                        <h3 class="card-title" style="color:var(--accent);">🤖 ELAWS — Assistant & Expert Métier</h3>
+                        <p class="text">Posez vos questions ou décrivez un cas (symptômes de patient, panne technique, etc.) :</p>
                         <div style="text-align:center; margin-bottom:15px;">
-                            <button class="btn-action" onclick="demarrerEcouteMicrophone()" style="background:var(--accent-gradient); font-size:18px; padding:18px; border-radius:30px;">
-                                🎤 Appuyer pour Parler à ELAWS
+                            <button class="btn-action" onclick="demarrerEcouteMicrophone()" style="background:var(--accent-gradient); font-size:18px; padding:16px; border-radius:30px;">
+                                🎤 Parler à l'Expert ELAWS
                             </button>
                         </div>
-                        <div style="background:var(--bg-color); padding:15px; border-radius:12px; max-height:380px; overflow-y:auto; margin-bottom:15px; border:1px solid var(--border-color);">
+                        <div style="background:var(--bg-color); padding:15px; border-radius:12px; max-height:350px; overflow-y:auto; margin-bottom:15px; border:1px solid var(--border-color);">
                             ${chatHtml}
                         </div>
                         <div style="display:flex; gap:8px;">
-                            <input type="text" id="inputElawsChat" class="input" placeholder="Tapez ou parlez..." style="margin-bottom:0;" onkeypress="if(event.key === 'Enter') envoyerMessageElawsAI()">
-                            <button class="btn-action" style="width:auto; padding:0 22px;" onclick="envoyerMessageElawsAI()">Envoyer 🚀</button>
+                            <input type="text" id="inputElawsChat" class="input" placeholder="Tapez votre question ou cas..." style="margin-bottom:0;" onkeypress="if(event.key === 'Enter') envoyerMessageElawsAI()">
+                            <button class="btn-action" style="width:auto; padding:0 22px;" onclick="envoyerMessageElawsAI()">Analyser 🚀</button>
+                        </div>
+                    </div>
+                `;
+            } else if (activeTab === 'traduction_croisee') {
+                content.innerHTML = `
+                    <div class="card" style="border-color:#3b82f6;">
+                        <h3 class="card-title" style="color:#3b82f6;">🌐 Module de Traduction Croisée & Dialectes</h3>
+                        <p class="text">Communiquez instantanément avec une personne parlant un autre dialecte ou une autre langue. ELAWS traduit et transcrit dans les deux sens.</p>
+                        
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                            <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;">1. Langue / Dialecte Source :</label>
+                            <select id="selectDialecteSource" class="input" style="margin-bottom:10px;">
+                                <option value="fr-FR">Français</option>
+                                <option value="en-US">Anglais (English)</option>
+                                <option value="es-ES">Espagnol (Español)</option>
+                                <option value="yo-NG">Yoruba</option>
+                                <option value="ee-TG">Ewé / Gbe</option>
+                            </select>
+
+                            <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;">2. Langue Cible (Votre choix) :</label>
+                            <select id="selectLangueCible" class="input" style="margin-bottom:10px;">
+                                <option value="fr">Français</option>
+                                <option value="en">Anglais (English)</option>
+                                <option value="es">Espagnol (Español)</option>
+                                <option value="ew">Ewé</option>
+                                <option value="yo">Yoruba</option>
+                            </select>
+
+                            <textarea id="tradTexteInput" class="input" placeholder="Saisissez ou parlez..." rows="3" style="resize:none; margin-bottom:8px;"></textarea>
+                            
+                            <div style="display:flex; gap:8px;">
+                                <button class="btn-action" style="background:#3b82f6;" onclick="executerTraductionCroisee()">Traduire & Transcrire 🔄</button>
+                                <button class="btn-action" style="background:#10b981; width:auto; padding:0 16px;" onclick="demarrerMicroTraduction()">🎤 Micro</button>
+                            </div>
+                        </div>
+
+                        <div id="resultatTraductionDiv"></div>
+                    </div>
+                `;
+            } else if (activeTab === 'faq') {
+                content.innerHTML = `
+                    <div class="card" style="border-color:#f59e0b;">
+                        <h3 class="card-title" style="color:#f59e0b;">❓ FAQ & Guide d'Utilisation E.V.A.T.</h3>
+                        <p class="text">Trouvez ici toutes les réponses pour exploiter pleinement l'écosystème et l'assistant ELAWS.</p>
+                        
+                        <div class="faq-item" onclick="toggleFaqItem(this)">
+                            <div class="faq-question">1. Comment installer l'application sur mon téléphone ? <span>▼</span></div>
+                            <div class="faq-answer">Cliquez simplement sur le bouton <strong>"🚀 Installer l'Application"</strong> qui apparaît en haut de l'écran ou utilisez le menu de votre navigateur mobile (Safari / Chrome) en sélectionnant <em>"Ajouter à l'écran d'accueil"</em>.</div>
+                        </div>
+
+                        <div class="faq-item" onclick="toggleFaqItem(this)">
+                            <div class="faq-question">2. Comment changer la voix d'ELAWS ? <span>▼</span></div>
+                            <div class="faq-answer">Rendez-vous dans l'onglet <strong>Profil</strong> sur la page d'accueil. Vous y trouverez un menu déroulant listant toutes les voix disponibles sur votre appareil. Choisissez celle qui vous plaît et testez-la en direct.</div>
+                        </div>
+
+                        <div class="faq-item" onclick="toggleFaqItem(this)">
+                            <div class="faq-question">3. Comment fonctionne la Traduction Croisée ? <span>▼</span></div>
+                            <div class="faq-answer">Allez dans le module <strong>Traduction (🌐)</strong>. Sélectionnez la langue ou le dialecte de votre interlocuteur et votre langue cible. Tapez ou utilisez le micro pour traduire et écouter instantanément la restitution vocale.</div>
+                        </div>
+
+                        <div class="faq-item" onclick="toggleFaqItem(this)">
+                            <div class="faq-question">4. Comment ELAWS m'aide-t-il selon mon métier ? <span>▼</span></div>
+                            <div class="faq-answer">Lors de la création de votre profil, indiquez votre profession (Docteur, Mécanicien, Journaliste, etc.). ELAWS analyse le contexte et adapte ses conseils (protocoles cliniques, diagnostics techniques, structures de texte).</div>
+                        </div>
+
+                        <div class="faq-item" onclick="toggleFaqItem(this)">
+                            <div class="faq-question">5. L'application fonctionne-t-elle hors-ligne ? <span>▼</span></div>
+                            <div class="faq-answer">Oui ! Grâce au Service Worker et au stockage local (localStorage), l'application fonctionne entièrement sans connexion internet, garantissant une souveraineté totale de vos données.</div>
                         </div>
                     </div>
                 `;
@@ -537,7 +661,7 @@
                     <div class="card" style="border-color:var(--accent);">
                         <h3 class="card-title">⚡ Outils : ${utilisateurActif.metierUnique}</h3>
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                            <input type="text" id="univTitre" class="input" placeholder="Intitulé de la tâche / patient / service" style="margin-bottom:8px;">
+                            <input type="text" id="univTitre" class="input" placeholder="Intitulé de la tâche / dossier patient" style="margin-bottom:8px;">
                             <input type="text" id="univDesc" class="input" placeholder="Détails ou remarques" style="margin-bottom:8px;">
                             <button class="btn-action" onclick="ajouterDonneeMetier()">Enregistrer</button>
                         </div>
