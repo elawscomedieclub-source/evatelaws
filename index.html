@@ -175,16 +175,6 @@
         .card-title { font-size: 15px; font-weight: 700; color: var(--text-secondary); margin-top: 0; margin-bottom: 10px; }
         .score-text { font-size: 16px; font-weight: 800; margin-bottom: 8px; }
         .text { font-size: 14px; color: var(--text-secondary); margin-bottom: 15px; line-height: 1.6; }
-        .tool-card {
-            background: var(--bg-color);
-            padding: 12px 15px;
-            border-radius: 10px;
-            margin-bottom: 8px;
-            border-left: 4px solid var(--accent);
-            font-size: 13px;
-            color: var(--text-main);
-            font-weight: 500;
-        }
         .grid-metiers {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -250,7 +240,7 @@
         </div>
     </header>
 
-    <div class="badge-info">🌟 Gestionnaire de Profils en Évidence | Souveraineté Totale</div>
+    <div class="badge-info">🌟 Accueil Épuré & Hub de Profils en Évidence</div>
 
     <div id="installBanner" class="card" style="display:none; border-color:var(--accent); background:rgba(5,150,105,0.12);">
         <h3 class="card-title" style="color:var(--accent);">📲 Installer E.V.A.T. & ELAWS</h3>
@@ -258,16 +248,17 @@
         <button class="btn-action" id="btnInstallApp">Installer l'Application</button>
     </div>
 
+    <!-- Menu Latéral enrichi avec le GPS et les Finances -->
     <div id="sideMenu" class="sidebar">
         <h3>📂 Navigation Globale E.V.A.T.</h3>
         <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Profils</button>
+        <button class="menu-item" onclick="switchTab('gps')">🧭 Géolocalisation & Quick Route (Menu)</button>
+        <button class="menu-item" onclick="switchTab('economie')">🪙 Finances & Caisse Locale (Menu)</button>
         <button class="menu-item" onclick="switchTab('camera')">📸 Caméra & Analyse de Sol/Documents</button>
-        <button class="menu-item" onclick="switchTab('gps')">🧭 Géolocalisation & Itinéraire (Chauffeur)</button>
         <button class="menu-item" onclick="switchTab('simulateur')">🧮 Calculateurs & Outils Métiers</button>
         <button class="menu-item" onclick="switchTab('stocks')">📦 Stocks, Récoltes & Matériel</button>
         <button class="menu-item" onclick="switchTab('securite')">🛡️ Sécurité & Chiffrement Local</button>
         <button class="menu-item" onclick="switchTab('sauvegarde')">💾 Sauvegardes & Synchro Souveraine</button>
-        <button class="menu-item" onclick="switchTab('economie')">🪙 Économie & Caisse Locale</button>
         <button class="menu-item" onclick="switchTab('apprentissage')">📚 Fiches Jeunes & Enfants</button>
         <button class="menu-item" onclick="switchTab('appel')">📞 Appels & Traduction Maternelle</button>
         <button class="menu-item" onclick="switchTab('ia')">🤖 Assistant ELAWS AI</button>
@@ -340,7 +331,6 @@
             const input = document.getElementById('inputNouveauProfil');
             const val = input.value.trim();
             if (val) {
-                // Vérifier si le profil existe déjà
                 if (!listeMetiers.some(m => m.nom.toLowerCase() === val.toLowerCase())) {
                     listeMetiers.push({ nom: val, icone: '💼', desc: 'Profil Personnalisé' });
                     metierActif = val;
@@ -416,6 +406,7 @@
                     `;
                 });
 
+                // Accueil épuré et centré sur le Hub Central des Profils
                 content.innerHTML = `
                     <div class="card" style="border-color: var(--accent);">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
@@ -425,34 +416,48 @@
                             </div>
                             <span style="background:rgba(5,150,105,0.2); color:var(--accent); padding:5px 10px; border-radius:20px; font-size:11px; font-weight:700;">Actif : ${metierActif}</span>
                         </div>
-                        <p class="text" style="margin-bottom:12px;">Sélectionnez un profil ci-dessous ou ajoutez instantanément une nouvelle activité (métier, passion, rôle) :</p>
+                        <p class="text" style="margin-bottom:12px;">Sélectionnez votre profil ou ajoutez instantanément un nouveau rôle :</p>
                         
-                        <!-- Formulaire d'ajout rapide de profil personnalisé -->
                         <div class="input-group" style="margin-bottom:12px;">
-                            <input type="text" id="inputNouveauProfil" class="input" placeholder="Ajouter un nouveau profil (ex: Pilote, Mécanicien...)">
+                            <input type="text" id="inputNouveauProfil" class="input" placeholder="Ajouter un profil (ex: Pilote, Mécanicien...)">
                             <button class="btn-action" style="width:auto; padding:0 15px;" onclick="ajouterNouveauMetier()">+ Créer</button>
                         </div>
 
-                        <!-- Grille des profils disponibles -->
                         <div class="grid-metiers">
                             ${cartesMetiersHtml}
                         </div>
                     </div>
 
-                    <!-- Widget Quick Route GPS -->
+                    <div class="card" style="text-align: center; padding: 15px; background: rgba(5, 150, 105, 0.05);">
+                        <p style="margin: 0; font-size: 13px; color: var(--text-secondary);">💡 <strong>Astuce :</strong> Retrouvez le GPS, la Caisse Financière, la Caméra et tous les autres outils à tout moment en cliquant sur le menu ☰ en haut à gauche.</p>
+                    </div>
+                `;
+            } else if (activeTab === 'gps') {
+                content.innerHTML = `
                     <div class="card">
-                        <div class="tool-card" style="border-left-color: var(--accent); margin-bottom:10px;">
-                            🧭 <strong>QUICK ROUTE • GPS & ITINÉRAIRE</strong><br>
-                            <span style="font-size:12px; color:var(--text-secondary);">${gpsStatus}</span><br><br>
-                            <button class="btn-action" style="padding:8px; font-size:12px;" onclick="switchTab('gps')">Ouvrir le Module GPS</button>
+                        <h3 class="card-title">🧭 Géolocalisation & Itinéraire (Quick Route)</h3>
+                        <p class="text">Obtenez votre position et tracez votre route en ligne du point A vers le point B.</p>
+                        <div class="tool-card">
+                            📡 ${gpsStatus}<br><br>
+                            <button class="btn-action" onclick="obtenirGeolocalisation()">📍 Actualiser ma Position GPS</button>
                         </div>
-
-                        <!-- Widget Sommaire Financier -->
-                        <div class="tool-card" style="border-left-color: #3b82f6; margin-bottom:0;">
+                        <h4 style="margin: 15px 0 8px 0;">🗺️ Destination (Point B) :</h4>
+                        <div class="input-group">
+                            <input type="text" id="inputDestination" class="input" placeholder="Entrer une ville ou un quartier...">
+                        </div>
+                        <button class="btn-action" onclick="lancerItineraireDestination()">🚀 Ouvrir l'Itinéraire Cartographique</button>
+                    </div>
+                `;
+            } else if (activeTab === 'economie') {
+                content.innerHTML = `
+                    <div class="card" style="border-color: #3b82f6;">
+                        <h3 class="card-title">🪙 Finances & Caisse Locale</h3>
+                        <div class="tool-card" style="border-left-color: #3b82f6; background: rgba(59, 130, 246, 0.08);">
                             🪙 <strong>SOMMAIRE FINANCIER & CAISSE</strong><br>
-                            <div style="font-size:18px; font-weight:800; color:var(--accent); margin:4px 0;">${soldeCaisse.toLocaleString()} FCFA</div>
-                            <div style="font-size:11px; color:var(--text-secondary);">Entrées : 67,500 FCFA | Sorties : 22,300 FCFA</div>
+                            <div style="font-size:22px; font-weight:800; color:var(--accent); margin:8px 0;">${soldeCaisse.toLocaleString()} FCFA</div>
+                            <div style="font-size:12px; color:var(--text-secondary);">Entrées totales : 67,500 FCFA | Sorties totales : 22,300 FCFA</div>
                         </div>
+                        <p class="text" style="margin-top: 15px;">Suivez l'ensemble de vos recettes et dépenses en toute autonomie et sécurité locale.</p>
                     </div>
                 `;
             } else if (activeTab === 'camera') {
@@ -480,22 +485,6 @@
                         </div>
                     </div>
                 `;
-            } else if (activeTab === 'gps') {
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">🧭 Géolocalisation & Itinéraire</h3>
-                        <p class="text">Obtenez votre position et tracez votre route en ligne.</p>
-                        <div class="tool-card">
-                            📡 ${gpsStatus}<br><br>
-                            <button class="btn-action" onclick="obtenirGeolocalisation()">📍 Actualiser ma Position GPS</button>
-                        </div>
-                        <h4 style="margin: 15px 0 8px 0;">🗺️ Destination (Point B) :</h4>
-                        <div class="input-group">
-                            <input type="text" id="inputDestination" class="input" placeholder="Entrer une ville ou un quartier...">
-                        </div>
-                        <button class="btn-action" onclick="lancerItineraireDestination()">🚀 Ouvrir l'Itinéraire Cartographique</button>
-                    </div>
-                `;
             } else if (activeTab === 'simulateur') {
                 content.innerHTML = `<div class="card"><h3 class="card-title">🧮 Calculateurs & Outils Métiers</h3><p class="text">Outils de calculs professionnels ELAWS.</p></div>`;
             } else if (activeTab === 'stocks') {
@@ -504,8 +493,6 @@
                 content.innerHTML = `<div class="card"><h3 class="card-title">🛡️ Sécurité & Chiffrement Local</h3><p class="text">Chiffrement AES-256 actif.</p></div>`;
             } else if (activeTab === 'sauvegarde') {
                 content.innerHTML = `<div class="card"><h3 class="card-title">💾 Sauvegarde & Synchro Souveraine</h3><p class="text">${etatSynchro}</p></div>`;
-            } else if (activeTab === 'economie') {
-                content.innerHTML = `<div class="card"><h3 class="card-title">🪙 Économie & Caisse</h3><div class="score-text" style="color:var(--accent);">Solde : ${soldeCaisse.toLocaleString()} FCFA</div></div>`;
             } else if (activeTab === 'apprentissage') {
                 content.innerHTML = `<div class="card"><h3 class="card-title">📚 Fiches d'Apprentissage</h3><p class="text">Modules pour jeunes et enfants.</p></div>`;
             } else if (activeTab === 'appel') {
