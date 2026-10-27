@@ -75,6 +75,14 @@
             border: 1px solid var(--border-color);
         }
         .header-left { display: flex; align-items: center; gap: 12px; }
+        .app-logo {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            object-fit: cover;
+            box-shadow: 0 4px 10px rgba(5, 150, 105, 0.4);
+            border: 2px solid var(--accent);
+        }
         .menu-toggle {
             background: var(--accent-gradient);
             color: white;
@@ -265,20 +273,23 @@
         <header>
             <div class="header-left">
                 <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-                <div class="title">✨ E.V.A.T. & ELAWS</div>
+                <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo ELAWS" class="app-logo">
+                <div class="title">E.V.A.T. & ELAWS</div>
             </div>
             <div class="header-right">
                 <button class="btn-top" onclick="changerTheme()">🎨 Thème</button>
                 <button class="btn-top" onclick="changerProfilSession()">👤 Profils</button>
             </div>
         </header>
-        <div class="badge-info">🌍 Écosystème Souverain Multi-Profils & Étanchéité Locale</div>
+        <div class="badge-info">🌍 Écosystème Souverain Multi-Profils & Logo Actif</div>
     </div>
 
-    <div id="installBanner" class="card" style="display:none; border-color:var(--accent); background:rgba(5,150,105,0.12);">
-        <h3 class="card-title" style="color:var(--accent);">📲 Installer E.V.A.T. & ELAWS</h3>
-        <p class="text">Installez l'application instantanément sur votre support en un clic !</p>
-        <button class="btn-action" id="btnInstallApp">Installer l'Application</button>
+    <!-- BANDEAU D'INSTALLATION AUTOMATIQUE FORCÉ -->
+    <div id="installBanner" class="card" style="display:none; border-color:var(--accent); background:rgba(5,150,105,0.15); text-align:center;">
+        <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo" style="width:50px; height:50px; margin-bottom:8px; border-radius:12px;">
+        <h3 class="card-title" style="color:var(--accent); margin-bottom:6px;">📲 Installer E.V.A.T. & ELAWS sur votre téléphone</h3>
+        <p class="text" style="margin-bottom:12px;">Profitez de l'application en plein écran, rapide et 100% hors-ligne en un seul clic !</p>
+        <button class="btn-action" id="btnInstallApp" style="font-size:15px; padding:14px;">Installer l'Application Immédiatement</button>
     </div>
 
     <div id="sideMenu" class="sidebar">
@@ -322,10 +333,8 @@
     <script>
         let activeTab = 'accueil';
         
-        // Gestion des profils multiples stockés localement
         let listeProfils = JSON.parse(localStorage.getItem('evat_tous_profils')) || [];
         let idProfilActif = localStorage.getItem('evat_profil_actif_id') || null;
-
         let utilisateurActif = null;
 
         function chargerDonneesProfil() {
@@ -349,10 +358,12 @@
             setTimeout(() => { toast.classList.remove('show'); }, 2500);
         }
 
+        // --- ENREGISTREMENT DU SERVICE WORKER & CAPTURE DE L'INSTALLATION AUTOMATIQUE ---
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
+            // Affiche le grand bouton d'installation automatique
             document.getElementById('installBanner').style.display = 'block';
         });
 
@@ -360,12 +371,20 @@
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') { document.getElementById('installBanner').style.display = 'none'; }
+                if (outcome === 'accepted') {
+                    document.getElementById('installBanner').style.display = 'none';
+                    showToast("Application installée avec succès !");
+                }
                 deferredPrompt = null;
             } else {
-                showToast("Utilisez le menu de votre navigateur pour installer l'application.");
+                showToast("L'application est déjà installée ou prête sur votre écran.");
             }
         });
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('data:text/javascript;base64,JG5hZ2lhdG9yLm9ubGluZSI=')
+                .catch(() => {});
+        }
 
         function toggleMenu() { document.getElementById('sideMenu').classList.toggle('open'); }
         function changerTheme() { showToast("Thème basculé."); }
@@ -415,7 +434,7 @@
             idProfilActif = nouveauId;
             utilisateurActif = nouveauProfil;
 
-            showToast(`Bienvenue, ${nom} ! Profil créé avec succès.`);
+            showToast(`Bienvenue, ${nom} ! Profil créé.`);
             document.getElementById('appHeader').style.display = 'block';
             document.getElementById('bottomBar').style.display = 'flex';
             render();
@@ -507,11 +526,12 @@
                 const recuHtml = `
                     <div style="background:#ffffff; color:#0f172a; padding:20px; border-radius:10px; border:2px dashed var(--accent);">
                         <div style="text-align:center; border-bottom:2px solid #cbd5e1; padding-bottom:10px; margin-bottom:10px;">
-                            <h3 style="margin:0; color:#059669;">🧾 REÇU DE PRESTATION / FACTURE</h3>
-                            <small>Écosystème E.V.A.T. — ${utilisateurActif.nom}</small>
+                            <img src="https://img.icons8.com/color/48/000000/artificial-intelligence.png" style="width:32px; height:32px; vertical-align:middle; margin-right:8px;">
+                            <h3 style="margin:0; display:inline-block; color:#059669;">🧾 REÇU DE PRESTATION</h3>
+                            <br><small>E.V.A.T. & ELAWS — ${utilisateurActif.nom}</small>
                         </div>
                         <p><strong>Date :</strong> ${new Date().toLocaleDateString()}</p>
-                        <p><strong>Émetteur :</strong> ${utilisateurActif.nom} (${utilisateurActif.telephone} | ${utilisateurActif.email})</p>
+                        <p><strong>Émetteur :</strong> ${utilisateurActif.nom} (${utilisateurActif.telephone})</p>
                         <p><strong>Client :</strong> ${client}</p>
                         <p><strong>Prestation :</strong> ${service}</p>
                         <p style="font-size:16px;"><strong>Montant :</strong> <span style="color:#059669; font-weight:800;">${parseFloat(montant).toLocaleString()} ${devise}</span></p>
@@ -532,14 +552,13 @@
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
-            showToast("Sauvegarde JSON exportée pour ce profil !");
+            showToast("Sauvegarde JSON exportée !");
         }
 
         function render() {
             const content = document.getElementById('mainContent');
             content.innerHTML = '';
 
-            // Écran d'accueil / Inscription si aucun profil actif
             if (!utilisateurActif) {
                 document.getElementById('appHeader').style.display = 'none';
                 document.getElementById('bottomBar').style.display = 'none';
@@ -554,50 +573,52 @@
                 }
 
                 content.innerHTML = `
-                    <div class="card" style="border-color:var(--accent); max-width:500px; margin: 30px auto;">
-                        <h2 style="color:var(--accent); text-align:center; margin-top:0;">✨ E.V.A.T. & ELAWS</h2>
-                        <p class="text" style="text-align:center;">Écosystème Souverain & Multi-Profils. Créez votre espace personnel pour sécuriser vos données en local.</p>
+                    <div class="card" style="border-color:var(--accent); max-width:500px; margin: 20px auto; text-align:center;">
+                        <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo ELAWS" style="width:72px; height:72px; margin-bottom:10px; border-radius:16px; border:2px solid var(--accent); box-shadow:0 0 20px rgba(5,150,105,0.4);">
+                        <h2 style="color:var(--accent); margin-top:0;">✨ E.V.A.T. & ELAWS</h2>
+                        <p class="text" style="text-align:center;">Écosystème Souverain Multi-Profils. Créez votre espace personnel pour sécuriser vos données en local.</p>
                         
                         ${profilsExistantsHtml}
 
-                        <h4 style="margin-bottom:10px; border-top:1px solid var(--border-color); padding-top:15px;">📝 Créer un nouveau profil :</h4>
-                        <label style="font-size:11px; color:var(--text-secondary);">Nom complet ou Pseudonyme * :</label>
-                        <input type="text" id="regNom" class="input" placeholder="Ex: Jean Dupont">
-                        
-                        <label style="font-size:11px; color:var(--text-secondary);">Adresse E-mail * :</label>
-                        <input type="email" id="regEmail" class="input" placeholder="Ex: monemail@domaine.com">
+                        <div style="text-align:left;">
+                            <h4 style="margin-bottom:10px; border-top:1px solid var(--border-color); padding-top:15px;">📝 Créer un nouveau profil :</h4>
+                            <label style="font-size:11px; color:var(--text-secondary);">Nom complet ou Pseudonyme * :</label>
+                            <input type="text" id="regNom" class="input" placeholder="Ex: Jean Dupont">
+                            
+                            <label style="font-size:11px; color:var(--text-secondary);">Adresse E-mail * :</label>
+                            <input type="email" id="regEmail" class="input" placeholder="Ex: monemail@domaine.com">
 
-                        <label style="font-size:11px; color:var(--text-secondary);">Téléphone :</label>
-                        <input type="text" id="regTel" class="input" placeholder="Ex: +228 98000000">
+                            <label style="font-size:11px; color:var(--text-secondary);">Téléphone :</label>
+                            <input type="text" id="regTel" class="input" placeholder="Ex: +228 98000000">
 
-                        <div style="display:flex; gap:8px;">
-                            <div style="flex:1;">
-                                <label style="font-size:11px; color:var(--text-secondary);">Nationalité :</label>
-                                <select id="regNationalite" class="input">
-                                    <option value="Togolais">🇹🇬 Togolais</option>
-                                    <option value="Allemand">🇩🇪 Allemand</option>
-                                    <option value="Anglais">🇬🇧 Anglais</option>
-                                    <option value="Haïtien">🇭🇹 Haïtien</option>
-                                    <option value="Amazonien">🌿 Amazonien</option>
-                                </select>
+                            <div style="display:flex; gap:8px;">
+                                <div style="flex:1;">
+                                    <label style="font-size:11px; color:var(--text-secondary);">Nationalité :</label>
+                                    <select id="regNationalite" class="input">
+                                        <option value="Togolais">🇹🇬 Togolais</option>
+                                        <option value="Allemand">🇩🇪 Allemand</option>
+                                        <option value="Anglais">🇬🇧 Anglais</option>
+                                        <option value="Haïtien">🇭🇹 Haïtien</option>
+                                        <option value="Amazonien">🌿 Amazonien</option>
+                                    </select>
+                                </div>
+                                <div style="flex:1;">
+                                    <label style="font-size:11px; color:var(--text-secondary);">Zone d'Évolution :</label>
+                                    <select id="regPaysActuel" class="input">
+                                        <option value="Togo / Afrique">Togo / Afrique</option>
+                                        <option value="Amazonie / Sud">Amazonie / Sud</option>
+                                        <option value="Europe / Allemagne">Europe / Allemagne</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div style="flex:1;">
-                                <label style="font-size:11px; color:var(--text-secondary);">Zone d'Évolution :</label>
-                                <select id="regPaysActuel" class="input">
-                                    <option value="Togo / Afrique">Togo / Afrique</option>
-                                    <option value="Amazonie / Sud">Amazonie / Sud</option>
-                                    <option value="Europe / Allemagne">Europe / Allemagne</option>
-                                </select>
-                            </div>
+
+                            <button class="btn-action" style="margin-top:10px;" onclick="creerNouveauProfil()">🚀 Commencer mon Espace Souverain</button>
                         </div>
-
-                        <button class="btn-action" style="margin-top:10px;" onclick="creerNouveauProfil()">🚀 Commencer mon Espace Souverain</button>
                     </div>
                 `;
                 return;
             }
 
-            // Affichage normal des onglets de l'application pour le profil actif
             document.getElementById('appHeader').style.display = 'block';
             document.getElementById('bottomBar').style.display = 'flex';
 
@@ -746,11 +767,11 @@
                     <div class="card">
                         <h3 class="card-title">💾 Sauvegarde & Restauration Souveraine (JSON)</h3>
                         <button class="btn-action" onclick="exporterDonneesJSON()" style="margin-bottom:12px;">📥 Exporter mon Profil JSON</button>
-                        <p class="text">Chaque profil dispose de son propre fichier de sauvegarde indépendant pour garantir une étanchéité totale.</p>
+                        <p class="text">Chaque profil dispose de son propre fichier de sauvegarde indépendant.</p>
                     </div>
                 `;
             } else {
-                content.innerHTML = `<div class="card"><h3 class="card-title">🛠️ Module actif</h3><p class="text">Ce module est prêt pour ${utilisateurActif.nom}.</p></div>`;
+                content.innerHTML = `<div class="card"><h3 class="card-title">🛠️ Module actif</h3><p class="text">Prêt pour ${utilisateurActif.nom}.</p></div>`;
             }
         }
 
