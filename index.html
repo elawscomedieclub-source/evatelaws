@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. & ELAWS - Écosystème Souverain & Appels</title>
+    <title>E.V.A.T. & ELAWS - Écosystème Universel & Outils Métiers</title>
     
     <link rel="manifest" href="data:application/manifest+json,{
         'name': 'E.V.A.T. & ELAWS',
@@ -275,7 +275,7 @@
             </div>
         </header>
         <div class="badge-info">
-            <span id="badgeDomaineActif">🌍 Écosystème Souverain & Réseau</span>
+            <span id="badgeDomaineActif">🌍 Écosystème Souverain & Universel</span>
             <span class="offline-status" id="reseauStatusIndicator">⚡ Vérification...</span>
         </div>
     </div>
@@ -330,7 +330,6 @@
     </div>
 
     <script>
-        // Enregistrement d'un Service Worker virtuel pour garantir le fonctionnement 100% hors-ligne et PWA
         if ('serviceWorker' in navigator) {
             const swCode = `self.addEventListener('fetch', function(e) { e.respondWith(fetch(e.request).catch(function() { return caches.match(e.request); })); });`;
             const blob = new Blob([swCode], {type: 'text/javascript'});
@@ -374,7 +373,6 @@
             setTimeout(() => { toast.classList.remove('show'); }, 2500);
         }
 
-        // Surveillance de l'état Réseau (En ligne / Hors-ligne en temps réel)
         function mettreAJourEtatReseau() {
             const indicator = document.getElementById('reseauStatusIndicator');
             if (!indicator) return;
@@ -430,16 +428,24 @@
                 ],
                 solde: 50000,
                 contactsAppels: [
-                    { id: 1, nom: "Contact Test / Référence", tel: "+228 98231402", type: "Client / Patient / Source" }
+                    { id: 1, nom: "Contact / Référence", tel: "+228 98231402", type: "Client / Patient / Source" }
                 ],
+                // Structure complète des registres métiers pour TOUTES les professions
                 donneesMetierSpecifique: {
                     enquetesJournaliste: [],
                     sourcesJournaliste: [],
                     patientsDocteur: [],
-                    plans: []
+                    ordonnancesDocteur: [],
+                    plansArchitecte: [],
+                    culturesAgriculteur: [],
+                    mesuresCouturier: [],
+                    coursEnseignant: [],
+                    vehiculeChauffeur: [],
+                    interventionsMecanicien: [],
+                    registreUniversel: []
                 },
                 discussionsElaws: [
-                    { role: 'ai', texte: `Bonjour ${nom} ! Je suis **ELAWS**, votre compagnon intelligent. J'ai généré votre profil pour le métier de **${metierUnique}**. Vous pouvez maintenant utiliser le microphone 🎤, consulter vos appels et travailler 100% hors-ligne.` }
+                    { role: 'ai', texte: `Bonjour ${nom} ! Je suis **ELAWS**, votre compagnon intelligent. J'ai généré votre profil et vos outils professionnels pour le métier de **${metierUnique}**. Vous pouvez utiliser le microphone 🎤, vos outils métiers, vos appels et travailler 100% hors-ligne.` }
                 ],
                 historiqueFinancier: [
                     { date: new Date().toLocaleDateString(), desc: "Capital initial", montant: 50000, type: 'entree' }
@@ -454,7 +460,7 @@
             utilisateurActif = nouveauProfil;
 
             if(modeIllettre && 'speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(`Bonjour ${nom}. Votre environnement ELAWS est prêt.`);
+                const utterance = new SpeechSynthesisUtterance(`Bonjour ${nom}. Votre environnement ELAWS pour ${metierUnique} est prêt.`);
                 utterance.lang = 'fr-FR';
                 window.speechSynthesis.speak(utterance);
             }
@@ -517,6 +523,53 @@
             }
         }
 
+        // --- OUTILS METIERS SPECIFIQUES & UNIVERSELS ---
+        function ajouterDonneeMetier(type) {
+            if(!utilisateurActif.donneesMetierSpecifique) utilisateurActif.donneesMetierSpecifique = {};
+            
+            if (type === 'journaliste_enquete') {
+                const sujet = document.getElementById('jSujet').value.trim();
+                const angle = document.getElementById('jAngle').value.trim();
+                if(sujet) {
+                    if(!utilisateurActif.donneesMetierSpecifique.enquetesJournaliste) utilisateurActif.donneesMetierSpecifique.enquetesJournaliste = [];
+                    utilisateurActif.donneesMetierSpecifique.enquetesJournaliste.unshift({ id: Date.now(), sujet, angle, date: new Date().toLocaleDateString() });
+                    sauvegarderProfilActif(); showToast("Enquête enregistrée !"); render();
+                } else { showToast("Remplissez le sujet."); }
+            } else if (type === 'docteur_patient') {
+                const nomP = document.getElementById('docNomP').value.trim();
+                const sympt = document.getElementById('docSympt').value.trim();
+                if(nomP) {
+                    if(!utilisateurActif.donneesMetierSpecifique.patientsDocteur) utilisateurActif.donneesMetierSpecifique.patientsDocteur = [];
+                    utilisateurActif.donneesMetierSpecifique.patientsDocteur.unshift({ id: Date.now(), nomP, sympt, date: new Date().toLocaleDateString() });
+                    sauvegarderProfilActif(); showToast("Patient enregistré !"); render();
+                } else { showToast("Remplissez le nom du patient."); }
+            } else if (type === 'mecanicien_interv') {
+                const vehicule = document.getElementById('mecVehicule').value.trim();
+                const panne = document.getElementById('mecPanne').value.trim();
+                if(vehicule) {
+                    if(!utilisateurActif.donneesMetierSpecifique.interventionsMecanicien) utilisateurActif.donneesMetierSpecifique.interventionsMecanicien = [];
+                    utilisateurActif.donneesMetierSpecifique.interventionsMecanicien.unshift({ id: Date.now(), vehicule, panne, date: new Date().toLocaleDateString() });
+                    sauvegarderProfilActif(); showToast("Intervention enregistrée !"); render();
+                } else { showToast("Remplissez le véhicule."); }
+            } else {
+                // Métier universel
+                const titre = document.getElementById('univTitre').value.trim();
+                const desc = document.getElementById('univDesc').value.trim();
+                if(titre) {
+                    if(!utilisateurActif.donneesMetierSpecifique.registreUniversel) utilisateurActif.donneesMetierSpecifique.registreUniversel = [];
+                    utilisateurActif.donneesMetierSpecifique.registreUniversel.unshift({ id: Date.now(), titre, desc, date: new Date().toLocaleDateString() });
+                    sauvegarderProfilActif(); showToast("Fiche métier enregistrée !"); render();
+                } else { showToast("Remplissez l'intitulé."); }
+            }
+        }
+
+        function supprimerElementMetier(categorie, id) {
+            utilisateurActif.donneesMetierSpecifique[categorie] = utilisateurActif.donneesMetierSpecifique[categorie].filter(x => x.id !== id);
+            sauvegarderProfilActif();
+            showToast("Élément supprimé.");
+            render();
+        }
+
         // --- VOCAL ELAWS ---
         function demarrerEcouteMicrophone() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -552,7 +605,7 @@
             if (!utilisateurActif.discussionsElaws) utilisateurActif.discussionsElaws = [];
             utilisateurActif.discussionsElaws.push({ role: 'user', texte: q });
 
-            let reponse = `ELAWS a bien reçu : "${q}". Je vous accompagne dans votre profil de ${utilisateurActif.metierUnique} !`;
+            let reponse = `ELAWS a bien reçu : "${q}". Je vous assiste dans votre activité de ${utilisateurActif.metierUnique} !`;
             utilisateurActif.discussionsElaws.push({ role: 'ai', texte: reponse });
             sauvegarderProfilActif();
             
@@ -583,7 +636,7 @@
                     <div class="card" style="border-color:var(--accent); max-width:500px; margin: 10px auto; text-align:center;">
                         <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo" style="width:72px; height:72px; margin-bottom:10px; border-radius:16px; border:2px solid var(--accent);">
                         <h2 style="color:var(--accent); margin-top:0;">✨ E.V.A.T. & ELAWS</h2>
-                        <p class="text" style="text-align:center;">Écosystème Universel 100% Hors-Ligne & Vocal. Compatible avec tous les métiers et doté d'appels intégrés.</p>
+                        <p class="text" style="text-align:center;">Écosystème Universel 100% Hors-Ligne & Vocal. Compatible avec tous les métiers du monde entier.</p>
                         
                         ${profilsExistantsHtml}
 
@@ -592,8 +645,8 @@
                             <label style="font-size:11px; color:var(--text-secondary);">Nom ou Pseudonyme * :</label>
                             <input type="text" id="regNom" class="input" placeholder="Ex: Eric Lawson">
                             
-                            <label style="font-size:11px; color:var(--text-secondary);">Votre Métier (Journaliste, Docteur, etc.) * :</label>
-                            <input type="text" id="regMetierCustom" class="input" placeholder="Ex: Journaliste, Docteur, Chauffeur...">
+                            <label style="font-size:11px; color:var(--text-secondary);">Votre Métier (Journaliste, Docteur, Mécanicien, Enseignant...) * :</label>
+                            <input type="text" id="regMetierCustom" class="input" placeholder="Ex: Journaliste, Docteur, Mécanicien...">
 
                             <label style="font-size:11px; color:var(--text-secondary);">Téléphone :</label>
                             <input type="text" id="regTel" class="input" placeholder="Ex: +228 98231402">
@@ -603,7 +656,7 @@
                                 <label for="regModeIllettre" style="font-size:13px; font-weight:700; color:var(--accent); cursor:pointer;">🎤 Activer le Mode Vocal (Synthèse vocale & micro)</label>
                             </div>
 
-                            <button class="btn-action" style="margin-top:10px;" onclick="creerNouveauProfil()">🚀 Générer mon Profil (Hors-Ligne)</button>
+                            <button class="btn-action" style="margin-top:10px;" onclick="creerNouveauProfil()">🚀 Générer mon Profil & Mes Outils</button>
                         </div>
                     </div>
                 `;
@@ -615,6 +668,25 @@
             document.getElementById('installGuideCard').style.display = 'none';
             document.getElementById('badgeDomaineActif').innerHTML = `💼 Profil : ${utilisateurActif.metierUnique}`;
             mettreAJourEtatReseau();
+
+            const metierLower = utilisateurActif.metierUnique.toLowerCase();
+            let iconeMetier = '⚡';
+            let labelMetierNav = 'Outils';
+            if (metierLower.includes('journaliste') || metierLower.includes('redacteur')) {
+                iconeMetier = '📰'; labelMetierNav = 'Enquêtes';
+            } else if (metierLower.includes('docteur') || metierLower.includes('medecin') || metierLower.includes('infirmier')) {
+                iconeMetier = '🩺'; labelMetierNav = 'Patients';
+            } else if (metierLower.includes('mecanicien') || metierLower.includes('garagiste')) {
+                iconeMetier = '🔧'; labelMetierNav = 'Atelier';
+            } else if (metierLower.includes('architecte')) {
+                iconeMetier = '📐'; labelMetierNav = 'Plans';
+            } else if (metierLower.includes('cultivateur') || metierLower.includes('agriculteur')) {
+                iconeMetier = '🌾'; labelMetierNav = 'Champs';
+            }
+
+            document.getElementById('iconBarMetier').innerText = iconeMetier;
+            document.getElementById('labelBarMetier').innerText = labelMetierNav;
+            document.getElementById('menuItemAtelier').innerText = `${iconeMetier} Outils : ${utilisateurActif.metierUnique}`;
 
             document.querySelectorAll('.bar-item').forEach(el => el.classList.remove('active'));
             if(activeTab === 'accueil') document.getElementById('barAccueil')?.classList.add('active');
@@ -633,14 +705,14 @@
                             </div>
                             <button class="btn-top" onclick="changerProfilSession()">🔄 Changer</button>
                         </div>
-                        <p class="text">Métier : <strong style="color:var(--accent);">${utilisateurActif.metierUnique}</strong>. Connecté et autonome.</p>
+                        <p class="text">Métier : <strong style="color:var(--accent);">${utilisateurActif.metierUnique}</strong>. Tous vos outils et logiciels sont prêts.</p>
                         
                         <div style="background:rgba(5,150,105,0.15); border:2px solid var(--accent); padding:16px; border-radius:12px; margin-bottom:15px; display:flex; align-items:center; justify-content:space-between;">
                             <div>
-                                <h4 style="margin:0 0 4px 0; color:var(--accent); font-size:16px;">📞 Appels & Contacts</h4>
-                                <p style="font-size:12px; margin:0; color:var(--text-secondary);">Appelez vos clients, patients ou sources (GSM ou Internet).</p>
+                                <h4 style="margin:0 0 4px 0; color:var(--accent); font-size:16px;">${iconeMetier} Accès direct à vos Outils</h4>
+                                <p style="font-size:12px; margin:0; color:var(--text-secondary);">Gérez votre activité de ${utilisateurActif.metierUnique}.</p>
                             </div>
-                            <button class="btn-action" style="width:auto; padding:12px 18px; font-size:14px;" onclick="switchTab('appels')">Gérer 📞</button>
+                            <button class="btn-action" style="width:auto; padding:12px 18px; font-size:14px;" onclick="switchTab('atelier_specifique')">Ouvrir ⚡</button>
                         </div>
                     </div>
                 `;
@@ -653,7 +725,7 @@
                             <div style="background:${isAi ? 'rgba(5,150,105,0.15)' : 'var(--bg-color)'}; border-left:4px solid ${isAi ? 'var(--accent)' : 'var(--border-color)'}; padding:14px; border-radius:10px; margin-bottom:12px; position:relative;">
                                 <strong style="font-size:12px; color:${isAi ? 'var(--accent)' : 'var(--text-secondary)'};">${isAi ? '🤖 ELAWS' : utilisateurActif.nom}</strong>
                                 <p style="margin:8px 0 0 0; font-size:14px;">${msg.texte}</p>
-                                ${isAi ? `<button onclick="lireTexteAAvoix('${msg.texte.replace(/'/g, "\'")}')" style="position:absolute; top:10px; right:10px; background:var(--accent); color:#000; border:none; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;">🔊 Écouter</button>` : ''}
+                                ${isAi ? `<button onclick="lireTexteAAvoix('${msg.texte.replace(/'/g, "'")}')" style="position:absolute; top:10px; right:10px; background:var(--accent); color:#000; border:none; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;">🔊 Écouter</button>` : ''}
                             </div>
                         `;
                     });
@@ -686,40 +758,114 @@
                                     <small style="color:var(--text-secondary);">📱 ${c.tel}</small>
                                 </div>
                                 <div style="display:flex; gap:8px;">
-                                    <button class="btn-action" style="width:auto; padding:8px 12px; background:#10b981;" onclick="lancerAppelGSM('${c.tel}')" title="Appel GSM direct">📞 GSM</button>
-                                    <button class="btn-action" style="width:auto; padding:8px 12px; background:#3b82f6;" onclick="lancerAppelInternet('${c.nom}')" title="Appel Internet VoIP">🌐 Data</button>
+                                    <button class="btn-action" style="width:auto; padding:8px 12px; background:#10b981;" onclick="lancerAppelGSM('${c.tel}')">📞 GSM</button>
+                                    <button class="btn-action" style="width:auto; padding:8px 12px; background:#3b82f6;" onclick="lancerAppelInternet('${c.nom}')">🌐 Data</button>
                                 </div>
                             </div>
                         `;
                     });
-                } else { contactsHtml = '<p style="color:var(--text-secondary);">Aucun contact enregistré.</p>'; }
+                } else { contactsHtml = '<p style="color:var(--text-secondary);">Aucun contact.</p>'; }
 
                 content.innerHTML = `
                     <div class="card" style="border-color:var(--accent);">
-                        <h3 class="card-title">📞 Module d'Appels (GSM & Internet / Data)</h3>
-                        <p class="text">Contactez vos clients, patients ou sources instantanément par appel téléphonique direct (réseau mobile) ou par VoIP (Internet).</p>
-                        
+                        <h3 class="card-title">📞 Appels & Contacts</h3>
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                            <h4 style="margin:0 0 8px 0; color:var(--accent);">➕ Ajouter un Contact :</h4>
                             <input type="text" id="appelNom" class="input" placeholder="Nom du contact" style="margin-bottom:8px;">
-                            <input type="text" id="appelTel" class="input" placeholder="Numéro (ex: +228 98231402)" style="margin-bottom:8px;">
+                            <input type="text" id="appelTel" class="input" placeholder="Téléphone" style="margin-bottom:8px;">
                             <select id="appelType" class="input" style="margin-bottom:8px;">
-                                <option value="Patient / Client">Patient / Client</option>
-                                <option value="Source Journaliste">Source Journaliste</option>
+                                <option value="Client / Patient">Client / Patient</option>
                                 <option value="Fournisseur">Fournisseur</option>
                             </select>
                             <button class="btn-action" onclick="ajouterContactAppel()">Enregistrer le Contact</button>
                         </div>
-
-                        <h4 style="margin-bottom:8px;">📂 Mes Contacts & Appels :</h4>
                         ${contactsHtml}
                     </div>
                 `;
             } else if (activeTab === 'atelier_specifique') {
+                // AFFICHAGE DYNAMIQUE DES OUTILS SELON LE METIER
+                let outilsHtml = '';
+                const dms = utilisateurActif.donneesMetierSpecifique || {};
+
+                if (metierLower.includes('journaliste') || metierLower.includes('redacteur')) {
+                    let listeEnquetes = '';
+                    if(dms.enquetesJournaliste && dms.enquetesJournaliste.length > 0) {
+                        dms.enquetesJournaliste.forEach(e => {
+                            listeEnquetes += `<div style="background:var(--bg-color); padding:10px; border-radius:6px; margin-bottom:6px; position:relative;"><strong>📰 ${e.sujet}</strong> (${e.angle}) <button onclick="supprimerElementMetier('enquetesJournaliste', ${e.id})" style="float:right; background:none; border:none; color:#ef4444; cursor:pointer;">❌</button></div>`;
+                        });
+                    } else { listeEnquetes = '<p style="color:var(--text-secondary);">Aucune enquête.</p>'; }
+
+                    outilsHtml = `
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
+                            <h4 style="margin:0 0 8px 0; color:var(--accent);">📰 Carnet d'Enquêtes :</h4>
+                            <input type="text" id="jSujet" class="input" placeholder="Sujet de l'enquête" style="margin-bottom:8px;">
+                            <input type="text" id="jAngle" class="input" placeholder="Angle journalistique" style="margin-bottom:8px;">
+                            <button class="btn-action" onclick="ajouterDonneeMetier('journaliste_enquete')">Enregistrer l'Enquête</button>
+                        </div>
+                        <h4 style="margin-bottom:8px;">📂 Mes Enquêtes :</h4>
+                        ${listeEnquetes}
+                    `;
+                } else if (metierLower.includes('docteur') || metierLower.includes('medecin') || metierLower.includes('infirmier')) {
+                    let listePatients = '';
+                    if(dms.patientsDocteur && dms.patientsDocteur.length > 0) {
+                        dms.patientsDocteur.forEach(p => {
+                            listePatients += `<div style="background:var(--bg-color); padding:10px; border-radius:6px; margin-bottom:6px; position:relative;"><strong>🩺 Patient : ${p.nomP}</strong> — Symptômes : ${p.sympt} <button onclick="supprimerElementMetier('patientsDocteur', ${p.id})" style="float:right; background:none; border:none; color:#ef4444; cursor:pointer;">❌</button></div>`;
+                        });
+                    } else { listePatients = '<p style="color:var(--text-secondary);">Aucun patient.</p>'; }
+
+                    outilsHtml = `
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
+                            <h4 style="margin:0 0 8px 0; color:var(--accent);">🩺 Registre des Patients :</h4>
+                            <input type="text" id="docNomP" class="input" placeholder="Nom du patient" style="margin-bottom:8px;">
+                            <input type="text" id="docSympt" class="input" placeholder="Symptômes / Diagnostic" style="margin-bottom:8px;">
+                            <button class="btn-action" onclick="ajouterDonneeMetier('docteur_patient')">Enregistrer le Patient</button>
+                        </div>
+                        <h4 style="margin-bottom:8px;">📂 Fichiers Patients :</h4>
+                        ${listePatients}
+                    `;
+                } else if (metierLower.includes('mecanicien') || metierLower.includes('garagiste')) {
+                    let listeMecano = '';
+                    if(dms.interventionsMecanicien && dms.interventionsMecanicien.length > 0) {
+                        dms.interventionsMecanicien.forEach(m => {
+                            listeMecano += `<div style="background:var(--bg-color); padding:10px; border-radius:6px; margin-bottom:6px; position:relative;"><strong>🔧 Véhicule : ${m.vehicule}</strong> — Panne : ${m.panne} <button onclick="supprimerElementMetier('interventionsMecanicien', ${m.id})" style="float:right; background:none; border:none; color:#ef4444; cursor:pointer;">❌</button></div>`;
+                        });
+                    } else { listeMecano = '<p style="color:var(--text-secondary);">Aucune intervention.</p>'; }
+
+                    outilsHtml = `
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
+                            <h4 style="margin:0 0 8px 0; color:var(--accent);">🔧 Suivi d'Atelier (Mécanicien) :</h4>
+                            <input type="text" id="mecVehicule" class="input" placeholder="Modèle du véhicule & Immatriculation" style="margin-bottom:8px;">
+                            <input type="text" id="mecPanne" class="input" placeholder="Panne constatée / Réparation" style="margin-bottom:8px;">
+                            <button class="btn-action" onclick="ajouterDonneeMetier('mecanicien_interv')">Enregistrer l'Intervention</button>
+                        </div>
+                        <h4 style="margin-bottom:8px;">📂 Interventions Atelier :</h4>
+                        ${listeMecano}
+                    `;
+                } else {
+                    // OUTIL UNIVERSEL POUR TOUS LES AUTRES METIERS DU MONDE (Boulanger, Enseignant, Électricien, Coiffeur, etc.)
+                    let listeUniv = '';
+                    if(dms.registreUniversel && dms.registreUniversel.length > 0) {
+                        dms.registreUniversel.forEach(u => {
+                            listeUniv += `<div style="background:var(--bg-color); padding:10px; border-radius:6px; margin-bottom:6px; position:relative;"><strong>📌 ${u.titre}</strong> — ${u.desc} <button onclick="supprimerElementMetier('registreUniversel', ${u.id})" style="float:right; background:none; border:none; color:#ef4444; cursor:pointer;">❌</button></div>`;
+                        });
+                    } else { listeUniv = '<p style="color:var(--text-secondary);">Aucun enregistrement dans votre registre professionnel.</p>'; }
+
+                    outilsHtml = `
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
+                            <h4 style="margin:0 0 8px 0; color:var(--accent);">⚡ Registre Professionnel (${utilisateurActif.metierUnique}) :</h4>
+                            <input type="text" id="univTitre" class="input" placeholder="Intitulé de la tâche, du service ou du stock" style="margin-bottom:8px;">
+                            <input type="text" id="univDesc" class="input" placeholder="Détails, notes ou prix" style="margin-bottom:8px;">
+                            <button class="btn-action" onclick="ajouterDonneeMetier('universel')">Enregistrer dans le Registre</button>
+                        </div>
+                        <h4 style="margin-bottom:8px;">📂 Mes Enregistrements Pro :</h4>
+                        ${listeUniv}
+                    `;
+                }
+
                 content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">⚡ Outils Métier : ${utilisateurActif.metierUnique}</h3>
-                        <p class="text">Environnement généré pour ${utilisateurActif.metierUnique}.</p>
+                    <div class="card" style="border-color:var(--accent);">
+                        <h3 class="card-title">${iconeMetier} Outils & Logiciels : ${utilisateurActif.metierUnique}</h3>
+                        <p class="text">Espace de travail généré dynamiquement pour votre profession.</p>
+                        ${outilsHtml}
                     </div>
                 `;
             } else if (activeTab === 'economie') {
