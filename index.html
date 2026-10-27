@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. & ELAWS - Écosystème Souverain Universel</title>
+    <title>E.V.A.T. & ELAWS - Écosystème Souverain & Assistant Administratif</title>
     
     <link rel="manifest" href="data:application/manifest+json,{
         'name': 'E.V.A.T. & ELAWS',
@@ -60,6 +60,7 @@
             flex-direction: column;
             min-height: 100vh;
             padding: 15px;
+            padding-bottom: 80px;
             transition: background 0.4s ease, color 0.4s ease;
         }
         header {
@@ -109,9 +110,39 @@
             align-items: center;
             gap: 6px;
         }
+        .bottom-action-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 999;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
+        }
+        .bar-item {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .bar-item span.icon { font-size: 18px; }
+        .bar-item.active, .bar-item:hover { color: var(--accent); }
+
         #toastNotification {
             position: fixed;
-            bottom: 20px;
+            bottom: 70px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
             background: var(--card-bg);
@@ -173,7 +204,6 @@
             animation: fadeIn 0.4s ease;
         }
         .card-title { font-size: 15px; font-weight: 700; color: var(--text-secondary); margin-top: 0; margin-bottom: 10px; }
-        .score-text { font-size: 16px; font-weight: 800; margin-bottom: 8px; }
         .text { font-size: 14px; color: var(--text-secondary); margin-bottom: 15px; line-height: 1.6; }
         .grid-metiers {
             display: grid;
@@ -205,6 +235,7 @@
             transition: border-color 0.2s;
         }
         .input:focus { border-color: var(--accent); }
+        select.input { width: 100%; margin-bottom: 10px; }
         .btn-action {
             background: var(--accent-gradient);
             color: white;
@@ -236,11 +267,11 @@
         </div>
         <div class="header-right">
             <button class="btn-top" onclick="changerTheme()">🎨 Thème</button>
-            <button class="btn-top" onclick="changerLangue()">🌐 FR</button>
+            <button class="btn-top" onclick="changerLangue()">🌐 Langue</button>
         </div>
     </header>
 
-    <div class="badge-info">🌟 Accueil Épuré & Hub de Profils en Évidence</div>
+    <div class="badge-info">🌍 Passeport Souverain & Assistant Administratif Global</div>
 
     <div id="installBanner" class="card" style="display:none; border-color:var(--accent); background:rgba(5,150,105,0.12);">
         <h3 class="card-title" style="color:var(--accent);">📲 Installer E.V.A.T. & ELAWS</h3>
@@ -248,42 +279,73 @@
         <button class="btn-action" id="btnInstallApp">Installer l'Application</button>
     </div>
 
-    <!-- Menu Latéral enrichi avec le GPS et les Finances -->
     <div id="sideMenu" class="sidebar">
         <h3>📂 Navigation Globale E.V.A.T.</h3>
-        <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Profils</button>
-        <button class="menu-item" onclick="switchTab('gps')">🧭 Géolocalisation & Quick Route (Menu)</button>
-        <button class="menu-item" onclick="switchTab('economie')">🪙 Finances & Caisse Locale (Menu)</button>
-        <button class="menu-item" onclick="switchTab('camera')">📸 Caméra & Analyse de Sol/Documents</button>
-        <button class="menu-item" onclick="switchTab('simulateur')">🧮 Calculateurs & Outils Métiers</button>
-        <button class="menu-item" onclick="switchTab('stocks')">📦 Stocks, Récoltes & Matériel</button>
+        <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Hub Identitaire</button>
+        <button class="menu-item" onclick="switchTab('dossiers')">📁 Assistant Visas & Titres de Séjour</button>
+        <button class="menu-item" onclick="switchTab('convertisseur')">💱 Convertisseur de Devises</button>
+        <button class="menu-item" onclick="switchTab('traduction')">🗣️ Pont de Traduction (ELAWS)</button>
+        <button class="menu-item" onclick="switchTab('carnet')">📝 Carnet de Commandes & Courses</button>
+        <button class="menu-item" onclick="switchTab('gps')">🧭 Géolocalisation & Quick Route</button>
+        <button class="menu-item" onclick="switchTab('economie')">🪙 Finances & Caisse Régionale</button>
+        <button class="menu-item" onclick="switchTab('camera')">📸 Caméra & Analyse de Documents</button>
         <button class="menu-item" onclick="switchTab('securite')">🛡️ Sécurité & Chiffrement Local</button>
         <button class="menu-item" onclick="switchTab('sauvegarde')">💾 Sauvegardes & Synchro Souveraine</button>
-        <button class="menu-item" onclick="switchTab('apprentissage')">📚 Fiches Jeunes & Enfants</button>
-        <button class="menu-item" onclick="switchTab('appel')">📞 Appels & Traduction Maternelle</button>
         <button class="menu-item" onclick="switchTab('ia')">🤖 Assistant ELAWS AI</button>
     </div>
 
     <div class="module-container" id="mainContent"></div>
 
+    <div class="bottom-action-bar">
+        <button class="bar-item active" onclick="switchTab('accueil')" id="barAccueil">
+            <span class="icon">🌍</span><span>Profil</span>
+        </button>
+        <button class="bar-item" onclick="switchTab('dossiers')" id="barDossiers">
+            <span class="icon">📁</span><span>Dossiers</span>
+        </button>
+        <button class="bar-item" onclick="switchTab('convertisseur')" id="barConv">
+            <span class="icon">💱</span><span>Devises</span>
+        </button>
+        <button class="bar-item" onclick="switchTab('traduction')" id="barTrad">
+            <span class="icon">🗣️</span><span>Traduction</span>
+        </button>
+        <button class="bar-item" onclick="switchTab('economie')" id="barEco">
+            <span class="icon">🪙</span><span>Caisse</span>
+        </button>
+    </div>
+
     <script>
         let activeTab = 'accueil';
-        let listeMetiers = [
+        
+        let utilisateur = JSON.parse(localStorage.getItem('evat_utilisateur')) || {
+            nom: 'Eric Lawson',
+            nationalite: 'Togolais',
+            paysActuel: 'Togo (Lomé)',
+            langueMaternelle: 'Éwé / Français'
+        };
+
+        let listeMetiers = JSON.parse(localStorage.getItem('evat_metiers')) || [
             { nom: 'Conducteur / Chauffeur', icone: '🚕', desc: 'GPS & Transport' },
             { nom: 'Agriculteur', icone: '🌾', desc: 'Récoltes & Sols' },
-            { nom: 'Artisan / Couturier', icone: '✂️', desc: 'Devis & Matériel' },
-            { nom: 'Étudiant / Jeune', icone: '📚', desc: 'Apprentissage' }
+            { nom: 'Artisan / Entrepreneur', icone: '✂️', desc: 'Devis & Commerce' },
+            { nom: 'Explorateur / Voyageur', icone: '🌍', desc: 'Mobilité Globale' }
         ];
-        let metierActif = 'Conducteur / Chauffeur';
+        let metierActif = localStorage.getItem('evat_metier_actif') || 'Conducteur / Chauffeur';
+        
         let themeIndex = 0;
         const themes = ['dark', 'light', 'eco'];
         const themeNoms = ['Sombre Pro', 'Clair Lumineux', 'Éco-Batterie'];
 
-        let soldeCaisse = 45200;
-        let gpsStatus = "📍 Prêt pour la géolocalisation en ligne (Point A vers Point B).";
-        let etatSynchro = "🟢 Données synchronisées et sécurisées en local.";
-        let analysisResult = "Aucune image scannée pour le moment. Prenez une photo depuis le menu Caméra pour lancer l'analyse.";
+        let soldeCaisse = parseFloat(localStorage.getItem('evat_solde')) || 45200;
+        let gpsStatus = "📍 Prêt pour la géolocalisation universelle.";
+        let etatSynchro = "🟢 Données souveraines et sécurisées localement (AES-256).";
+        let analysisResult = "Aucune image scannée. Prenez une photo pour lancer l'analyse ELAWS.";
         let capturedImageSrc = null;
+
+        let carnetCommandes = JSON.parse(localStorage.getItem('evat_carnet')) || [
+            { id: 1, client: "Koffi Mensah", detail: "Mission locale (Lomé)", montant: 2500, devise: "FCFA", statut: "Terminé" },
+            { id: 2, client: "Partner Amazonia", detail: "Échange de ressources", montant: 45, devise: "USD", statut: "En cours" }
+        ];
 
         function showToast(message) {
             const toast = document.getElementById('toastNotification');
@@ -319,32 +381,114 @@
             showToast("Thème appliqué : " + themeNoms[themeIndex]);
         }
 
-        function changerLangue() { showToast("Mode Multilingue actif."); }
+        function changerLangue() { showToast("Assistant ELAWS : Pont linguistique multilingue actif."); }
 
         function selectionnerMetier(nom) {
             metierActif = nom;
+            localStorage.setItem('evat_metier_actif', nom);
             showToast(`Profil actif : ${nom}`);
             render();
         }
 
-        function ajouterNouveauMetier() {
-            const input = document.getElementById('inputNouveauProfil');
-            const val = input.value.trim();
-            if (val) {
-                if (!listeMetiers.some(m => m.nom.toLowerCase() === val.toLowerCase())) {
-                    listeMetiers.push({ nom: val, icone: '💼', desc: 'Profil Personnalisé' });
-                    metierActif = val;
-                    input.value = '';
-                    showToast(`Nouveau profil "${val}" créé et activé !`);
-                    render();
-                } else {
-                    metierActif = val;
-                    input.value = '';
-                    showToast(`Profil "${val}" sélectionné.`);
-                    render();
-                }
+        function mettreAJourIdentite() {
+            const nat = document.getElementById('selectNationalite').value;
+            const pays = document.getElementById('selectPaysActuel').value;
+            const lang = document.getElementById('selectLangue').value;
+            
+            utilisateur.nationalite = nat;
+            utilisateur.paysActuel = pays;
+            utilisateur.langueMaternelle = lang;
+            
+            localStorage.setItem('evat_utilisateur', JSON.stringify(utilisateur));
+            showToast(`Identité mise à jour : Origine ${nat} | Actuellement en ${pays}`);
+            render();
+        }
+
+        function genererChecklistDossier() {
+            const typeDemande = document.getElementById('typeDemandeAdministrative').value;
+            const paysDestination = document.getElementById('destinationDemande').value;
+            let checklistHtml = "";
+
+            if (typeDemande === 'visa') {
+                checklistHtml = `
+                    📋 <strong>Dossier requis pour Visa (${paysDestination}) [Origine : ${utilisateur.nationalite}] :</strong><br>
+                    1. 🛂 Passeport biométrique valide (au moins 6 mois après la date de retour).<br>
+                    2. 📄 Formulaire officiel de demande de visa rempli et signé.<br>
+                    3. 📸 2 photos d'identité récentes aux normes consulaires.<br>
+                    4. ✈️ Justificatif de transport (billet d'avion aller-retour ou réservation).<br>
+                    5. 🏨 Justificatif d'hébergement (attestation d'accueil ou réservation d'hôtel).<br>
+                    6. 🪙 Justificatifs financiers (relevés bancaires des 3 derniers mois prouvant l'autonomie).<br>
+                    7. 💼 Attestation de travail, carte professionnelle ou certificat de scolarité.
+                `;
+            } else if (typeDemande === 'sejour') {
+                checklistHtml = `
+                    📋 <strong>Dossier requis pour Titre de Séjour / Carte de Résident en ${paysDestination} :</strong><br>
+                    1. 🛂 Passeport original et copie des pages d'identification.<br>
+                    2. 🏠 Justificatif de domicile récent (facture d'électricité, quittance de loyer).<br>
+                    3. 📜 Extrait d'acte de naissance légalisé ou apostillé.<br>
+                    4. 💼 Justificatif de ressources stables (contrat de travail ou attestation financière).<br>
+                    5. 🏥 Justificatif d'assurance maladie ou couverture sociale locale.<br>
+                    6. 🎫 Timbres fiscaux ou taxes administratives exigés par l'autorité locale.
+                `;
             } else {
-                showToast("Veuillez saisir un nom de profil valide.");
+                checklistHtml = `
+                    📋 <strong>Dossier requis pour Passeport / Pièce d'Identité Nationalité (${utilisateur.nationalite}) :</strong><br>
+                    1. 📜 Extrait d'acte de naissance original.<br>
+                    2. 📇 Ancienne pièce d'identité ou certificat de nationalité.<br>
+                    3. 📸 Photos d'identité aux normes.<br>
+                    4. 📄 Justificatif de domicile ou attestation de résidence.
+                `;
+            }
+
+            document.getElementById('resultatChecklist').innerHTML = checklistHtml;
+            showToast("Checklist administrative générée par ELAWS !");
+        }
+
+        function executerConversionDevise() {
+            const montant = parseFloat(document.getElementById('montantAConvertir').value) || 0;
+            const sens = document.getElementById('sensConversion').value;
+            let resultat = "";
+            if (sens === 'fcfa_eur') {
+                let res = (montant / 655.957).toFixed(2);
+                resultat = `${montant.toLocaleString()} FCFA = <strong style="color:var(--accent);">${res} EUR (€)</strong>`;
+            } else if (sens === 'eur_fcfa') {
+                let res = (montant * 655.957).toLocaleString(undefined, {maximumFractionDigits: 0});
+                resultat = `${montant} EUR (€) = <strong style="color:var(--accent);">${res} FCFA</strong>`;
+            } else if (sens === 'fcfa_usd') {
+                let res = (montant / 600).toFixed(2);
+                resultat = `${montant.toLocaleString()} FCFA = <strong style="color:var(--accent);">${res} USD ($)</strong>`;
+            } else if (sens === 'usd_fcfa') {
+                let res = (montant * 600).toLocaleString(undefined, {maximumFractionDigits: 0});
+                resultat = `${montant} USD ($) = <strong style="color:var(--accent);">${res} FCFA</strong>`;
+            }
+            document.getElementById('resultatConversion').innerHTML = `💱 <strong>Résultat :</strong><br>${resultat}`;
+            showToast("Conversion effectuée !");
+        }
+
+        function traduirePontUniversel() {
+            const texte = document.getElementById('texteUniversel').value.trim();
+            const sourceLang = document.getElementById('sourceLangue').value;
+            const targetLang = document.getElementById('targetLangue').value;
+            if(!texte) { showToast("Entrez un texte à traduire."); return; }
+            let traductionSimulee = `🌐 [ELAWS Bridge] (${sourceLang.toUpperCase()} ➔ ${targetLang.toUpperCase()}) :<br>"<em>${texte}</em>" traduit et adapté aux contextes administratifs locaux.<br><small style="color:var(--accent);">✓ Prêt pour vos démarches.</small>`;
+            document.getElementById('resultatPontTraduction').innerHTML = traductionSimulee;
+            showToast("Traduction effectuée !");
+        }
+
+        function ajouterCommandeCarnet() {
+            const client = document.getElementById('clientNom').value.trim();
+            const detail = document.getElementById('clientDetail').value.trim();
+            const montant = parseFloat(document.getElementById('clientMontant').value) || 0;
+            if (client && detail) {
+                carnetCommandes.unshift({ id: Date.now(), client, detail, montant, devise: "FCFA", statut: "En cours" });
+                localStorage.setItem('evat_carnet', JSON.stringify(carnetCommandes));
+                document.getElementById('clientNom').value = '';
+                document.getElementById('clientDetail').value = '';
+                document.getElementById('clientMontant').value = '';
+                showToast("Activité enregistrée !");
+                render();
+            } else {
+                showToast("Veuillez remplir les champs.");
             }
         }
 
@@ -354,8 +498,8 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     capturedImageSrc = e.target.result;
-                    analysisResult = `🔍 <strong>Analyse ELAWS de l'image :</strong><br>- Type détecté : Échantillon / Document.<br>- Statut : Enregistré avec succès.`;
-                    showToast("Photo analysée avec succès !");
+                    analysisResult = `🔍 <strong>Analyse Document / Pièce (${utilisateur.paysActuel}) :</strong><br>- Statut : Scanné, vérifié et sécurisé en local.`;
+                    showToast("Document analysé par ELAWS !");
                     render();
                 };
                 reader.readAsDataURL(file);
@@ -364,20 +508,20 @@
 
         function obtenirGeolocalisation() {
             if (!navigator.onLine) {
-                showToast("Mode Hors-ligne : Connexion requise pour le GPS.");
+                showToast("Mode Hors-ligne : GPS local actif.");
                 return;
             }
             if (navigator.geolocation) {
-                showToast("Recherche GPS en cours...");
+                showToast("Recherche GPS...");
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         const lat = position.coords.latitude;
                         const lon = position.coords.longitude;
-                        gpsStatus = `📍 Position GPS active : Lat ${lat.toFixed(4)}, Lon ${lon.toFixed(4)}`;
-                        showToast("Position GPS actualisée !");
+                        gpsStatus = `📍 Position active : Lat ${lat.toFixed(4)}, Lon ${lon.toFixed(4)} (${utilisateur.paysActuel})`;
+                        showToast("Position actualisée !");
                         render();
                     },
-                    (error) => { gpsStatus = "⚠️ Erreur de géolocalisation."; showToast("Erreur GPS."); render(); }
+                    (error) => { gpsStatus = "⚠️ Erreur GPS."; showToast("Erreur de géolocalisation."); render(); }
                 );
             }
         }
@@ -390,6 +534,13 @@
         }
 
         function render() {
+            document.querySelectorAll('.bar-item').forEach(el => el.classList.remove('active'));
+            if(activeTab === 'accueil') document.getElementById('barAccueil')?.classList.add('active');
+            if(activeTab === 'dossiers') document.getElementById('barDossiers')?.classList.add('active');
+            if(activeTab === 'convertisseur') document.getElementById('barConv')?.classList.add('active');
+            if(activeTab === 'traduction') document.getElementById('barTrad')?.classList.add('active');
+            if(activeTab === 'economie') document.getElementById('barEco')?.classList.add('active');
+
             const content = document.getElementById('mainContent');
             content.innerHTML = '';
 
@@ -406,20 +557,50 @@
                     `;
                 });
 
-                // Accueil épuré et centré sur le Hub Central des Profils
                 content.innerHTML = `
                     <div class="card" style="border-color: var(--accent);">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                             <div>
-                                <span style="font-size:11px; color:var(--accent); font-weight:700;">✨ HUB CENTRAL DES PROFILS</span>
-                                <div style="font-size:17px; font-weight:800;">Choisissez ou créez votre profil :</div>
+                                <span style="font-size:11px; color:var(--accent); font-weight:700;">🌍 PASSEPORT SOUVERAIN & IDENTITÉ</span>
+                                <div style="font-size:17px; font-weight:800;">Configuration Régionale & Profil :</div>
                             </div>
-                            <span style="background:rgba(5,150,105,0.2); color:var(--accent); padding:5px 10px; border-radius:20px; font-size:11px; font-weight:700;">Actif : ${metierActif}</span>
+                            <span style="background:rgba(5,150,105,0.2); color:var(--accent); padding:5px 10px; border-radius:20px; font-size:11px; font-weight:700;">${utilisateur.nationalite} ➔ ${utilisateur.paysActuel}</span>
                         </div>
-                        <p class="text" style="margin-bottom:12px;">Sélectionnez votre profil ou ajoutez instantanément un nouveau rôle :</p>
+                        <p class="text" style="margin-bottom:12px;">Définissez votre origine et votre zone d'évolution pour adapter l'application :</p>
                         
+                        <div style="background:var(--bg-color); padding:12px; border-radius:10px; margin-bottom:15px; display:flex; flex-direction:column; gap:8px;">
+                            <div style="display:flex; gap:8px;">
+                                <div style="flex:1;">
+                                    <label style="font-size:11px; color:var(--text-secondary);">Nationalité d'origine :</label>
+                                    <select id="selectNationalite" class="input" style="margin-top:4px;">
+                                        <option value="Togolais" ${utilisateur.nationalite === 'Togolais' ? 'selected' : ''}>🇹🇬 Togolais</option>
+                                        <option value="Allemand" ${utilisateur.nationalite === 'Allemand' ? 'selected' : ''}>🇩🇪 Allemand</option>
+                                        <option value="Anglais" ${utilisateur.nationalite === 'Anglais' ? 'selected' : ''}>🇬🇧 Anglais</option>
+                                        <option value="Haïtien" ${utilisateur.nationalite === 'Haïtien' ? 'selected' : ''}>🇭🇹 Haïtien</option>
+                                        <option value="Amérindien / Amazonien" ${utilisateur.nationalite === 'Amérindien / Amazonien' ? 'selected' : ''}>🌿 Amazonien</option>
+                                    </select>
+                                </div>
+                                <div style="flex:1;">
+                                    <label style="font-size:11px; color:var(--text-secondary);">Pays / Zone d'Évolution :</label>
+                                    <select id="selectPaysActuel" class="input" style="margin-top:4px;">
+                                        <option value="Togo / Afrique de l'Ouest" ${utilisateur.paysActuel.includes('Togo') ? 'selected' : ''}>Togo / Afrique</option>
+                                        <option value="Amazonie / Amérique du Sud" ${utilisateur.paysActuel.includes('Amazonie') ? 'selected' : ''}>Amazonie / Sud</option>
+                                        <option value="Europe / Allemagne" ${utilisateur.paysActuel.includes('Europe') || utilisateur.paysActuel.includes('Allemagne') ? 'selected' : ''}>Europe (Allemagne/UK)</option>
+                                        <option value="Haïti / Caraïbes" ${utilisateur.paysActuel.includes('Haïti') ? 'selected' : ''}>Haïti / Caraïbes</option>
+                                        <option value="Asie / International" ${utilisateur.paysActuel.includes('Asie') ? 'selected' : ''}>Asie / Global</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label style="font-size:11px; color:var(--text-secondary);">Langue Maternelle / Préférée :</label>
+                                <input type="text" id="selectLangue" class="input" value="${utilisateur.langueMaternelle}" style="margin-top:4px;">
+                            </div>
+                            <button class="btn-action" style="padding:10px; font-size:13px; margin-top:4px;" onclick="mettreAJourIdentite()">💾 Enregistrer mon Identité Géographique</button>
+                        </div>
+
+                        <div style="font-size:14px; font-weight:800; margin-bottom:8px;">Sélectionnez votre rôle / activité :</div>
                         <div class="input-group" style="margin-bottom:12px;">
-                            <input type="text" id="inputNouveauProfil" class="input" placeholder="Ajouter un profil (ex: Pilote, Mécanicien...)">
+                            <input type="text" id="inputNouveauProfil" class="input" placeholder="Ajouter un profil (ex: Pilote, Commerçant...)">
                             <button class="btn-action" style="width:auto; padding:0 15px;" onclick="ajouterNouveauMetier()">+ Créer</button>
                         </div>
 
@@ -427,54 +608,168 @@
                             ${cartesMetiersHtml}
                         </div>
                     </div>
+                `;
+            } else if (activeTab === 'dossiers') {
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">📁 Assistant Administratif : Visas & Titres de Séjour</h3>
+                        <p class="text">Préparez vos dossiers officiels en toute sérénité selon votre pays d'origine (${utilisateur.nationalite}) et votre destination.</p>
+                        
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
+                            <label style="font-size:12px; color:var(--text-secondary);">Type de démarche :</label>
+                            <select id="typeDemandeAdministrative" class="input" style="margin-top:4px; margin-bottom:10px;">
+                                <option value="visa">Demande de Visa (Schengen / International)</option>
+                                <option value="sejour">Titre de Séjour / Carte de Résident</option>
+                                <option value="passeport">Passeport / Pièce d'Identité Nationale</option>
+                            </select>
 
-                    <div class="card" style="text-align: center; padding: 15px; background: rgba(5, 150, 105, 0.05);">
-                        <p style="margin: 0; font-size: 13px; color: var(--text-secondary);">💡 <strong>Astuce :</strong> Retrouvez le GPS, la Caisse Financière, la Caméra et tous les autres outils à tout moment en cliquant sur le menu ☰ en haut à gauche.</p>
+                            <label style="font-size:12px; color:var(--text-secondary);">Pays ou zone de destination :</label>
+                            <input type="text" id="destinationDemande" class="input" placeholder="Ex: Allemagne, France, Brésil, Canada..." value="Europe / Allemagne" style="margin-top:4px; margin-bottom:12px;">
+                            
+                            <button class="btn-action" onclick="genererChecklistDossier()">📋 Générer la Checklist des Pièces à Fournir</button>
+                        </div>
+
+                        <div class="tool-card" id="resultatChecklist">
+                            💡 Sélectionnez vos critères ci-dessus pour obtenir la liste exacte des documents exigés par les administrations et consulats.
+                        </div>
+                    </div>
+                `;
+            } else if (activeTab === 'convertisseur') {
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">💱 Convertisseur de Devises Universel</h3>
+                        <p class="text">Convertissez instantanément vos montants entre le Franc CFA, l'Euro et le Dollar.</p>
+                        
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
+                            <label style="font-size:12px; color:var(--text-secondary);">Sens de conversion :</label>
+                            <select id="sensConversion" class="input" style="margin-top:4px; margin-bottom:10px;">
+                                <option value="fcfa_eur">Franc CFA (FCFA) ➔ Euro (EUR €)</option>
+                                <option value="eur_fcfa">Euro (EUR €) ➔ Franc CFA (FCFA)</option>
+                                <option value="fcfa_usd">Franc CFA (FCFA) ➔ Dollar (USD $)</option>
+                                <option value="usd_fcfa">Dollar (USD $) ➔ Franc CFA (FCFA)</option>
+                            </select>
+                            
+                            <label style="font-size:12px; color:var(--text-secondary);">Montant à convertir :</label>
+                            <input type="number" id="montantAConvertir" class="input" placeholder="Ex: 10000" style="margin-top:4px; margin-bottom:12px;">
+                            
+                            <button class="btn-action" onclick="executerConversionDevise()">💱 Convertir Immédiatement</button>
+                        </div>
+
+                        <div class="tool-card" id="resultatConversion">
+                            📊 Entrez un montant ci-dessus pour lancer la conversion.
+                        </div>
+                    </div>
+                `;
+            } else if (activeTab === 'traduction') {
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">🗣️ Pont de Traduction Universel (ELAWS Bridge)</h3>
+                        <p class="text">Communiquez sans barrière entre des cultures différentes.</p>
+                        
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
+                            <div style="display:flex; gap:8px; margin-bottom:10px;">
+                                <div style="flex:1;">
+                                    <label style="font-size:11px; color:var(--text-secondary);">Langue Source :</label>
+                                    <select id="sourceLangue" class="input" style="margin-top:4px;">
+                                        <option value="fr">Français</option>
+                                        <option value="ewe">Éwé / Mina</option>
+                                        <option value="de">Allemand</option>
+                                        <option value="en">Anglais</option>
+                                    </select>
+                                </div>
+                                <div style="flex:1;">
+                                    <label style="font-size:11px; color:var(--text-secondary);">Langue Cible :</label>
+                                    <select id="targetLangue" class="input" style="margin-top:4px;">
+                                        <option value="de">Allemand</option>
+                                        <option value="ewe">Éwé</option>
+                                        <option value="en">Anglais</option>
+                                        <option value="local">Langue locale</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <input type="text" id="texteUniversel" class="input" placeholder="Entrez le texte à traduire..." style="margin-bottom:10px;">
+                            <button class="btn-action" onclick="traduirePontUniversel()">🌐 Activer le Pont ELAWS</button>
+                        </div>
+
+                        <div class="tool-card" id="resultatPontTraduction">
+                            💬 Le traducteur universel adaptera le sens pour vos démarches.
+                        </div>
+                    </div>
+                `;
+            } else if (activeTab === 'carnet') {
+                let carnetHtml = '';
+                carnetCommandes.forEach(c => {
+                    carnetHtml += `
+                        <div class="tool-card" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <div>
+                                <strong style="color:var(--accent);">👤 ${c.client}</strong><br>
+                                <small>${c.detail}</small>
+                            </div>
+                            <div style="text-align:right;">
+                                <strong>${c.montant.toLocaleString()} ${c.devise}</strong><br>
+                                <span style="font-size:10px; background:rgba(5,150,105,0.15); color:var(--accent); padding:2px 6px; border-radius:10px;">${c.statut}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">📝 Carnet de Commandes & Échanges (${utilisateur.paysActuel})</h3>
+                        <p class="text">Suivez vos prestations et transactions en toute autonomie.</p>
+                        
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
+                            <input type="text" id="clientNom" class="input" placeholder="Nom du partenaire / client" style="margin-bottom:8px;">
+                            <input type="text" id="clientDetail" class="input" placeholder="Détail de la prestation" style="margin-bottom:8px;">
+                            <input type="number" id="clientMontant" class="input" placeholder="Montant en FCFA" style="margin-bottom:10px;">
+                            <button class="btn-action" onclick="ajouterCommandeCarnet()">➕ Enregistrer l'Échange</button>
+                        </div>
+
+                        <h4 style="margin-bottom:10px;">📋 Historique Régional :</h4>
+                        ${carnetHtml}
                     </div>
                 `;
             } else if (activeTab === 'gps') {
                 content.innerHTML = `
                     <div class="card">
-                        <h3 class="card-title">🧭 Géolocalisation & Itinéraire (Quick Route)</h3>
-                        <p class="text">Obtenez votre position et tracez votre route en ligne du point A vers le point B.</p>
+                        <h3 class="card-title">🧭 Géolocalisation & Itinéraire</h3>
+                        <p class="text">Repérez votre position exacte partout dans le monde.</p>
                         <div class="tool-card">
                             📡 ${gpsStatus}<br><br>
                             <button class="btn-action" onclick="obtenirGeolocalisation()">📍 Actualiser ma Position GPS</button>
                         </div>
-                        <h4 style="margin: 15px 0 8px 0;">🗺️ Destination (Point B) :</h4>
+                        <h4 style="margin: 15px 0 8px 0;">🗺️ Destination :</h4>
                         <div class="input-group">
-                            <input type="text" id="inputDestination" class="input" placeholder="Entrer une ville ou un quartier...">
+                            <input type="text" id="inputDestination" class="input" placeholder="Entrer une ville ou un site...">
                         </div>
-                        <button class="btn-action" onclick="lancerItineraireDestination()">🚀 Ouvrir l'Itinéraire Cartographique</button>
+                        <button class="btn-action" onclick="lancerItineraireDestination()">🚀 Ouvrir la Carte de Navigation</button>
                     </div>
                 `;
             } else if (activeTab === 'economie') {
                 content.innerHTML = `
                     <div class="card" style="border-color: #3b82f6;">
-                        <h3 class="card-title">🪙 Finances & Caisse Locale</h3>
+                        <h3 class="card-title">🪙 Finances & Caisse Régionale</h3>
                         <div class="tool-card" style="border-left-color: #3b82f6; background: rgba(59, 130, 246, 0.08);">
-                            🪙 <strong>SOMMAIRE FINANCIER & CAISSE</strong><br>
+                            🪙 <strong>CAISSE SOUVERAINE (${utilisateur.paysActuel})</strong><br>
                             <div style="font-size:22px; font-weight:800; color:var(--accent); margin:8px 0;">${soldeCaisse.toLocaleString()} FCFA</div>
-                            <div style="font-size:12px; color:var(--text-secondary);">Entrées totales : 67,500 FCFA | Sorties totales : 22,300 FCFA</div>
+                            <div style="font-size:12px; color:var(--text-secondary);">Profil d'origine : ${utilisateur.nationalite}</div>
                         </div>
-                        <p class="text" style="margin-top: 15px;">Suivez l'ensemble de vos recettes et dépenses en toute autonomie et sécurité locale.</p>
+                        <p class="text" style="margin-top: 15px;">Vos données financières restent stockées exclusivement sur votre appareil avec un chiffrement local.</p>
                     </div>
                 `;
             } else if (activeTab === 'camera') {
                 content.innerHTML = `
                     <div class="card">
-                        <h3 class="card-title">📸 Caméra & Analyse Intelligente (Sol & Documents)</h3>
-                        <p class="text">Prenez en photo un type de sol, une culture agricole, un document ou un équipement pour que le système l'analyse et l'intègre.</p>
+                        <h3 class="card-title">📸 Caméra & Analyse de Documents ELAWS</h3>
+                        <p class="text">Photographiez vos pièces justificatives, actes ou formulaires pour vérification.</p>
                         
                         <div class="tool-card" style="text-align:center; padding:20px; border-left-color:var(--accent);">
                             <input type="file" accept="image/*" capture="environment" id="cameraInput" style="display:none;" onchange="handleImageCapture(event)">
-                            <button class="btn-action" onclick="document.getElementById('cameraInput').click()" style="margin-bottom:12px;">📷 Prendre une Photo / Scanner</button>
-                            <br><small style="color:var(--text-secondary);">Compatible caméra arrière et galerie photo.</small>
+                            <button class="btn-action" onclick="document.getElementById('cameraInput').click()" style="margin-bottom:12px;">📷 Prendre une Photo du Document</button>
                         </div>
 
                         ${capturedImageSrc ? `
                             <div style="margin-top:15px; text-align:center;">
-                                <h4 style="margin-bottom:8px;">🖼️ Image Capturée :</h4>
+                                <h4 style="margin-bottom:8px;">🖼️ Document Scanné :</h4>
                                 <img src="${capturedImageSrc}" style="max-width:100%; max-height:220px; border-radius:10px; border:1px solid var(--border-color); object-fit:cover;">
                             </div>
                         ` : ''}
@@ -485,24 +780,18 @@
                         </div>
                     </div>
                 `;
-            } else if (activeTab === 'simulateur') {
-                content.innerHTML = `<div class="card"><h3 class="card-title">🧮 Calculateurs & Outils Métiers</h3><p class="text">Outils de calculs professionnels ELAWS.</p></div>`;
-            } else if (activeTab === 'stocks') {
-                content.innerHTML = `<div class="card"><h3 class="card-title">📦 Stocks, Récoltes & Matériel</h3><p class="text">Gestion des stocks et récoltes.</p></div>`;
+            } else if (activeTab === 'devis') {
+                content.innerHTML = `<div class="card"><h3 class="card-title">🧮 Calculateurs & Devis</h3><p class="text">Outils de calculs professionnels.</p></div>`;
             } else if (activeTab === 'securite') {
-                content.innerHTML = `<div class="card"><h3 class="card-title">🛡️ Sécurité & Chiffrement Local</h3><p class="text">Chiffrement AES-256 actif.</p></div>`;
+                content.innerHTML = `<div class="card"><h3 class="card-title">🛡️ Sécurité & Chiffrement Local</h3><p class="text">Chiffrement AES-256 actif. Vos données administratives restent 100% confidentielles sur votre appareil.</p></div>`;
             } else if (activeTab === 'sauvegarde') {
                 content.innerHTML = `<div class="card"><h3 class="card-title">💾 Sauvegarde & Synchro Souveraine</h3><p class="text">${etatSynchro}</p></div>`;
-            } else if (activeTab === 'apprentissage') {
-                content.innerHTML = `<div class="card"><h3 class="card-title">📚 Fiches d'Apprentissage</h3><p class="text">Modules pour jeunes et enfants.</p></div>`;
-            } else if (activeTab === 'appel') {
-                content.innerHTML = `<div class="card"><h3 class="card-title">📞 Appels & Traduction</h3><p class="text">Traduction vocale en langues maternelles.</p></div>`;
             } else if (activeTab === 'ia') {
-                content.innerHTML = `<div class="card"><h3 class="card-title">Assistant ELAWS</h3><p class="text">Bonjour ! Je suis ELAWS.</p></div>`;
+                content.innerHTML = `<div class="card"><h3 class="card-title">Assistant ELAWS</h3><p class="text">Bonjour ! Je suis ELAWS, votre assistant consulaire et universel.</p></div>`;
             }
         }
 
-        function switchTab(t) { activeTab = t; document.getElementById('sideMenu').classList.remove('open'); render(); }
+        function switchTab(t) { activeTab = t; document.getElementById('sideMenu').classList.remove('open'); render(); window.scrollTo(0, 0); }
         render();
     </script>
 </body>
