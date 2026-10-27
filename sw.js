@@ -1,5 +1,5 @@
 self.addEventListener('install', (e) => {
-    e.waitUntil(caches.open('evat-v19').then((cache) => cache.addAll(['index.html', 'manifest.webmanifest'])));
+    e.waitUntil(caches.open('evat-v24').then((cache) => cache.addAll(['index.html', 'manifest.webmanifest'])));
 });
 self.addEventListener('fetch', (e) => {
     e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));

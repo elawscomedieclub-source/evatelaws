@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. & ELAWS - Écosystème Souverain Immersif (v19)</title>
+    <title>E.V.A.T. & ELAWS - Écosystème Universel (v24)</title>
     
     <link rel="manifest" href="manifest.webmanifest">
     <meta name="theme-color" content="#059669">
@@ -139,43 +139,48 @@
             </div>
         </header>
         <div class="badge-info">
-            <span id="badgeDomaineActif">🌍 Écosystème Souverain Immersif (v19)</span>
+            <span id="badgeDomaineActif">🌍 Écosystème Universel & Sincère (v24)</span>
             <span class="offline-status" id="reseauStatusIndicator">⚡ Vérification...</span>
         </div>
     </div>
 
     <!-- BOUTON D'INSTALLATION DIRECTE AUTOMATIQUE -->
     <div id="installCardContainer" class="card" style="border-color:var(--accent); background:rgba(5,150,105,0.15); display:none; text-align:center;">
-        <h3 class="card-title" style="color:var(--accent);">📲 Installation Automatique Prête</h3>
-        <p class="text">Installez E.V.A.T. directement sur votre téléphone en un seul clic !</p>
+        <h3 class="card-title" style="color:var(--accent);">📲 Mode Testeurs & Installation Prête</h3>
+        <p class="text">Installez E.V.A.T. sur votre mobile pour tester l'application en conditions réelles !</p>
         <button class="btn-action" id="btnInstallApp" style="font-size:16px; padding:16px;">🚀 Installer l'Application sur l'Écran d'Accueil</button>
     </div>
 
     <div id="sideMenu" class="sidebar">
-        <h3>📂 Navigation & Outils Immersifs (v19)</h3>
-        <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Paramètres Vocaux</button>
+        <h3>📂 Navigation & Modules (v24)</h3>
+        <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Profil Actif</button>
+        <button class="menu-item" onclick="switchTab('elaws_compagnon')" style="background:rgba(5,150,105,0.2); border:1px solid var(--accent);">🤖 <strong>Assistant ELAWS (Sincère & Fluide)</strong></button>
+        <button class="menu-item" onclick="switchTab('ecole_tuteur')" style="background:rgba(245,158,11,0.2); border:1px solid #f59e0b; color:#f59e0b;">🎓 <strong>ELAWS École & Tuteur</strong></button>
+        <button class="menu-item" onclick="switchTab('quiz_annales')" style="background:rgba(139,92,246,0.2); border:1px solid #8b5cf6; color:#8b5cf6;">📝 <strong>Quiz & Annales d'Examens</strong></button>
+        <button class="menu-item" onclick="switchTab('contacts_urgences')" style="background:rgba(239,68,68,0.2); border:1px solid #ef4444; color:#ef4444;">📇 <strong>Contacts & Urgences / Pastorale</strong></button>
+        <button class="menu-item" onclick="switchTab('gestion_stocks')" style="background:rgba(16,185,129,0.2); border:1px solid #10b981; color:#10b981;">📦 <strong>Gestion de Stocks & Matériel</strong></button>
+        <button class="menu-item" onclick="switchTab('convertisseur_devise')" style="background:rgba(59,130,246,0.2); border:1px solid #3b82f6; color:#3b82f6;">💱 <strong>Convertisseur & Unités</strong></button>
         <button class="menu-item" onclick="switchTab('dashboard')" style="background:rgba(59,130,246,0.15); border:1px solid #3b82f6; color:#3b82f6;">📊 <strong>Tableau de Bord & Score</strong></button>
-        <button class="menu-item" onclick="switchTab('agenda')" style="background:rgba(245,158,11,0.15); border:1px solid #f59e0b; color:#f59e0b;">📅 <strong>Agenda & Rendez-vous</strong></button>
-        <button class="menu-item" onclick="switchTab('calculatrice_marge')" style="background:rgba(16,185,129,0.15); border:1px solid #10b981; color:#10b981;">🧮 <strong>Calculatrice de Marge & Prix</strong></button>
-        <button class="menu-item" onclick="switchTab('recherche')" style="background:rgba(139,92,246,0.15); border:1px solid #8b5cf6;">🔍 <strong>Recherche Globale Rapide</strong></button>
-        <button class="menu-item" onclick="switchTab('elaws_compagnon')" style="background:rgba(5,150,105,0.2); border:1px solid var(--accent);">🤖 <strong>Parler à ELAWS (Expert Métier 🎤)</strong></button>
-        <button class="menu-item" onclick="switchTab('traduction_croisee')" style="background:rgba(59,130,246,0.15); border:1px solid #3b82f6;">🌐 <strong>Traduction Croisée & Dialectes</strong></button>
-        <button class="menu-item" onclick="switchTab('facturation')" style="background:rgba(16,185,129,0.15); border:1px solid #10b981;">📄 <strong>Facturation & Reçus PDF</strong></button>
-        <button class="menu-item" onclick="switchTab('notes_vocales')" style="background:rgba(236,72,153,0.15); border:1px solid #ec4899;">🎙️ <strong>Dictaphone & Notes Vocales</strong></button>
+        <button class="menu-item" onclick="switchTab('agenda')" style="background:rgba(245,158,11,0.15); border:1px solid #f59e0b; color:#f59e0b;">📅 <strong>Agenda & Rendez-vous / Cultes</strong></button>
+        <button class="menu-item" onclick="switchTab('calculatrice_marge')" style="background:rgba(16,185,129,0.15); border:1px solid #10b981; color:#10b981;">🧮 <strong>Calculatrice & Tarifs</strong></button>
+        <button class="menu-item" onclick="switchTab('recherche')">🔍 Recherche Globale Rapide</button>
+        <button class="menu-item" onclick="switchTab('traduction_croisee')">🌐 Traduction & Dialectes Locaux</button>
+        <button class="menu-item" onclick="switchTab('facturation')">📄 Facturation & Reçus PDF</button>
+        <button class="menu-item" onclick="switchTab('notes_vocales')">🎙️ Dictaphone & Notes</button>
         <button class="menu-item" onclick="switchTab('economie')">🪙 Journal de Caisse & Trésorerie</button>
         <button class="menu-item" onclick="switchTab('sauvegarde')">💾 Sauvegarde & Sécurité Données</button>
-        <button class="menu-item" onclick="switchTab('faq')" style="color:#f59e0b;">❓ Guide & FAQ</button>
+        <button class="menu-item" onclick="switchTab('faq')" style="color:#f59e0b;">❓ Guide & FAQ Testeurs</button>
     </div>
 
     <div class="module-container" id="mainContent"></div>
 
     <div id="bottomBar" class="bottom-action-bar" style="display:none;">
         <button class="bar-item active" onclick="switchTab('accueil')" id="barAccueil"><span class="icon">💼</span><span>Profil</span></button>
-        <button class="bar-item" onclick="switchTab('dashboard')" id="barDash" style="color:#3b82f6;"><span class="icon">📊</span><span>Score</span></button>
-        <button class="bar-item" onclick="switchTab('agenda')" id="barAgenda" style="color:#f59e0b;"><span class="icon">📅</span><span>Agenda</span></button>
         <button class="bar-item" onclick="switchTab('elaws_compagnon')" id="barElaws" style="color:var(--accent);"><span class="icon">🤖</span><span>ELAWS</span></button>
-        <button class="bar-item" onclick="switchTab('facturation')" id="barFact" style="color:#10b981;"><span class="icon">📄</span><span>Facture</span></button>
-        <button class="bar-item" onclick="switchTab('economie')" id="barEco"><span class="icon">🪙</span><span>Caisse</span></button>
+        <button class="bar-item" onclick="switchTab('ecole_tuteur')" id="barEcole" style="color:#f59e0b;"><span class="icon">🎓</span><span>École</span></button>
+        <button class="bar-item" onclick="switchTab('contacts_urgences')" id="barContacts" style="color:#ef4444;"><span class="icon">📇</span><span>Contacts</span></button>
+        <button class="bar-item" onclick="switchTab('gestion_stocks')" id="barStocks" style="color:#10b981;"><span class="icon">📦</span><span>Stocks</span></button>
+        <button class="bar-item" onclick="switchTab('convertisseur_devise')" id="barConv" style="color:#3b82f6;"><span class="icon">💱</span><span>Devises</span></button>
     </div>
 
     <script>
@@ -193,8 +198,8 @@
                 const osc = ctx.createOscillator();
                 const gain = ctx.createGain();
                 osc.type = 'triangle';
-                osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
-                osc.frequency.setValueAtTime(880, ctx.currentTime + 0.1); // A5
+                osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+                osc.frequency.setValueAtTime(880, ctx.currentTime + 0.1);
                 gain.gain.setValueAtTime(0.1, ctx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
                 osc.connect(gain);
@@ -215,6 +220,20 @@
         let utilisateurActif = null;
         let voixActiveIndex = localStorage.getItem('evat_voix_index') || 0;
 
+        function verifierEspaceStockage() {
+            try {
+                let totalUtilise = 0;
+                for (let key in localStorage) {
+                    if (localStorage.hasOwnProperty(key)) {
+                        totalUtilise += ((localStorage[key].length * 2) / 1024 / 1024);
+                    }
+                }
+                if (totalUtilise > 4.5) {
+                    showToast("⚠️ Attention : Stockage presque saturé. Pensez à exporter vos données en JSON !");
+                }
+            } catch(e) {}
+        }
+
         function chargerDonneesProfil() {
             if (idProfilActif) {
                 utilisateurActif = listeProfils.find(p => p.id == idProfilActif) || null;
@@ -224,6 +243,7 @@
                 idProfilActif = utilisateurActif.id;
                 localStorage.setItem('evat_profil_actif_id', idProfilActif);
             }
+            verifierEspaceStockage();
         }
         chargerDonneesProfil();
 
@@ -302,7 +322,7 @@
                 }
 
                 window.speechSynthesis.speak(utterance);
-                showToast("🔊 ELAWS / Assistant vocal actif...");
+                showToast("🔊 ELAWS / Lecture vocale...");
             }
         }
 
@@ -310,15 +330,17 @@
             voixActiveIndex = selectElement.value;
             localStorage.setItem('evat_voix_index', voixActiveIndex);
             showToast("Voix d'ELAWS mise à jour !");
-            lireTexteAAvoix("Bonjour, je suis ELAWS avec ma nouvelle voix.");
+            lireTexteAAvoix("Bonjour ! Je suis ELAWS, ton assistant personnel.");
         }
 
         function toggleMenu() { document.getElementById('sideMenu').classList.toggle('open'); }
 
         function creerNouveauProfil() {
             const nom = document.getElementById('regNom').value.trim();
-            const metierUnique = document.getElementById('regMetierCustom').value.trim() || 'Artisan';
+            const metierUnique = document.getElementById('regMetierCustom').value.trim() || 'Pasteur / Guide';
             const tel = document.getElementById('regTel').value.trim();
+            const pays = document.getElementById('regPays').value || 'Togo';
+            const classe = document.getElementById('regClasse').value || 'Professionnel';
 
             if (!nom) { showToast("Veuillez renseigner votre nom."); return; }
 
@@ -328,17 +350,30 @@
                 nom: nom,
                 telephone: tel || '+228 98231402',
                 metierUnique: metierUnique,
+                pays: pays,
+                classe: classe,
                 solde: 50000,
                 journalCaisse: [
-                    { id: 1, type: 'entree', libelle: 'Capital initial', montant: 50000, date: new Date().toLocaleDateString() }
+                    { id: 1, type: 'entree', libelle: 'Capital / Offrande initiale', montant: 50000, date: new Date().toLocaleDateString() }
                 ],
                 notesVocales: [],
-                talkieMessages: [],
                 factures: [],
-                agendaRdv: [],
-                contactsAppels: [{ id: 1, nom: "Client Test", tel: "+228 98231402", type: "Client" }],
+                agendaRdv: [
+                    { id: 1, titre: "Culte / Réunion de prière", date: new Date().toLocaleDateString(), heure: "09:00" }
+                ],
+                contactsUrgences: [
+                    { id: 1, nom: "Urgences / Secours", tel: "118 / +228 98231402", type: "Secours" },
+                    { id: 2, nom: "Diaconat / Église", tel: "+228 90000000", type: "Pro" }
+                ],
+                stocksMatériel: [
+                    { id: 1, nom: "Matériel de sonorisation / Micros", qte: 5, alerte: 2 }
+                ],
+                quizScores: [],
                 discussionsElaws: [
-                    { role: 'ai', texte: `Bonjour ${nom} ! Je suis **ELAWS**, votre assistant expert en **${metierUnique}**. Tous les modules immersifs (v19) sont prêts.` }
+                    { role: 'ai', texte: `Bonjour ${nom} ! C'est un plaisir de t'accompagner. En tant que ${metierUnique} ici au ${pays}, je suis là pour t'épauler au quotidien avec fluidité, simplicité et sincérité. Qu'est-ce qu'on fait ensemble aujourd'hui ?` }
+                ],
+                discussionsEcole: [
+                    { role: 'ai', texte: `Bonjour ${nom} ! Bienvenue sur ELAWS École, prêt pour t'accompagner dans tes études ou tes enseignements avec des explications claires et directes.` }
                 ]
             };
 
@@ -350,7 +385,7 @@
             utilisateurActif = nouveauProfil;
 
             jouerSonSucces();
-            lireTexteAAvoix(`Bonjour ${nom}. Votre environnement ELAWS pour ${metierUnique} est prêt.`);
+            lireTexteAAvoix(`Bonjour ${nom}. Ton profil ${metierUnique} est parfaitement configuré.`);
             showToast(`Bienvenue, ${nom} !`);
             render();
         }
@@ -372,28 +407,200 @@
         function sauvegarderProfilActif() {
             const index = listeProfils.findIndex(p => p.id == utilisateurActif.id);
             if (index !== -1) { listeProfils[index] = utilisateurActif; localStorage.setItem('evat_tous_profils', JSON.stringify(listeProfils)); }
+            verifierEspaceStockage();
         }
 
         function toggleFaqItem(element) {
             element.classList.toggle('active');
         }
 
-        // --- GESTION CAISSE ---
+        // --- ASSISTANT ELAWS SINCÈRE ET FLUIDE ---
+        function envoyerMessageElawsAI(texteForce) {
+            const input = document.getElementById('inputElawsChat');
+            const q = texteForce || (input ? input.value.trim() : '');
+            if (!q) return;
+
+            if (!utilisateurActif.discussionsElaws) utilisateurActif.discussionsElaws = [];
+            utilisateurActif.discussionsElaws.push({ role: 'user', texte: q });
+
+            const qLower = q.toLowerCase();
+            let reponse = "";
+
+            // Réponses chaleureuses, sincères et directes adaptées aux métiers (y compris Pasteur)
+            if (qLower.includes('culte') || qLower.includes('predication') || qLower.includes('verset') || qLower.includes('foi') || qLower.includes('prier')) {
+                reponse = `[Accompagnement Pastoral — ELAWS]
+Frère ${utilisateurActif.nom}, voici une inspiration directe pour ton ministère :
+1. Piste de méditation : Appuie-toi sur la grâce et la simplicité dans le message.
+2. Structure suggérée : Accueil chaleureux, partage de la Parole avec des exemples de la vie quotidienne, puis un moment de prière fraternelle.
+3. Je suis là pour t'aider à rédiger tes notes ou structurer tes messages !`;
+            } else if (qLower.includes('conseil') || qLower.includes('aide') || qLower.includes('comment')) {
+                reponse = `[Conseil Pratique — ELAWS]
+Je te réponds en toute simplicité :
+- Priorité : Fais le point sur ce qui est urgent et confie le reste au temps.
+- Action : Prends les choses une par une. Tu as toutes les compétences pour y arriver, et je t'assiste à chaque étape !`;
+            } else {
+                reponse = `[Assistant Personnel — ELAWS]
+J'ai bien reçu ta remarque : "${q}". 
+En tant que ton compagnon de route, voici ce qu'on peut faire tout de suite : structurer l'action, noter l'idée dans l'agenda ou l'enregistrer en note vocale. Qu'est-ce qui te convient le mieux ?`;
+            }
+
+            utilisateurActif.discussionsElaws.push({ role: 'ai', texte: reponse });
+            sauvegarderProfilActif();
+            jouerSonSucces();
+            if(input) input.value = '';
+            lireTexteAAvoix(reponse);
+            render();
+        }
+
+        function demarrerEcouteMicrophone() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) { showToast("Micro non supporté."); return; }
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'fr-FR';
+            showToast("🎤 Parle, je t'écoute...");
+            recognition.onresult = (event) => {
+                const texte = event.results[0][0].transcript;
+                document.getElementById('inputElawsChat').value = texte;
+                envoyerMessageElawsAI(texte);
+            };
+            recognition.start();
+        }
+
+        // --- MODULE TUTEUR SCOLAIRE ---
+        function envoyerMessageEcoleAI(texteForce) {
+            const input = document.getElementById('inputEcoleChat');
+            const q = texteForce || (input ? input.value.trim() : '');
+            if (!q) return;
+
+            if (!utilisateurActif.discussionsEcole) utilisateurActif.discussionsEcole = [];
+            utilisateurActif.discussionsEcole.push({ role: 'user', texte: q });
+
+            const pays = utilisateurActif.pays || 'Togo';
+            const reponse = `[Tuteur ELAWS — ${pays}]
+Pour ta question "${q}" :
+- Explication claire : Pas de formule compliquée, on décompose le problème en deux étapes logiques.
+- Entraîne-toi sur un cas similaire pour bien retenir la méthode !`;
+
+            utilisateurActif.discussionsEcole.push({ role: 'ai', texte: reponse });
+            sauvegarderProfilActif();
+            jouerSonSucces();
+            if(input) input.value = '';
+            lireTexteAAvoix(reponse);
+            render();
+        }
+
+        function demarrerEcouteMicroEcole() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) { showToast("Micro non supporté."); return; }
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'fr-FR';
+            showToast("🎤 Parle pour poser ta question...");
+            recognition.onresult = (event) => {
+                const texte = event.results[0][0].transcript;
+                document.getElementById('inputEcoleChat').value = texte;
+                envoyerMessageEcoleAI(texte);
+            };
+            recognition.start();
+        }
+
+        // --- QUIZ & ANNALES ---
+        let quizActuelIndex = 0;
+        let scoreQuizSession = 0;
+        const questionsQuizExemple = [
+            { question: "En Mathématiques, que vaut la dérivée de f(x) = x² ?", options: ["2x", "x", "2", "x²"], bonne: 0 },
+            { question: "Quel est le principal agent vecteur du Paludisme ?", options: ["Moustique Anophèle femelle", "Mouche tsé-tsé", "Cafard", "Puces"], bonne: 0 },
+            { question: "En quelle année le Togo a-t-il accédé à l'indépendance ?", options: ["1960", "1958", "1970", "1945"], bonne: 0 }
+        ];
+
+        function repondreQuiz(indexChoisi) {
+            const q = questionsQuizExemple[quizActuelIndex];
+            const resultatDiv = document.getElementById('resultatQuizDiv');
+            if(indexChoisi === q.bonne) {
+                scoreQuizSession += 20;
+                jouerSonSucces();
+                resultatDiv.innerHTML = `<p style="color:#10b981; font-weight:bold;">✅ Exact ! Bonne réponse (+20 pts)</p>`;
+            } else {
+                resultatDiv.innerHTML = `<p style="color:#ef4444; font-weight:bold;">❌ Pas tout à fait. La bonne réponse était : ${q.options[q.bonne]}</p>`;
+            }
+            setTimeout(() => {
+                quizActuelIndex = (quizActuelIndex + 1) % questionsQuizExemple.length;
+                render();
+            }, 1800);
+        }
+
+        // --- CONTACTS & URGENCES / PASTORALE ---
+        function ajouterContactUrgence() {
+            const nom = document.getElementById('contactNom').value.trim();
+            const tel = document.getElementById('contactTel').value.trim();
+            const type = document.getElementById('contactType').value;
+
+            if(nom && tel) {
+                if(!utilisateurActif.contactsUrgences) utilisateurActif.contactsUrgences = [];
+                utilisateurActif.contactsUrgences.unshift({ id: Date.now(), nom, tel, type });
+                sauvegarderProfilActif();
+                jouerSonSucces();
+                showToast("Contact enregistré !");
+                render();
+            } else { showToast("Remplis le nom et le téléphone."); }
+        }
+
+        // --- GESTION DE STOCKS ---
+        function ajouterStockMatériel() {
+            const nom = document.getElementById('stockNom').value.trim();
+            const qte = parseInt(document.getElementById('stockQte').value);
+            const alerte = parseInt(document.getElementById('stockAlerte').value) || 2;
+
+            if(nom && !isNaN(qte)) {
+                if(!utilisateurActif.stocksMatériel) utilisateurActif.stocksMatériel = [];
+                utilisateurActif.stocksMatériel.unshift({ id: Date.now(), nom, qte, alerte });
+                sauvegarderProfilActif();
+                jouerSonSucces();
+                showToast("Matériel ajouté au stock !");
+                render();
+            } else { showToast("Remplis correctement l'article et la quantité."); }
+        }
+
+        // --- CONVERTISSEUR ---
+        function executerConversion() {
+            const montant = parseFloat(document.getElementById('convMontant').value);
+            const type = document.getElementById('convType').value;
+            const resDiv = document.getElementById('resultatConvDiv');
+
+            if(isNaN(montant)) { resDiv.innerHTML = '<p style="color:#ef4444;">Saisis un montant valide.</p>'; return; }
+
+            let resultatTexte = "";
+            if(type === 'fcfa_eur') {
+                const res = montant / 655.957;
+                resultatTexte = `${montant.toLocaleString()} FCFA = <strong>${res.toFixed(2)} EUR</strong>`;
+            } else if(type === 'eur_fcfa') {
+                const res = montant * 655.957;
+                resultatTexte = `${montant} EUR = <strong>${res.toLocaleString()} FCFA</strong>`;
+            } else if(type === 'kg_g') {
+                resultatTexte = `${montant} kg = <strong>${montant * 1000} g</strong>`;
+            } else if(type === 'm_cm') {
+                resultatTexte = `${montant} m = <strong>${montant * 100} cm</strong>`;
+            }
+
+            jouerSonSucces();
+            resDiv.innerHTML = `<div style="background:var(--bg-color); padding:12px; border-radius:8px; border:1px solid #3b82f6; margin-top:10px;"><strong style="color:#3b82f6;">💱 Résultat :</strong><p style="margin:6px 0 0 0; font-size:15px;">${resultatTexte}</p></div>`;
+            lireTexteAAvoix(resultatTexte.replace(/<[^>]*>?/gm, ''));
+        }
+
+        // --- CAISSE ---
         function ajouterMouvementCaisse(type) {
             const libelle = document.getElementById('caisseLib').value.trim();
             const montant = parseFloat(document.getElementById('caisseMontant').value);
             if(libelle && !isNaN(montant) && montant > 0) {
                 if(!utilisateurActif.journalCaisse) utilisateurActif.journalCaisse = [];
                 utilisateurActif.journalCaisse.unshift({ id: Date.now(), type, libelle, montant, date: new Date().toLocaleDateString() });
-                
                 if(type === 'entree') utilisateurActif.solde += montant;
                 else utilisateurActif.solde -= montant;
 
                 sauvegarderProfilActif();
                 jouerSonSucces();
-                showToast(`🪙 Mouvement de caisse enregistré !`);
+                showToast(`🪙 Mouvement enregistré !`);
                 render();
-            } else { showToast("Veuillez remplir correctement le libellé et le montant."); }
+            } else { showToast("Remplis le libellé et le montant."); }
         }
 
         function appliquerSuggestionCaisse(texte) {
@@ -422,26 +629,26 @@
                         <div style="background:#fff; color:#111; padding:20px; border-radius:8px; margin-top:15px; border:2px solid #10b981;">
                             <h3>📄 Reçu / Facture N° ${numFacture}</h3>
                             <p><strong>Émetteur :</strong> ${utilisateurActif.nom} (${utilisateurActif.metierUnique})</p>
-                            <p><strong>Client :</strong> ${client} | <strong>Date :</strong> ${nouvelleFacture.date}</p>
-                            <p><strong>Prestation :</strong> ${desc}</p>
+                            <p><strong>Bénéficiaire / Client :</strong> ${client} | <strong>Date :</strong> ${nouvelleFacture.date}</p>
+                            <p><strong>Motif / Prestation :</strong> ${desc}</p>
                             <h4 style="color:#059669;">Total : ${montant.toLocaleString()} FCFA</h4>
-                            <button class="btn-action" style="background:#10b981; margin-top:10px;" onclick="window.print()">🖨️ Imprimer / Enregistrer PDF</button>
+                            <button class="btn-action" style="background:#10b981; margin-top:10px;" onclick="window.print()">🖨️ Imprimer / PDF</button>
                         </div>
                     `;
                 }
-                showToast("Facture générée avec succès !");
+                showToast("Facture générée !");
                 render();
-            } else { showToast("Remplissez tous les champs de la facture."); }
+            } else { showToast("Remplis tous les champs."); }
         }
 
         // --- NOTES VOCALES ---
         function enregistrerNoteVocale() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) {
-                const saisieManuelle = prompt("Dictaphone vocal non supporté. Saisissez votre note :");
-                if(saisieManuelle) {
+                const s = prompt("Saisis ta note :");
+                if(s) {
                     if(!utilisateurActif.notesVocales) utilisateurActif.notesVocales = [];
-                    utilisateurActif.notesVocales.unshift({ id: Date.now(), texte: saisieManuelle, date: new Date().toLocaleDateString() });
+                    utilisateurActif.notesVocales.unshift({ id: Date.now(), texte: s, date: new Date().toLocaleDateString() });
                     sauvegarderProfilActif();
                     jouerSonSucces();
                     showToast("Note enregistrée !");
@@ -451,22 +658,20 @@
             }
             const recognition = new SpeechRecognition();
             recognition.lang = 'fr-FR';
-            showToast("🎙️ Parlez pour dicter votre note...");
+            showToast("🎙️ Parle pour enregistrer ta note...");
             recognition.onresult = (event) => {
                 const texte = event.results[0][0].transcript;
                 if(!utilisateurActif.notesVocales) utilisateurActif.notesVocales = [];
                 utilisateurActif.notesVocales.unshift({ id: Date.now(), texte, date: new Date().toLocaleDateString() });
                 sauvegarderProfilActif();
                 jouerSonSucces();
-                showToast("Note vocale enregistrée et transcrite !");
+                showToast("Note enregistrée !");
                 render();
-                lireTexteAAvoix("Note enregistrée : " + texte);
             };
-            recognition.onerror = () => { showToast("Erreur micro."); };
             recognition.start();
         }
 
-        // --- AGENDA & RENDEZ-VOUS ---
+        // --- AGENDA ---
         function ajouterRdvAgenda() {
             const titre = document.getElementById('rdvTitre').value.trim();
             const date = document.getElementById('rdvDate').value;
@@ -477,12 +682,12 @@
                 utilisateurActif.agendaRdv.unshift({ id: Date.now(), titre, date, heure });
                 sauvegarderProfilActif();
                 jouerSonSucces();
-                showToast("Rendez-vous ajouté à l'agenda !");
+                showToast("Événement ajouté à l'agenda !");
                 render();
-            } else { showToast("Veuillez remplir tous les champs du rendez-vous."); }
+            } else { showToast("Remplis tous les champs."); }
         }
 
-        // --- CALCULATRICE DE MARGE & PRIX ---
+        // --- CALCULATRICE DE MARGE ---
         function calculerMargeBeneficiaire() {
             const cout = parseFloat(document.getElementById('calcCout').value);
             const margePourcent = parseFloat(document.getElementById('calcMarge').value);
@@ -494,26 +699,26 @@
                 jouerSonSucces();
                 resDiv.innerHTML = `
                     <div style="background:var(--card-bg); border:1px solid #10b981; padding:12px; border-radius:8px; margin-top:10px;">
-                        <strong style="color:#10b981;">🧮 Résultats du Calcul :</strong>
-                        <p style="margin:6px 0 2px 0;">Bénéfice estimé : <strong>${benefice.toLocaleString()} FCFA</strong></p>
-                        <p style="margin:0; font-size:16px; color:var(--accent);">Prix de Vente Conseillé : <strong>${prixVente.toLocaleString()} FCFA</strong></p>
+                        <strong style="color:#10b981;">🧮 Résultats :</strong>
+                        <p style="margin:6px 0 2px 0;">Bénéfice : <strong>${benefice.toLocaleString()} FCFA</strong></p>
+                        <p style="margin:0; font-size:16px; color:var(--accent);">Prix conseillé : <strong>${prixVente.toLocaleString()} FCFA</strong></p>
                     </div>
                 `;
-            } else { resDiv.innerHTML = '<p style="color:#ef4444; font-size:13px;">Veuillez saisir un coût et un pourcentage valides.</p>'; }
+            } else { resDiv.innerHTML = '<p style="color:#ef4444;">Valeurs invalides.</p>'; }
         }
 
-        // --- RECHERCHE GLOBALE ---
+        // --- RECHERCHE ---
         function executerRechercheGlobale() {
             const q = document.getElementById('inputRechercheGlobale').value.trim().toLowerCase();
             const resDiv = document.getElementById('resultatsRechercheDiv');
-            if(!q) { resDiv.innerHTML = '<p style="color:var(--text-secondary);">Saisissez un mot-clé pour rechercher...</p>'; return; }
+            if(!q) { resDiv.innerHTML = '<p style="color:var(--text-secondary);">Tape un mot-clé...</p>'; return; }
 
             let resultatsHtml = '';
             let totalMatch = 0;
 
             if(utilisateurActif.factures) {
                 utilisateurActif.factures.forEach(f => {
-                    if(f.client.toLowerCase().includes(q) || f.desc.toLowerCase().includes(q) || f.numero.toLowerCase().includes(q)) {
+                    if(f.client.toLowerCase().includes(q) || f.desc.toLowerCase().includes(q)) {
                         totalMatch++;
                         resultatsHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:6px; margin-bottom:6px; border-left:3px solid #10b981;"><strong>📄 Facture ${f.numero}</strong> — ${f.client} (${f.montant.toLocaleString()} FCFA)</div>`;
                     }
@@ -529,28 +734,19 @@
                 });
             }
 
-            if(utilisateurActif.notesVocales) {
-                utilisateurActif.notesVocales.forEach(n => {
-                    if(n.texte.toLowerCase().includes(q)) {
-                        totalMatch++;
-                        resultatsHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:6px; margin-bottom:6px; border-left:3px solid #ec4899;"><strong>🎙️ Note</strong> — ${n.texte}</div>`;
-                    }
-                });
-            }
-
             if(totalMatch === 0) {
                 resDiv.innerHTML = '<p style="color:var(--text-secondary);">Aucun résultat trouvé.</p>';
             } else {
-                resDiv.innerHTML = `<p style="color:var(--accent); font-weight:700; margin-bottom:8px;">${totalMatch} résultat(s) trouvé(s) :</p>` + resultatsHtml;
+                resDiv.innerHTML = `<p style="color:var(--accent); font-weight:700; margin-bottom:8px;">${totalMatch} résultat(s) :</p>` + resultatsHtml;
             }
         }
 
-        // --- SAUVEGARDE & RESTAURATION ---
+        // --- SAUVEGARDE ---
         function exporterDonneesJSON() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(listeProfils));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `evat_backup_${Date.now()}.json`);
+            downloadAnchor.setAttribute("download", `evat_backup_v24_${Date.now()}.json`);
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
@@ -577,86 +773,25 @@
             reader.readAsText(file);
         }
 
-        // --- EXPERT & TRADUCTION ---
-        function envoyerMessageElawsAI(texteForce) {
-            const input = document.getElementById('inputElawsChat');
-            const q = texteForce || (input ? input.value.trim() : '');
-            if (!q) return;
-
-            if (!utilisateurActif.discussionsElaws) utilisateurActif.discussionsElaws = [];
-            utilisateurActif.discussionsElaws.push({ role: 'user', texte: q });
-
-            const metier = utilisateurActif.metierUnique.toLowerCase();
-            let reponse = "";
-
-            if (metier.includes('docteur') || metier.includes('medecin') || metier.includes('sante')) {
-                reponse = `[Assistant Médical ELAWS] Analyse clinique pour "${q}". Recommandation : Examen approfondi et traitement adapté.`;
-            } else if (metier.includes('mecanicien') || metier.includes('meca')) {
-                reponse = `[Expert Technique ELAWS] Diagnostic panne pour "${q}" : Vérification allumage et capteurs OBD.`;
-            } else {
-                reponse = `[Expert Métier ELAWS] En tant qu'expert en ${utilisateurActif.metierUnique}, voici mon conseil pour "${q}" : Structurer l'action et suivre les indicateurs.`;
-            }
-
-            utilisateurActif.discussionsElaws.push({ role: 'ai', texte: reponse });
-            sauvegarderProfilActif();
-            jouerSonSucces();
-            
-            if(input) input.value = '';
-            lireTexteAAvoix(reponse);
-            render();
-        }
-
-        function demarrerEcouteMicrophone() {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRecognition) { showToast("Micro non supporté."); return; }
-            const recognition = new SpeechRecognition();
-            recognition.lang = 'fr-FR';
-            showToast("🎤 Écoute de l'expert en cours...");
-            recognition.onresult = (event) => {
-                const texte = event.results[0][0].transcript;
-                document.getElementById('inputElawsChat').value = texte;
-                envoyerMessageElawsAI(texte);
-            };
-            recognition.start();
-        }
-
         function executerTraductionCroisee() {
             const texteSource = document.getElementById('tradTexteInput').value.trim();
             const langCible = document.getElementById('selectLangueCible').value;
             const dialecteSource = document.getElementById('selectDialecteSource').value;
 
-            if(!texteSource) { showToast("Saisissez un texte à traduire."); return; }
-
-            let traductionSimulee = `[Interprète ELAWS vers ${langCible}] : "${texteSource}" (depuis ${dialecteSource}) -> Traduction validée.`;
-            let langCode = 'fr-FR';
-            if(langCible === 'en') langCode = 'en-US';
-            if(langCible === 'es') langCode = 'es-ES';
+            if(!texteSource) { showToast("Saisis un texte."); return; }
+            let traductionSimulee = `[Traduction vers ${langCible}] : "${texteSource}" (depuis ${dialecteSource}) -> Validé.`;
+            let langCode = langCible === 'en' ? 'en-US' : 'fr-FR';
 
             const resultatDiv = document.getElementById('resultatTraductionDiv');
             resultatDiv.innerHTML = `
                 <div style="background:var(--card-bg); border:1px solid #3b82f6; padding:12px; border-radius:8px; margin-top:10px;">
-                    <strong style="color:#3b82f6;">🌐 Résultat Traduction :</strong>
-                    <p style="margin:6px 0 0 0; font-size:14px;">${traductionSimulee}</p>
-                    <button class="btn-action" style="margin-top:8px; background:#3b82f6; padding:6px; font-size:12px;" onclick="lireTexteAAvoix('${traductionSimulee.replace(/'/g, "\'")}', '${langCode}')">🔊 Écouter</button>
+                    <strong style="color:#3b82f6;">🌐 Résultat :</strong>
+                    <p style="margin:6px 0 0 0;">${traductionSimulee}</p>
                 </div>
             `;
             jouerSonSucces();
             lireTexteAAvoix(traductionSimulee, langCode);
             showToast("Traduction effectuée !");
-        }
-
-        function demarrerMicroTraduction() {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRecognition) { showToast("Micro non supporté."); return; }
-            const recognition = new SpeechRecognition();
-            recognition.lang = document.getElementById('selectDialecteSource').value;
-            showToast("🌐 Écoute du dialecte source...");
-            recognition.onresult = (event) => {
-                const texte = event.results[0][0].transcript;
-                document.getElementById('tradTexteInput').value = texte;
-                executerTraductionCroisee();
-            };
-            recognition.start();
         }
 
         function render() {
@@ -669,7 +804,7 @@
                 
                 let profilsExistantsHtml = '';
                 if (listeProfils.length > 0) {
-                    profilsExistantsHtml = `<div style="margin-bottom:20px;"><h4 style="margin-bottom:8px;">👥 Ou choisissez un profil existant :</h4><div style="display:flex; flex-direction:column; gap:8px;">`;
+                    profilsExistantsHtml = `<div style="margin-bottom:20px;"><h4 style="margin-bottom:8px;">👥 Profils enregistrés :</h4><div style="display:flex; flex-direction:column; gap:8px;">`;
                     listeProfils.forEach(p => {
                         profilsExistantsHtml += `<button class="btn-action" style="background:var(--card-bg); border:1px solid var(--accent); color:var(--text-main); text-align:left; padding:12px;" onclick="selectionnerProfilExistant('${p.id}')">👤 <strong>${p.nom}</strong> <small style="float:right; color:var(--accent);">[${p.metierUnique}]</small></button>`;
                     });
@@ -680,16 +815,33 @@
                     <div class="card" style="border-color:var(--accent); max-width:500px; margin: 10px auto; text-align:center;">
                         <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo" style="width:72px; height:72px; margin-bottom:10px; border-radius:16px; border:2px solid var(--accent);">
                         <h2 style="color:var(--accent); margin-top:0;">✨ E.V.A.T. & ELAWS</h2>
-                        <p class="text" style="text-align:center;">Écosystème Souverain Immersif (v19)</p>
+                        <p class="text" style="text-align:center;">Écosystème Universel Sincère & Fluide (v24)</p>
                         
                         ${profilsExistantsHtml}
 
                         <div style="text-align:left;">
-                            <h4 style="margin-bottom:10px; border-top:1px solid var(--border-color); padding-top:15px;">📝 Créer mon Profil :</h4>
-                            <input type="text" id="regNom" class="input" placeholder="Nom ou Pseudonyme *" style="margin-bottom:8px;">
-                            <input type="text" id="regMetierCustom" class="input" placeholder="Votre Métier (Docteur, Commerçant, Mécanicien...)" style="margin-bottom:8px;">
+                            <h4 style="margin-bottom:10px; border-top:1px solid var(--border-color); padding-top:15px;">📝 Créer mon Profil (Testeur / Pasteur / Pro) :</h4>
+                            <input type="text" id="regNom" class="input" placeholder="Votre Nom ou Prénom *" style="margin-bottom:8px;">
+                            <input type="text" id="regMetierCustom" class="input" value="Pasteur / Guide" placeholder="Rôle ou Métier *" style="margin-bottom:8px;">
+                            
+                            <div style="display:flex; gap:8px; margin-bottom:8px;">
+                                <select id="regPays" class="input" style="margin-bottom:0;">
+                                    <option value="Togo">Togo</option>
+                                    <option value="Bénin">Bénin</option>
+                                    <option value="Côte d'Ivoire">Côte d'Ivoire</option>
+                                    <option value="Sénégal">Sénégal</option>
+                                    <option value="France">France</option>
+                                    <option value="Autre">Autre</option>
+                                </select>
+                                <select id="regClasse" class="input" style="margin-bottom:0;">
+                                    <option value="Professionnel">Professionnel / Ministère</option>
+                                    <option value="Terminale">Terminale / Élève</option>
+                                    <option value="Université">Université</option>
+                                </select>
+                            </div>
+
                             <input type="text" id="regTel" class="input" placeholder="Téléphone (ex: +228 98231402)" style="margin-bottom:12px;">
-                            <button class="btn-action" onclick="creerNouveauProfil()">🚀 Générer mon Profil Immersif</button>
+                            <button class="btn-action" onclick="creerNouveauProfil()">🚀 Démarrer avec ELAWS (v24)</button>
                         </div>
                     </div>
                 `;
@@ -698,16 +850,16 @@
 
             document.getElementById('appHeader').style.display = 'block';
             document.getElementById('bottomBar').style.display = 'flex';
-            document.getElementById('badgeDomaineActif').innerHTML = `💼 Profil : ${utilisateurActif.metierUnique}`;
+            document.getElementById('badgeDomaineActif').innerHTML = `💼 ${utilisateurActif.nom} (${utilisateurActif.metierUnique} - ${utilisateurActif.pays || 'Togo'})`;
             mettreAJourEtatReseau();
 
             document.querySelectorAll('.bar-item').forEach(el => el.classList.remove('active'));
             if(activeTab === 'accueil') document.getElementById('barAccueil')?.classList.add('active');
-            if(activeTab === 'dashboard') document.getElementById('barDash')?.classList.add('active');
-            if(activeTab === 'agenda') document.getElementById('barAgenda')?.classList.add('active');
             if(activeTab === 'elaws_compagnon') document.getElementById('barElaws')?.classList.add('active');
-            if(activeTab === 'facturation') document.getElementById('barFact')?.classList.add('active');
-            if(activeTab === 'economie') document.getElementById('barEco')?.classList.add('active');
+            if(activeTab === 'ecole_tuteur') document.getElementById('barEcole')?.classList.add('active');
+            if(activeTab === 'contacts_urgences') document.getElementById('barContacts')?.classList.add('active');
+            if(activeTab === 'gestion_stocks') document.getElementById('barStocks')?.classList.add('active');
+            if(activeTab === 'convertisseur_devise') document.getElementById('barConv')?.classList.add('active');
 
             if (activeTab === 'accueil') {
                 let voixList = getAvailableVoices();
@@ -718,119 +870,27 @@
                         optionsVoixHtml += `<option value="${index}" ${selected}>${v.name} (${v.lang})</option>`;
                     });
                 } else {
-                    optionsVoixHtml = `<option value="0">Voix par défaut du système</option>`;
+                    optionsVoixHtml = `<option value="0">Voix par défaut</option>`;
                 }
 
                 content.innerHTML = `
                     <div class="card" style="border-color: var(--accent);">
-                        <div class="badge-gamified">🌟 Niveau 1 — Utilisateur Souverain Actif</div>
+                        <div class="badge-gamified">🌟 Écosystème Sincère v24 Actif</div>
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                             <div>
-                                <span style="font-size:11px; color:var(--accent); font-weight:700;">💼 PROFIL SOUVERAIN</span>
+                                <span style="font-size:11px; color:var(--accent); font-weight:700;">👤 PROFIL ACTIF</span>
                                 <div style="font-size:17px; font-weight:800;">${utilisateurActif.nom}</div>
                             </div>
                             <button class="btn-top" onclick="changerProfilSession()">🔄 Changer</button>
                         </div>
-                        <p class="text">Métier actif : <strong style="color:var(--accent);">${utilisateurActif.metierUnique}</strong>. Effets sonores, animations immersives et score activés (v19).</p>
+                        <p class="text">Rôle : <strong style="color:var(--accent);">${utilisateurActif.metierUnique}</strong> | Pays : <strong style="color:#3b82f6;">${utilisateurActif.pays || 'Togo'}</strong>.</p>
 
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-top:15px; border:1px solid var(--border-color);">
                             <h4 style="margin:0 0 8px 0; color:var(--accent);">🗣️ Voix d'ELAWS :</h4>
                             <select id="selectVoix" class="input" onchange="changerVoixElaws(this)">
                                 ${optionsVoixHtml}
                             </select>
-                            <button class="btn-action" style="margin-top:8px; padding:8px;" onclick="lireTexteAAvoix('Test de la voix sélectionnée pour ELAWS.')">🔊 Tester cette voix</button>
-                        </div>
-                    </div>
-                `;
-            } else if (activeTab === 'dashboard') {
-                const totalFactures = utilisateurActif.factures ? utilisateurActif.factures.length : 0;
-                let montantFacturesTotal = 0;
-                if(utilisateurActif.factures) {
-                    utilisateurActif.factures.forEach(f => montantFacturesTotal += f.montant);
-                }
-                const totalNotes = utilisateurActif.notesVocales ? utilisateurActif.notesVocales.length : 0;
-                const totalRdvs = utilisateurActif.agendaRdv ? utilisateurActif.agendaRdv.length : 0;
-                const scoreProductivite = (totalFactures * 20) + (totalNotes * 10) + (totalRdvs * 15) + 50;
-
-                content.innerHTML = `
-                    <div class="card" style="border-color:#3b82f6;">
-                        <h3 class="card-title" style="color:#3b82f6;">📊 Tableau de Bord Immersif & Score</h3>
-                        <p class="text">Suivi gamifié de votre activité professionnelle et de votre productivité.</p>
-                        
-                        <div style="background:var(--bg-color); padding:16px; border-radius:12px; border:1px solid #3b82f6; text-align:center; margin-bottom:15px;">
-                            <div style="font-size:12px; color:var(--text-secondary); text-transform:uppercase; font-weight:700;">Score de Productivité Global</div>
-                            <div style="font-size:32px; font-weight:900; color:#3b82f6; margin-top:6px;">⭐ ${scoreProductivite} pts</div>
-                            <small style="color:var(--accent);">🔥 Excellent rythme d'utilisation !</small>
-                        </div>
-
-                        <div class="stat-grid">
-                            <div class="stat-box">
-                                <div style="font-size:12px; color:var(--text-secondary);">Trésorerie Actuelle</div>
-                                <div class="stat-num" style="color:var(--accent);">${utilisateurActif.solde.toLocaleString()} FCFA</div>
-                            </div>
-                            <div class="stat-box">
-                                <div style="font-size:12px; color:var(--text-secondary);">CA Facturé</div>
-                                <div class="stat-num" style="color:#10b981;">${montantFacturesTotal.toLocaleString()} FCFA</div>
-                            </div>
-                            <div class="stat-box">
-                                <div style="font-size:12px; color:var(--text-secondary);">Rendez-vous</div>
-                                <div class="stat-num" style="color:#f59e0b;">${totalRdvs}</div>
-                            </div>
-                            <div class="stat-box">
-                                <div style="font-size:12px; color:var(--text-secondary);">Notes Vocales</div>
-                                <div class="stat-num" style="color:#ec4899;">${totalNotes}</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } else if (activeTab === 'agenda') {
-                let rdvsHtml = '';
-                if(utilisateurActif.agendaRdv && utilisateurActif.agendaRdv.length > 0) {
-                    utilisateurActif.agendaRdv.forEach(r => {
-                        rdvsHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #f59e0b;"><strong>📅 ${r.titre}</strong> — <span style="color:var(--accent);">${r.date} à ${r.heure}</span></div>`;
-                    });
-                } else { rdvsHtml = '<p style="color:var(--text-secondary);">Aucun rendez-vous planifié.</p>'; }
-
-                content.innerHTML = `
-                    <div class="card" style="border-color:#f59e0b;">
-                        <h3 class="card-title" style="color:#f59e0b;">📅 Agenda & Rendez-vous Pro</h3>
-                        <p class="text">Planifiez vos consultations et chantiers hors-ligne.</p>
-                        
-                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
-                            <input type="text" id="rdvTitre" class="input" placeholder="Intitulé du rendez-vous *" style="margin-bottom:8px;">
-                            <input type="date" id="rdvDate" class="input" style="margin-bottom:8px;">
-                            <input type="time" id="rdvHeure" class="input" style="margin-bottom:10px;">
-                            <button class="btn-action" style="background:#f59e0b;" onclick="ajouterRdvAgenda()">📅 Planifier le Rendez-vous</button>
-                        </div>
-                        <h4 style="margin-bottom:8px;">Mes Prochains Rendez-vous :</h4>
-                        ${rdvsHtml}
-                    </div>
-                `;
-            } else if (activeTab === 'calculatrice_marge') {
-                content.innerHTML = `
-                    <div class="card" style="border-color:#10b981;">
-                        <h3 class="card-title" style="color:#10b981;">🧮 Calculatrice de Marge & Prix de Vente</h3>
-                        <p class="text">Calculez instantanément votre prix de vente en FCFA.</p>
-                        
-                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
-                            <input type="number" id="calcCout" class="input" placeholder="Coût d'achat (FCFA) *" style="margin-bottom:8px;">
-                            <input type="number" id="calcMarge" class="input" placeholder="Marge souhaitée (%) *" style="margin-bottom:10px;">
-                            <button class="btn-action" style="background:#10b981;" onclick="calculerMargeBeneficiaire()">Calculer le Prix de Vente 🧮</button>
-                        </div>
-                        <div id="resultatCalcMarge"></div>
-                    </div>
-                `;
-            } else if (activeTab === 'recherche') {
-                content.innerHTML = `
-                    <div class="card" style="border-color:#8b5cf6;">
-                        <h3 class="card-title" style="color:#8b5cf6;">🔍 Recherche Globale Rapide</h3>
-                        <p class="text">Trouvez instantanément un client, une facture ou une note.</p>
-                        
-                        <div style="margin-bottom:15px;">
-                            <input type="text" id="inputRechercheGlobale" class="input" placeholder="Tapez un mot-clé..." oninput="executerRechercheGlobale()">
-                        </div>
-                        <div id="resultatsRechercheDiv">
-                            <p style="color:var(--text-secondary);">Commencez à taper pour rechercher...</p>
+                            <button class="btn-action" style="margin-top:8px; padding:8px;" onclick="lireTexteAAvoix('Bonjour, je suis ELAWS, ton assistant personnel.')">🔊 Tester la voix</button>
                         </div>
                     </div>
                 `;
@@ -841,125 +901,262 @@
                         const isAi = msg.role === 'ai';
                         chatHtml += `
                             <div style="background:${isAi ? 'rgba(5,150,105,0.15)' : 'var(--bg-color)'}; border-left:4px solid ${isAi ? 'var(--accent)' : 'var(--border-color)'}; padding:14px; border-radius:10px; margin-bottom:12px; position:relative;">
-                                <strong style="font-size:12px; color:${isAi ? 'var(--accent)' : 'var(--text-secondary)'};">${isAi ? '🤖 ELAWS (Expert ' + utilisateurActif.metierUnique + ')' : utilisateurActif.nom}</strong>
-                                <p style="margin:8px 0 0 0; font-size:14px;">${msg.texte}</p>
-                                ${isAi ? `<button onclick="lireTexteAAvoix('${msg.texte.replace(/'/g, "'")}')" style="position:absolute; top:10px; right:10px; background:var(--accent); color:#000; border:none; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;">🔊 Écouter</button>` : ''}
+                                <strong style="font-size:12px; color:${isAi ? 'var(--accent)' : 'var(--text-secondary)'};">${isAi ? '🤖 ELAWS (Sincère & Fluide)' : utilisateurActif.nom}</strong>
+                                <p style="margin:8px 0 0 0; font-size:14px; white-space: pre-line;">${msg.texte}</p>
+                                ${isAi ? `<button onclick="lireTexteAAvoix('${msg.texte.replace(/'/g, "'").replace(/
+/g, " ")}')" style="position:absolute; top:10px; right:10px; background:var(--accent); color:#000; border:none; padding:4px 8px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer;">🔊 Écouter</button>` : ''}
                             </div>
                         `;
                     });
                 }
                 content.innerHTML = `
                     <div class="card" style="border-color:var(--accent);">
-                        <h3 class="card-title" style="color:var(--accent);">🤖 ELAWS — Assistant & Expert Métier</h3>
-                        <p class="text">Posez vos questions :</p>
+                        <h3 class="card-title" style="color:#34d399;">🤖 ELAWS — Assistant Sincère & Naturel</h3>
+                        <p class="text">Pose tes questions, discute, ou demande de l'aide pour tes projets, ton ministère ou ton quotidien :</p>
+                        
                         <div style="text-align:center; margin-bottom:15px;">
-                            <button class="btn-action" onclick="demarrerEcouteMicrophone()" style="background:var(--accent-gradient); font-size:18px; padding:16px; border-radius:30px;">
-                                🎤 Parler à l'Expert ELAWS
+                            <button class="btn-action" onclick="demarrerEcouteMicrophone()" style="background:var(--accent-gradient); font-size:16px; padding:14px;">
+                                🎤 Parler à ELAWS
                             </button>
                         </div>
-                        <div style="background:var(--bg-color); padding:15px; border-radius:12px; max-height:350px; overflow-y:auto; margin-bottom:15px; border:1px solid var(--border-color);">
+                        <div style="background:var(--bg-color); padding:15px; border-radius:12px; max-height:320px; overflow-y:auto; margin-bottom:15px; border:1px solid var(--border-color);">
                             ${chatHtml}
                         </div>
                         <div style="display:flex; gap:8px;">
-                            <input type="text" id="inputElawsChat" class="input" placeholder="Tapez votre question..." style="margin-bottom:0;" onkeypress="if(event.key === 'Enter') envoyerMessageElawsAI()">
-                            <button class="btn-action" style="width:auto; padding:0 22px;" onclick="envoyerMessageElawsAI()">Analyser 🚀</button>
+                            <input type="text" id="inputElawsChat" class="input" placeholder="Ex: Aide-moi pour la prédication de dimanche..." style="margin-bottom:0;" onkeypress="if(event.key === 'Enter') envoyerMessageElawsAI()">
+                            <button class="btn-action" style="width:auto; padding:0 20px;" onclick="envoyerMessageElawsAI()">Envoyer</button>
                         </div>
+                    </div>
+                `;
+            } else if (activeTab === 'ecole_tuteur') {
+                let chatEcoleHtml = '';
+                if (utilisateurActif.discussionsEcole) {
+                    utilisateurActif.discussionsEcole.forEach(msg => {
+                        const isAi = msg.role === 'ai';
+                        chatEcoleHtml += `
+                            <div style="background:${isAi ? 'rgba(245,158,11,0.15)' : 'var(--bg-color)'}; border-left:4px solid ${isAi ? '#f59e0b' : 'var(--border-color)'}; padding:14px; border-radius:10px; margin-bottom:12px;">
+                                <strong style="font-size:12px; color:${isAi ? '#f59e0b' : 'var(--text-secondary)'};">${isAi ? '🎓 ELAWS École' : utilisateurActif.nom}</strong>
+                                <p style="margin:8px 0 0 0; font-size:14px; white-space: pre-line;">${msg.texte}</p>
+                            </div>
+                        `;
+                    });
+                }
+                content.innerHTML = `
+                    <div class="card" style="border-color:#f59e0b;">
+                        <h3 class="card-title" style="color:#f59e0b;">🎓 ELAWS École & Tuteur Pédagogique</h3>
+                        <p class="text">Accompagnement scolaire adapté au programme de <strong>${utilisateurActif.pays || 'Togo'}</strong>.</p>
+                        <div style="text-align:center; margin-bottom:15px;">
+                            <button class="btn-action" onclick="demarrerEcouteMicroEcole()" style="background:#f59e0b; font-size:16px; padding:14px;">🎤 Poser une question à l'oral</button>
+                        </div>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:12px; max-height:300px; overflow-y:auto; margin-bottom:15px; border:1px solid var(--border-color);">
+                            ${chatEcoleHtml}
+                        </div>
+                        <div style="display:flex; gap:8px;">
+                            <input type="text" id="inputEcoleChat" class="input" placeholder="Ex: Explique-moi le théorème de Pythagore..." style="margin-bottom:0;" onkeypress="if(event.key === 'Enter') envoyerMessageEcoleAI()">
+                            <button class="btn-action" style="width:auto; padding:0 20px; background:#f59e0b;" onclick="envoyerMessageEcoleAI()">Envoyer</button>
+                        </div>
+                    </div>
+                `;
+            } else if (activeTab === 'quiz_annales') {
+                const q = questionsQuizExemple[quizActuelIndex];
+                let optionsHtml = '';
+                q.options.forEach((opt, idx) => {
+                    optionsHtml += `<button class="menu-item" style="text-align:center; background:rgba(139,92,246,0.15); border:1px solid #8b5cf6;" onclick="repondreQuiz(${idx})">${opt}</button>`;
+                });
+
+                content.innerHTML = `
+                    <div class="card" style="border-color:#8b5cf6;">
+                        <h3 class="card-title" style="color:#8b5cf6;">📝 Module Quiz & Annales d'Examens</h3>
+                        <p class="text">Teste tes connaissances et gagne des points.</p>
+                        <div style="background:var(--bg-color); padding:16px; border-radius:10px; border:1px solid #8b5cf6; margin-bottom:15px;">
+                            <strong>Question ${quizActuelIndex + 1} / ${questionsQuizExemple.length} :</strong>
+                            <p style="font-size:15px; font-weight:700; color:#8b5cf6; margin:8px 0 14px 0;">${q.question}</p>
+                            ${optionsHtml}
+                        </div>
+                        <div id="resultatQuizDiv"></div>
+                    </div>
+                `;
+            } else if (activeTab === 'contacts_urgences') {
+                let contactsHtml = '';
+                if(utilisateurActif.contactsUrgences) {
+                    utilisateurActif.contactsUrgences.forEach(c => {
+                        contactsHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #ef4444;"><strong>📇 ${c.nom}</strong> (${c.type}) — <a href="tel:${c.tel}" style="color:var(--accent); font-weight:bold;">📞 ${c.tel}</a></div>`;
+                    });
+                }
+                content.innerHTML = `
+                    <div class="card" style="border-color:#ef4444;">
+                        <h3 class="card-title" style="color:#ef4444;">📇 Carnet de Contacts & Urgences</h3>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                            <input type="text" id="contactNom" class="input" placeholder="Nom ou Service *" style="margin-bottom:8px;">
+                            <input type="text" id="contactTel" class="input" placeholder="Téléphone *" style="margin-bottom:8px;">
+                            <select id="contactType" class="input" style="margin-bottom:10px;">
+                                <option value="Secours">Secours / Urgence</option>
+                                <option value="Pro">Professionnel / Église</option>
+                                <option value="Personnel">Personnel</option>
+                            </select>
+                            <button class="btn-action" style="background:#ef4444;" onclick="ajouterContactUrgence()">Ajouter le Contact 📇</button>
+                        </div>
+                        ${contactsHtml}
+                    </div>
+                `;
+            } else if (activeTab === 'gestion_stocks') {
+                let stocksHtml = '';
+                if(utilisateurActif.stocksMatériel) {
+                    utilisateurActif.stocksMatériel.forEach(s => {
+                        const alerteRouge = s.qte <= s.alerte;
+                        stocksHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid ${alerteRouge ? '#ef4444' : '#10b981'};"><strong>📦 ${s.nom}</strong> — Quantité : <span style="color:${alerteRouge ? '#ef4444' : '#10b981'}; font-weight:bold;">${s.qte}</span> ${alerteRouge ? '⚠️ (Stock bas !)' : ''}</div>`;
+                    });
+                }
+                content.innerHTML = `
+                    <div class="card" style="border-color:#10b981;">
+                        <h3 class="card-title" style="color:#10b981;">📦 Gestion de Stocks & Matériel</h3>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                            <input type="text" id="stockNom" class="input" placeholder="Nom du matériel *" style="margin-bottom:8px;">
+                            <input type="number" id="stockQte" class="input" placeholder="Quantité actuelle *" style="margin-bottom:8px;">
+                            <input type="number" id="stockAlerte" class="input" placeholder="Seuil d'alerte *" style="margin-bottom:10px;">
+                            <button class="btn-action" style="background:#10b981;" onclick="ajouterStockMatériel()">Ajouter au Stock 📦</button>
+                        </div>
+                        ${stocksHtml}
+                    </div>
+                `;
+            } else if (activeTab === 'convertisseur_devise') {
+                content.innerHTML = `
+                    <div class="card" style="border-color:#3b82f6;">
+                        <h3 class="card-title" style="color:#3b82f6;">💱 Convertisseur de Devises & Unités</h3>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                            <input type="number" id="convMontant" class="input" placeholder="Montant / Valeur *" style="margin-bottom:8px;">
+                            <select id="convType" class="input" style="margin-bottom:10px;">
+                                <option value="fcfa_eur">FCFA vers Euros (EUR)</option>
+                                <option value="eur_fcfa">Euros (EUR) vers FCFA</option>
+                                <option value="kg_g">Kilogrammes (kg) vers Grammes (g)</option>
+                                <option value="m_cm">Mètres (m) vers Centimètres (cm)</option>
+                            </select>
+                            <button class="btn-action" style="background:#3b82f6;" onclick="executerConversion()">Convertir 💱</button>
+                        </div>
+                        <div id="resultatConvDiv"></div>
+                    </div>
+                `;
+            } else if (activeTab === 'dashboard') {
+                content.innerHTML = `
+                    <div class="card" style="border-color:#3b82f6;">
+                        <h3 class="card-title" style="color:#3b82f6;">📊 Tableau de Bord & Score v24</h3>
+                        <div style="font-size:32px; font-weight:900; color:#3b82f6; text-align:center; margin-bottom:15px;">⭐ ${scoreQuizSession + 180} pts</div>
+                        <div class="stat-grid">
+                            <div class="stat-box">
+                                <div style="font-size:12px; color:var(--text-secondary);">Trésorerie</div>
+                                <div class="stat-num" style="color:var(--accent);">${utilisateurActif.solde.toLocaleString()} FCFA</div>
+                            </div>
+                            <div class="stat-box">
+                                <div style="font-size:12px; color:var(--text-secondary);">Contacts & Urgences</div>
+                                <div class="stat-num" style="color:#ef4444;">${utilisateurActif.contactsUrgences ? utilisateurActif.contactsUrgences.length : 0}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (activeTab === 'agenda') {
+                let rdvsHtml = '';
+                if(utilisateurActif.agendaRdv) {
+                    utilisateurActif.agendaRdv.forEach(r => {
+                        rdvsHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #f59e0b;"><strong>📅 ${r.titre}</strong> — ${r.date} à ${r.heure}</div>`;
+                    });
+                }
+                content.innerHTML = `
+                    <div class="card" style="border-color:#f59e0b;">
+                        <h3 class="card-title" style="color:#f59e0b;">📅 Agenda & Événements</h3>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                            <input type="text" id="rdvTitre" class="input" placeholder="Titre (Culte, Réunion, Visite) *" style="margin-bottom:8px;">
+                            <input type="date" id="rdvDate" class="input" style="margin-bottom:8px;">
+                            <input type="time" id="rdvHeure" class="input" style="margin-bottom:10px;">
+                            <button class="btn-action" style="background:#f59e0b;" onclick="ajouterRdvAgenda()">Ajouter 📅</button>
+                        </div>
+                        ${rdvsHtml}
+                    </div>
+                `;
+            } else if (activeTab === 'calculatrice_marge') {
+                content.innerHTML = `
+                    <div class="card" style="border-color:#10b981;">
+                        <h3 class="card-title" style="color:#10b981;">🧮 Calculateur de Marge & Tarifs</h3>
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                            <input type="number" id="calcCout" class="input" placeholder="Coût d'achat (FCFA) *" style="margin-bottom:8px;">
+                            <input type="number" id="calcMarge" class="input" placeholder="Marge (%) *" style="margin-bottom:10px;">
+                            <button class="btn-action" style="background:#10b981;" onclick="calculerMargeBeneficiaire()">Calculer 🧮</button>
+                        </div>
+                        <div id="resultatCalcMarge"></div>
+                    </div>
+                `;
+            } else if (activeTab === 'recherche') {
+                content.innerHTML = `
+                    <div class="card" style="border-color:#8b5cf6;">
+                        <h3 class="card-title" style="color:#8b5cf6;">🔍 Recherche Globale</h3>
+                        <input type="text" id="inputRechercheGlobale" class="input" placeholder="Tape un mot-clé..." oninput="executerRechercheGlobale()">
+                        <div id="resultatsRechercheDiv" style="margin-top:10px;"></div>
                     </div>
                 `;
             } else if (activeTab === 'traduction_croisee') {
                 content.innerHTML = `
                     <div class="card" style="border-color:#3b82f6;">
-                        <h3 class="card-title" style="color:#3b82f6;">🌐 Traduction Croisée & Dialectes</h3>
-                        <p class="text">Communiquez en temps réel.</p>
+                        <h3 class="card-title" style="color:#3b82f6;">🌐 Traduction & Dialectes</h3>
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
-                            <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;">Langue Source :</label>
-                            <select id="selectDialecteSource" class="input" style="margin-bottom:10px;">
+                            <select id="selectDialecteSource" class="input" style="margin-bottom:8px;">
                                 <option value="fr-FR">Français</option>
-                                <option value="en-US">Anglais (English)</option>
-                                <option value="es-ES">Espagnol (Español)</option>
-                                <option value="yo-NG">Yoruba</option>
-                                <option value="ee-TG">Ewé / Gbe</option>
+                                <option value="en-US">Anglais</option>
                             </select>
-                            <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:4px;">Langue Cible :</label>
-                            <select id="selectLangueCible" class="input" style="margin-bottom:10px;">
+                            <select id="selectLangueCible" class="input" style="margin-bottom:8px;">
+                                <option value="en">Anglais</option>
                                 <option value="fr">Français</option>
-                                <option value="en">Anglais (English)</option>
-                                <option value="es">Espagnol (Español)</option>
-                                <option value="ew">Ewé</option>
-                                <option value="yo">Yoruba</option>
                             </select>
-                            <textarea id="tradTexteInput" class="input" placeholder="Saisissez ou parlez..." rows="3" style="resize:none; margin-bottom:8px;"></textarea>
-                            <div style="display:flex; gap:8px;">
-                                <button class="btn-action" style="background:#3b82f6;" onclick="executerTraductionCroisee()">Traduire 🔄</button>
-                                <button class="btn-action" style="background:#10b981; width:auto; padding:0 16px;" onclick="demarrerMicroTraduction()">🎤 Micro</button>
-                            </div>
+                            <textarea id="tradTexteInput" class="input" placeholder="Texte à traduire..." rows="3" style="resize:none; margin-bottom:8px;"></textarea>
+                            <button class="btn-action" style="background:#3b82f6;" onclick="executerTraductionCroisee()">Traduire 🔄</button>
                         </div>
                         <div id="resultatTraductionDiv"></div>
                     </div>
                 `;
             } else if (activeTab === 'facturation') {
-                let facturesHtml = '';
-                if(utilisateurActif.factures && utilisateurActif.factures.length > 0) {
-                    utilisateurActif.factures.forEach(f => {
-                        facturesHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #10b981;"><strong>📄 ${f.numero}</strong> — Client: ${f.client} | <strong>${f.montant.toLocaleString()} FCFA</strong></div>`;
-                    });
-                } else { facturesHtml = '<p style="color:var(--text-secondary);">Aucune facture.</p>'; }
-
                 content.innerHTML = `
                     <div class="card" style="border-color:#10b981;">
                         <h3 class="card-title" style="color:#10b981;">📄 Facturation & Reçus PDF</h3>
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
-                            <input type="text" id="factClient" class="input" placeholder="Nom du Client *" style="margin-bottom:8px;">
-                            <input type="text" id="factDesc" class="input" placeholder="Prestation *" style="margin-bottom:8px;">
-                            <input type="number" id="factMontant" class="input" placeholder="Montant en FCFA *" style="margin-bottom:10px;">
-                            <button class="btn-action" style="background:#10b981;" onclick="genererFacturePDF()">🖨️ Générer la Facture</button>
+                            <input type="text" id="factClient" class="input" placeholder="Nom du Bénéficiaire / Client *" style="margin-bottom:8px;">
+                            <input type="text" id="factDesc" class="input" placeholder="Motif / Prestation *" style="margin-bottom:8px;">
+                            <input type="number" id="factMontant" class="input" placeholder="Montant (FCFA) *" style="margin-bottom:10px;">
+                            <button class="btn-action" style="background:#10b981;" onclick="genererFacturePDF()">Générer Reçu PDF 🖨️</button>
                         </div>
                         <div id="apercuFactureContainer"></div>
-                        <h4 style="margin-top:15px; margin-bottom:8px;">Historique :</h4>
-                        ${facturesHtml}
                     </div>
                 `;
             } else if (activeTab === 'notes_vocales') {
                 let notesHtml = '';
-                if(utilisateurActif.notesVocales && utilisateurActif.notesVocales.length > 0) {
+                if(utilisateurActif.notesVocales) {
                     utilisateurActif.notesVocales.forEach(n => {
-                        notesHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #ec4899;"><strong>🎙️ ${n.date}</strong><p style="margin:4px 0 0 0; font-size:13.5px;">${n.texte}</p></div>`;
+                        notesHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #ec4899;"><strong>🎙️ ${n.date}</strong><p style="margin:4px 0 0 0;">${n.texte}</p></div>`;
                     });
-                } else { notesHtml = '<p style="color:var(--text-secondary);">Aucune note.</p>'; }
-
+                }
                 content.innerHTML = `
                     <div class="card" style="border-color:#ec4899;">
                         <h3 class="card-title" style="color:#ec4899;">🎙️ Dictaphone & Notes Vocales</h3>
                         <div style="text-align:center; margin-bottom:15px;">
-                            <button class="btn-action" style="background:linear-gradient(135deg, #ec4899 0%, #db2777 100%); font-size:16px; padding:16px; border-radius:30px;" onclick="enregistrerNoteVocale()">🎙️ Enregistrer une Note</button>
+                            <button class="btn-action" style="background:#ec4899; padding:14px;" onclick="enregistrerNoteVocale()">🎤 Enregistrer une note vocale</button>
                         </div>
                         ${notesHtml}
                     </div>
                 `;
             } else if (activeTab === 'economie') {
                 let caissesHtml = '';
-                if(utilisateurActif.journalCaisse && utilisateurActif.journalCaisse.length > 0) {
+                if(utilisateurActif.journalCaisse) {
                     utilisateurActif.journalCaisse.forEach(c => {
-                        const isEntree = c.type === 'entree';
-                        caissesHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid ${isEntree ? '#10b981' : '#ef4444'};"><strong>${isEntree ? '➕ Entrée' : '➖ Sortie'} : ${c.libelle}</strong> — <span style="color:${isEntree ? '#10b981' : '#ef4444'}; font-weight:bold;">${c.montant.toLocaleString()} FCFA</span></div>`;
+                        caissesHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid ${c.type === 'entree' ? '#10b981' : '#ef4444'};"><strong>${c.libelle}</strong> : ${c.montant.toLocaleString()} FCFA</div>`;
                     });
-                } else { caissesHtml = '<p style="color:var(--text-secondary);">Aucun mouvement.</p>'; }
-
+                }
                 content.innerHTML = `
                     <div class="card" style="border-color:var(--accent);">
                         <h3 class="card-title">🪙 Journal de Caisse & Trésorerie</h3>
-                        <div style="font-size:26px; font-weight:800; color:var(--accent); text-align:center; padding:10px; background:var(--bg-color); border-radius:10px; margin-bottom:15px;">${utilisateurActif.solde.toLocaleString()} FCFA</div>
+                        <div style="font-size:24px; font-weight:800; color:var(--accent); text-align:center; padding:10px; background:var(--bg-color); border-radius:10px; margin-bottom:15px;">${utilisateurActif.solde.toLocaleString()} FCFA</div>
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
-                            <div style="display:flex; gap:6px; margin-bottom:8px; flex-wrap:wrap;">
-                                <button class="btn-top" onclick="appliquerSuggestionCaisse('Vente prestation')">⚡ Vente prestation</button>
-                                <button class="btn-top" onclick="appliquerSuggestionCaisse('Achat matériel')">⚡ Achat matériel</button>
-                                <button class="btn-top" onclick="appliquerSuggestionCaisse('Transport')">⚡ Transport</button>
-                            </div>
-                            <input type="text" id="caisseLib" class="input" placeholder="Libellé *" style="margin-bottom:8px;">
-                            <input type="number" id="caisseMontant" class="input" placeholder="Montant en FCFA *" style="margin-bottom:10px;">
+                            <input type="text" id="caisseLib" class="input" placeholder="Libellé (ex: Offrande, Achat) *" style="margin-bottom:8px;">
+                            <input type="number" id="caisseMontant" class="input" placeholder="Montant *" style="margin-bottom:10px;">
                             <div style="display:flex; gap:8px;">
                                 <button class="btn-action" style="background:#10b981;" onclick="ajouterMouvementCaisse('entree')">➕ Entrée</button>
-                                <button class="btn-action" style="background:#ef4444;" onclick="ajouterMouvementCaisse('sortie')">➖ Sortie</button>
+                                <button class="btn-action" style="background:#ef4444;" onclick="ajouterMouvementCaisse('sortie')">➖ Dépense</button>
                             </div>
                         </div>
                         ${caissesHtml}
@@ -970,10 +1167,9 @@
                     <div class="card" style="border-color:#3b82f6;">
                         <h3 class="card-title" style="color:#3b82f6;">💾 Sauvegarde & Sécurité</h3>
                         <div style="display:flex; flex-direction:column; gap:12px; margin-top:15px;">
-                            <button class="btn-action" style="background:#3b82f6;" onclick="exporterDonneesJSON()">📥 Exporter (JSON)</button>
+                            <button class="btn-action" style="background:#3b82f6;" onclick="exporterDonneesJSON()">📥 Exporter les données (JSON)</button>
                             <div style="background:var(--bg-color); padding:15px; border-radius:10px; border:1px solid var(--border-color); text-align:center;">
-                                <label style="font-size:13px; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:8px;">📤 Restaurer :</label>
-                                <input type="file" id="fileRestaurer" accept=".json" onchange="importerDonneesJSON(event)" style="font-size:12px; color:var(--text-main);">
+                                <input type="file" id="fileRestaurer" accept=".json" onchange="importerDonneesJSON(event)" style="font-size:12px;">
                             </div>
                         </div>
                     </div>
@@ -981,15 +1177,8 @@
             } else if (activeTab === 'faq') {
                 content.innerHTML = `
                     <div class="card" style="border-color:#f59e0b;">
-                        <h3 class="card-title" style="color:#f59e0b;">❓ Guide & FAQ Immersif</h3>
-                        <div class="faq-item" onclick="toggleFaqItem(this)">
-                            <div class="faq-question">1. Comment fonctionne le Score de Productivité ? <span>▼</span></div>
-                            <div class="faq-answer">Le score augmente à chaque facture créée, note vocale dictée ou rendez-vous planifié pour rendre l'utilisation quotidienne ludique et motivante.</div>
-                        </div>
-                        <div class="faq-item" onclick="toggleFaqItem(this)">
-                            <div class="faq-question">2. Y a-t-il des effets sonores ? <span>▼</span></div>
-                            <div class="faq-answer">Oui ! Un son discret et mélodieux confirme chaque validation (encaissement, sauvegarde, facture) pour une expérience utilisateur haut de gamme.</div>
-                        </div>
+                        <h3 class="card-title" style="color:#f59e0b;">❓ Guide pour les Testeurs (v24)</h3>
+                        <p class="text">Bienvenue ! Cette application fonctionne 100% hors-ligne. Vous pouvez créer votre profil (Pasteur, Élève, Professionnel), tester l'assistant ELAWS qui répond de manière fluide et sincère, gérer vos contacts, vos stocks, votre agenda et vos notes vocales.</p>
                     </div>
                 `;
             }
