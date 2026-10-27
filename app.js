@@ -85,7 +85,7 @@ function creerNouveauProfil() {
         dossiersVoyagePapiers: [],
         carnetContacts: [],
         discussionsElaws: [
-            { role: 'ai', texte: `Salut ${nom} ! C'est ELAWS. Je suis ton ami et ton assistant personnel (v28.0). Que tu sois professionnel ou élève (${niveauEtude || metierUnique}), on est ensemble pour réussir !` }
+            { role: 'ai', texte: `Salut ${nom} ! C'est ELAWS. Je suis ton ami et ton assistant personnel (v29.0). On est ensemble pour réussir !` }
         ]
     };
 
@@ -156,12 +156,86 @@ function lancerAppelInternetAvecTraduction(nomDest, dialecteDest) {
     jouerSonSucces();
     showToast(`🌐 Appel Internet & Traduction ELAWS vers ${nomDest} (${dialecteDest})...`);
     setTimeout(() => {
-        alert(`[Appel Intelligent ELAWS v28.0] 
+        alert(`[Appel Intelligent ELAWS v29.0] 
 Connexion établie avec ${nomDest} !
 🗣️ Langue source : Votre voix.
-🔄 Traduction instantanée active vers : ${dialecteDest}.
-L'interlocuteur vous comprend parfaitement dans son dialecte !`);
+🔄 Traduction instantanée active vers : ${dialecteDest}.`);
     }, 600);
+}
+
+function enregistrerMesureCouture() {
+    const client = document.getElementById('coutureClient')?.value.trim();
+    const epaule = document.getElementById('coutureEpaule')?.value || '';
+    const poitrine = document.getElementById('couturePoitrine')?.value || '';
+    const longueur = document.getElementById('coutureLongueur')?.value || '';
+    const details = document.getElementById('coutureDetails')?.value.trim() || '';
+
+    if(client) {
+        if(!utilisateurActif.mesuresCouture) utilisateurActif.mesuresCouture = [];
+        utilisateurActif.mesuresCouture.unshift({ id: Date.now(), client, epaule, poitrine, longueur, details, date: new Date().toLocaleDateString() });
+        sauvegarderProfilActif();
+        jouerSonSucces();
+        showToast("Mesures enregistrées !");
+        render();
+    } else { showToast("Veuillez indiquer le nom du client."); }
+}
+
+function ajouterNotePastorale() {
+    const titre = document.getElementById('pasteurTitre')?.value.trim();
+    const contenu = document.getElementById('pasteurContenu')?.value.trim();
+    if(titre) {
+        if(!utilisateurActif.notesPastorales) utilisateurActif.notesPastorales = [];
+        utilisateurActif.notesPastorales.unshift({ id: Date.now(), titre, contenu, date: new Date().toLocaleDateString() });
+        sauvegarderProfilActif();
+        jouerSonSucces();
+        showToast("Prédication enregistrée !");
+        render();
+    } else { showToast("Indiquez le titre du message."); }
+}
+
+function ajouterConsultationMedicale() {
+    const patient = document.getElementById('medPatient')?.value.trim();
+    const diagnostic = document.getElementById('medDiagnostic')?.value.trim();
+    const prescription = document.getElementById('medPrescription')?.value.trim();
+
+    if(patient && diagnostic) {
+        if(!utilisateurActif.consultationsMedicales) utilisateurActif.consultationsMedicales = [];
+        utilisateurActif.consultationsMedicales.unshift({ id: Date.now(), patient, diagnostic, prescription, date: new Date().toLocaleDateString() });
+        sauvegarderProfilActif();
+        jouerSonSucces();
+        showToast("Consultation enregistrée !");
+        render();
+    } else { showToast("Remplissez le patient et le diagnostic."); }
+}
+
+function ajouterStockBoutique() {
+    const article = document.getElementById('boutiqueArticle')?.value.trim();
+    const qte = parseInt(document.getElementById('boutiqueQte')?.value);
+    const prix = parseFloat(document.getElementById('boutiquePrix')?.value);
+
+    if(article && !isNaN(qte) && !isNaN(prix)) {
+        if(!utilisateurActif.stocksBoutique) utilisateurActif.stocksBoutique = [];
+        utilisateurActif.stocksBoutique.unshift({ id: Date.now(), article, qte, prix });
+        sauvegarderProfilActif();
+        jouerSonSucces();
+        showToast("Article ajouté au stock !");
+        render();
+    } else { showToast("Remplissez correctement les champs."); }
+}
+
+function ajouterAtelierMecanique() {
+    const vehicule = document.getElementById('mecaVehicule')?.value.trim();
+    const panne = document.getElementById('mecaPanne')?.value.trim();
+    const cout = parseFloat(document.getElementById('mecaCout')?.value) || 0;
+
+    if(vehicule && panne) {
+        if(!utilisateurActif.ateliersMecanique) utilisateurActif.ateliersMecanique = [];
+        utilisateurActif.ateliersMecanique.unshift({ id: Date.now(), vehicule, panne, cout, date: new Date().toLocaleDateString() });
+        sauvegarderProfilActif();
+        jouerSonSucces();
+        showToast("Réparation enregistrée !");
+        render();
+    } else { showToast("Remplissez le véhicule et la panne."); }
 }
 
 function enregistrerDevoirEleve() {
@@ -169,7 +243,7 @@ function enregistrerDevoirEleve() {
     const question = document.getElementById('devoirQuestion')?.value.trim();
     if(matiere && question) {
         if(!utilisateurActif.devoirsEleve) utilisateurActif.devoirsEleve = [];
-        const explicationElaws = `[Explication ELAWS] Bonjour ${utilisateurActif.nom} ! Pour ta question en ${matiere} ("${question}"), voici comment comprendre la leçon : Prends le temps de relire ton cours calmement. Si c'est un exercice, décompose-le étape par étape. Tu as tout ce qu'il faut pour réussir ! 🌟`;
+        const explicationElaws = `[Explication ELAWS] Bonjour ${utilisateurActif.nom} ! Pour ta question en ${matiere} ("${question}"), voici comment comprendre la leçon : Prends le temps de relire ton cours calmement et décompose l'exercice étape par étape. Tu vas y arriver ! 🌟`;
         utilisateurActif.devoirsEleve.unshift({ id: Date.now(), matiere, question, reponse: explicationElaws, date: new Date().toLocaleDateString() });
         sauvegarderProfilActif();
         jouerSonSucces();
@@ -270,7 +344,7 @@ function render() {
             <div class="card" style="border-color:var(--accent); max-width:500px; margin: 10px auto; text-align:center;">
                 <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo" style="width:72px; height:72px; margin-bottom:10px; border-radius:16px; border:2px solid var(--accent);">
                 <h2 style="color:var(--accent); margin-top:0;">✨ E.V.A.T. & ELAWS</h2>
-                <p class="text" style="text-align:center;">Écosystème Universel & Scolaire (v28.0)</p>
+                <p class="text" style="text-align:center;">Écosystème Universel & Scolaire (v29.0)</p>
                 
                 ${profilsExistantsHtml}
 
@@ -303,7 +377,7 @@ function render() {
 
                     <input type="text" id="regMetierCustom" class="input" value="Élève / Étudiant" placeholder="Ou personnalisez..." style="margin-bottom:12px;">
                     
-                    <button class="btn-action" onclick="creerNouveauProfil()">🚀 Démarrer avec ELAWS (v28.0)</button>
+                    <button class="btn-action" onclick="creerNouveauProfil()">🚀 Démarrer avec ELAWS (v29.0)</button>
                 </div>
             </div>
         `;
@@ -399,7 +473,7 @@ function render() {
         }
         content.innerHTML = `
             <div class="card" style="border-color:var(--accent);">
-                <h3 class="card-title" style="color:var(--accent);">🤖 ELAWS v28.0 — Ton Ami Bienveillant</h3>
+                <h3 class="card-title" style="color:var(--accent);">🤖 ELAWS v29.0 — Ton Ami Bienveillant</h3>
                 <p class="text">Discute avec ELAWS pour tes révisions, tes projets ou pour trouver du soutien :</p>
                 <div style="text-align:center; margin-bottom:15px;">
                     <button class="btn-action" onclick="demarrerMicroElaws()" style="background:linear-gradient(135deg, #ec4899 0%, #db2777 100%); font-size:16px; padding:14px; border-radius:30px;">
@@ -416,8 +490,10 @@ function render() {
             </div>
         `;
     } else if (activeTab === 'outils_metier') {
-        const isEleve = utilisateurActif.metierUnique.toLowerCase().includes('élève') || utilisateurActif.metierUnique.toLowerCase().includes('étudiant');
-        
+        const metier = (utilisateurActif.metierUnique || "").toLowerCase();
+        const isEleve = metier.includes('élève') || metier.includes('étudiant');
+        let outilsHtml = '';
+
         if (isEleve) {
             let devoirsHtml = '';
             if (utilisateurActif.devoirsEleve && utilisateurActif.devoirsEleve.length > 0) {
@@ -426,7 +502,7 @@ function render() {
                 });
             } else { devoirsHtml = '<p style="color:var(--text-secondary);">Aucune question de cours enregistrée pour l’instant.</p>'; }
 
-            content.innerHTML = `
+            outilsHtml += `
                 <div class="card" style="border-color:#34d399;">
                     <h3 class="card-title" style="color:#34d399;">🎒 Espace Élève & Aide aux Devoirs (Niveau : ${utilisateurActif.niveauEtude || 'Général'})</h3>
                     <p class="text">Pose une question sur ton cours ou ton exercice. ELAWS t'expliquera la leçon avec des mots simples pour t'aider à réussir !</p>
@@ -439,14 +515,138 @@ function render() {
                     ${devoirsHtml}
                 </div>
             `;
-        } else {
-            content.innerHTML = `
+        }
+
+        if (metier.includes('couturier') || metier.includes('tailleur')) {
+            let mesuresHtml = '';
+            if(utilisateurActif.mesuresCouture && utilisateurActif.mesuresCouture.length > 0) {
+                utilisateurActif.mesuresCouture.forEach(m => {
+                    mesuresHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #f59e0b;"><strong>✂️ Client : ${m.client}</strong> (${m.date})<br><small>Épaule: ${m.epaule} cm | Poitrine: ${m.poitrine} cm | Longueur: ${m.longueur} cm</small><br><em>Détails : ${m.details || 'Aucun'}</em></div>`;
+                });
+            } else { mesuresHtml = '<p style="color:var(--text-secondary);">Aucune mesure enregistrée.</p>'; }
+
+            outilsHtml += `
+                <div class="card" style="border-color:#f59e0b;">
+                    <h3 class="card-title" style="color:#f59e0b;">✂️ Carnet de Mesures & Commandes (Couture)</h3>
+                    <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                        <input type="text" id="coutureClient" class="input" placeholder="Nom du Client *" style="margin-bottom:8px;">
+                        <div style="display:flex; gap:8px; margin-bottom:8px;">
+                            <input type="text" id="coutureEpaule" class="input" placeholder="Épaule (cm)" style="margin-bottom:0;">
+                            <input type="text" id="couturePoitrine" class="input" placeholder="Poitrine (cm)" style="margin-bottom:0;">
+                            <input type="text" id="coutureLongueur" class="input" placeholder="Longueur (cm)" style="margin-bottom:0;">
+                        </div>
+                        <input type="text" id="coutureDetails" class="input" placeholder="Modèle ou remarques..." style="margin-bottom:10px;">
+                        <button class="btn-action" style="background:#f59e0b;" onclick="enregistrerMesureCouture()">💾 Enregistrer les Mesures</button>
+                    </div>
+                    <h4 style="margin-bottom:8px;">Historique des Clients :</h4>
+                    ${mesuresHtml}
+                </div>
+            `;
+        }
+
+        if (metier.includes('pasteur') || metier.includes('guide') || metier.includes('culte')) {
+            let notesHtml = '';
+            if(utilisateurActif.notesPastorales && utilisateurActif.notesPastorales.length > 0) {
+                utilisateurActif.notesPastorales.forEach(n => {
+                    notesHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #f59e0b;"><strong>📖 ${n.titre}</strong> (${n.date})<br><p style="margin:5px 0 0 0; white-space:pre-line;">${n.contenu}</p></div>`;
+                });
+            } else { notesHtml = '<p style="color:var(--text-secondary);">Aucune prédication enregistrée.</p>'; }
+
+            outilsHtml += `
+                <div class="card" style="border-color:#f59e0b;">
+                    <h3 class="card-title" style="color:#f59e0b;">📖 Notes de Prédication & Pastorale</h3>
+                    <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                        <input type="text" id="pasteurTitre" class="input" placeholder="Thème du culte *" style="margin-bottom:8px;">
+                        <textarea id="pasteurContenu" class="input" rows="4" placeholder="Saisissez vos notes bibliques..." style="resize:none; margin-bottom:10px;"></textarea>
+                        <button class="btn-action" style="background:#f59e0b;" onclick="ajouterNotePastorale()">💾 Sauvegarder la Prédication</button>
+                    </div>
+                    <h4 style="margin-bottom:8px;">Mes Prédications :</h4>
+                    ${notesHtml}
+                </div>
+            `;
+        }
+
+        if (metier.includes('medecin') || metier.includes('soignant')) {
+            let medHtml = '';
+            if(utilisateurActif.consultationsMedicales && utilisateurActif.consultationsMedicales.length > 0) {
+                utilisateurActif.consultationsMedicales.forEach(c => {
+                    medHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #3b82f6;"><strong>🩺 Patient : ${c.patient}</strong> (${c.date})<br>Diagnostic : ${c.diagnostic}<br>Prescription : ${c.prescription}</div>`;
+                });
+            } else { medHtml = '<p style="color:var(--text-secondary);">Aucune consultation enregistrée.</p>'; }
+
+            outilsHtml += `
+                <div class="card" style="border-color:#3b82f6;">
+                    <h3 class="card-title" style="color:#3b82f6;">🩺 Registre de Consultations Médicales</h3>
+                    <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                        <input type="text" id="medPatient" class="input" placeholder="Nom du Patient *" style="margin-bottom:8px;">
+                        <input type="text" id="medDiagnostic" class="input" placeholder="Diagnostic / Symptômes *" style="margin-bottom:8px;">
+                        <input type="text" id="medPrescription" class="input" placeholder="Prescription / Traitement *" style="margin-bottom:10px;">
+                        <button class="btn-action" style="background:#3b82f6;" onclick="ajouterConsultationMedicale()">💾 Enregistrer la Consultation</button>
+                    </div>
+                    <h4 style="margin-bottom:8px;">Derniers Patients :</h4>
+                    ${medHtml}
+                </div>
+            `;
+        }
+
+        if (metier.includes('commercant') || metier.includes('boutique')) {
+            let stockHtml = '';
+            if(utilisateurActif.stocksBoutique && utilisateurActif.stocksBoutique.length > 0) {
+                utilisateurActif.stocksBoutique.forEach(s => {
+                    stockHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #10b981;"><strong>🛍️ ${s.article}</strong> — Stock : ${s.qte} | Prix : ${s.prix.toLocaleString()} FCFA</div>`;
+                });
+            } else { stockHtml = '<p style="color:var(--text-secondary);">Aucun article en stock.</p>'; }
+
+            outilsHtml += `
+                <div class="card" style="border-color:#10b981;">
+                    <h3 class="card-title" style="color:#10b981;">🛍️ Gestion de Stock & Boutique</h3>
+                    <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                        <input type="text" id="boutiqueArticle" class="input" placeholder="Nom de l'article *" style="margin-bottom:8px;">
+                        <div style="display:flex; gap:8px; margin-bottom:8px;">
+                            <input type="number" id="boutiqueQte" class="input" placeholder="Quantité" style="margin-bottom:0;">
+                            <input type="number" id="boutiquePrix" class="input" placeholder="Prix unitaire (FCFA)" style="margin-bottom:0;">
+                        </div>
+                        <button class="btn-action" style="background:#10b981;" onclick="ajouterStockBoutique()">➕ Ajouter au Stock</button>
+                    </div>
+                    <h4 style="margin-bottom:8px;">Inventaire Actuel :</h4>
+                    ${stockHtml}
+                </div>
+            `;
+        }
+
+        if (metier.includes('mecanicien') || metier.includes('artisan')) {
+            let mecaHtml = '';
+            if(utilisateurActif.ateliersMecanique && utilisateurActif.ateliersMecanique.length > 0) {
+                utilisateurActif.ateliersMecanique.forEach(m => {
+                    mecaHtml += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid #f59e0b;"><strong>🔧 Véhicule : ${m.vehicule}</strong> (${m.date})<br>Panne : ${m.panne}<br>Coût : ${m.cout.toLocaleString()} FCFA</div>`;
+                });
+            } else { mecaHtml = '<p style="color:var(--text-secondary);">Aucun véhicule enregistré.</p>'; }
+
+            outilsHtml += `
+                <div class="card" style="border-color:#f59e0b;">
+                    <h3 class="card-title" style="color:#f59e0b;">🔧 Suivi Atelier Mécanique</h3>
+                    <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                        <input type="text" id="mecaVehicule" class="input" placeholder="Véhicule / Client *" style="margin-bottom:8px;">
+                        <input type="text" id="mecaPanne" class="input" placeholder="Description de la panne *" style="margin-bottom:8px;">
+                        <input type="number" id="mecaCout" class="input" placeholder="Coût estimé (FCFA)" style="margin-bottom:10px;">
+                        <button class="btn-action" style="background:#f59e0b;" onclick="ajouterAtelierMecanique()">💾 Enregistrer la Réparation</button>
+                    </div>
+                    <h4 style="margin-bottom:8px;">Véhicules en Atelier :</h4>
+                    ${mecaHtml}
+                </div>
+            `;
+        }
+
+        if (!outilsHtml) {
+            outilsHtml = `
                 <div class="card" style="border-color:#f59e0b;">
                     <h3 class="card-title" style="color:#f59e0b;">🛠️ Espace Professionnel — ${utilisateurActif.metierUnique}</h3>
                     <p class="text">Votre profil est actif. Vous pouvez gérer vos clients et vos projets en toute autonomie.</p>
                 </div>
             `;
         }
+
+        content.innerHTML = outilsHtml;
     } else if (activeTab === 'voyages_papiers') {
         content.innerHTML = `
             <div class="card" style="border-color:#0ea5e9;">
