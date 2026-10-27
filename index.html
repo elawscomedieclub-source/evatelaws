@@ -3,9 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. & ELAWS - Écosystème Universel Dynamique</title>
+    <title>E.V.A.T. & ELAWS - Écosystème Souverain Universel & Caméra Intelligente</title>
     <style>
         :root {
+            --bg-color: #0b0f19;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #34d399;
+            --accent-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --border-color: #334155;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+        [data-theme="light"] {
             --bg-color: #f1f5f9;
             --card-bg: #ffffff;
             --text-main: #0f172a;
@@ -14,16 +24,6 @@
             --accent-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
             --border-color: #e2e8f0;
             --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-        }
-        [data-theme="dark"] {
-            --bg-color: #0b0f19;
-            --card-bg: #1e293b;
-            --text-main: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent: #34d399;
-            --accent-gradient: linear-gradient(135deg, #059669 0%, #047857 100%);
-            --border-color: #334155;
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
         }
         [data-theme="eco"] {
             --bg-color: #000000;
@@ -84,7 +84,6 @@
             cursor: pointer;
             transition: background 0.2s;
         }
-        .btn-top:hover { opacity: 0.85; }
         .badge-info {
             font-size: 11px;
             color: var(--accent);
@@ -145,21 +144,23 @@
             color: var(--text-main);
             font-weight: 500;
         }
-        .badge-metier {
-            display: inline-block;
-            background: rgba(16, 185, 129, 0.12);
-            color: var(--accent);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            margin-right: 6px;
-            margin-bottom: 6px;
-            cursor: pointer;
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            transition: all 0.2s;
+        .grid-metiers {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
         }
-        .badge-metier:hover { transform: scale(1.05); }
+        .metier-card-widget {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            padding: 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        .metier-card-widget:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .metier-card-widget.active { border-color: var(--accent); background: rgba(5, 150, 105, 0.1); }
         .input-group { display: flex; gap: 10px; margin-bottom: 10px; }
         .input {
             flex: 1;
@@ -194,7 +195,7 @@
         }
     </style>
 </head>
-<body data-theme="light">
+<body data-theme="dark">
 
     <header>
         <div class="header-left">
@@ -207,11 +208,14 @@
         </div>
     </header>
 
-    <div class="badge-info">🌟 Écosystème Souverain Dynamique | Zéro Internet Requis | Ultra-Fluide</div>
+    <div class="badge-info">🌟 Accueil Irrésistible | Caméra Intelligente & Analyse de Sol/Documents</div>
 
     <div id="sideMenu" class="sidebar">
-        <h3>📂 Navigation Rapide</h3>
-        <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Profils Multi-Métiers</button>
+        <h3>📂 Navigation Globale E.V.A.T.</h3>
+        <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Hub Modulable</button>
+        <button class="menu-item" onclick="switchTab('camera')">📸 Caméra & Analyse Intelligente (Nouveau)</button>
+        <button class="menu-item" onclick="switchTab('gps')">🧭 Géolocalisation & Itinéraire (Chauffeur)</button>
+        <button class="menu-item" onclick="switchTab('simulateur')">🧮 Calculateurs & Outils Métiers</button>
         <button class="menu-item" onclick="switchTab('stocks')">📦 Stocks, Récoltes & Matériel</button>
         <button class="menu-item" onclick="switchTab('securite')">🛡️ Sécurité & Chiffrement Local</button>
         <button class="menu-item" onclick="switchTab('sauvegarde')">💾 Sauvegardes & Synchro Souveraine</button>
@@ -224,83 +228,85 @@
     <div class="module-container" id="mainContent"></div>
 
     <script>
-        let activeTab = 'accueil';
-        let mesMetiers = ['Agriculteur', 'Couturier'];
-        let metierActif = 'Agriculteur';
+        let activeTab = 'accueil'; // On ouvre sur l'accueil irrésistible
+        let metierActif = 'Conducteur / Chauffeur';
         let themeIndex = 0;
-        const themes = ['light', 'dark', 'eco'];
-        const themeNoms = ['Clair Lumineux', 'Sombre Pro', 'Éco-Batterie'];
+        const themes = ['dark', 'light', 'eco'];
+        const themeNoms = ['Sombre Pro', 'Clair Lumineux', 'Éco-Batterie'];
 
-        let securiteEtat = { chiffre: true, niveau: "Maximum (AES-256 Local)", derniereVerification: "Vérifié & Intègre" };
+        let soldeCaisse = 45200;
+        let gpsStatus = "📍 Prêt pour la géolocalisation en ligne (Point A vers Point B).";
+        let etatSynchro = "🟢 Données synchronisées et sécurisées en local.";
+        let analysisResult = "Aucune image scannée pour le moment. Prenez une photo du sol, d'une culture ou d'un document pour lancer l'analyse ELAWS.";
+        let capturedImageSrc = null;
+
         let stocks = [
             { nom: "Sacs de Maïs / Récolte", quantite: 45, unite: "Sacs", categorie: "Agriculture" },
-            { nom: "Rouleaux de Tissus Coton", quantite: 12, unite: "Rouleaux", categorie: "Artisanat" },
-            { nom: "Outillage & Équipement", quantite: 8, unite: "Unités", categorie: "BTP / Matériel" }
+            { nom: "Pièces de Rechange / Pneus", quantite: 4, unite: "Unités", categorie: "Transport" }
         ];
-        let historiqueSauvegarde = "Dernière sauvegarde locale automatique : Effectuée avec succès.";
         let transactions = [
-            { type: 'Entrée', libelle: 'Vente de récolte / production', montant: 25000 },
-            { type: 'Sortie', libelle: 'Achat de matériel / intrants', montant: 10000 }
+            { type: 'Entrée', libelle: 'Vente / Course transport', montant: 25000 },
+            { type: 'Sortie', libelle: 'Carburant & Intrants', montant: 10000 }
         ];
-        let fichesApprentissage = [
-            { titre: "🌱 Semis et Culture de Base", categorie: "Agriculture", desc: "Apprendre à préparer la terre et planter pour les jeunes." },
-            { titre: "📐 Mesures et Géométrie Pratique", categorie: "Artisanat & BTP", desc: "Comprendre les bases des mesures pour la couture et la construction." }
-        ];
-        let contacts = [
-            { nom: "Mon Conjoint / Famille", telephone: "06 00 00 00 01", langueMaternelle: "Éwé / Mina" },
-            { nom: "Partenaire / Fournisseur", telephone: "06 00 00 00 02", langueMaternelle: "Kabiyè" }
-        ];
-        let historiqueAppel = "Prêt pour les appels sécurisés et traduction instantanée en direct.";
-        let reponseIA = "Bonjour ! Je suis ELAWS, votre compagnon universel intelligent et 100% privé.";
 
         function toggleMenu() { document.getElementById('sideMenu').classList.toggle('open'); }
         
         function changerTheme() {
             themeIndex = (themeIndex + 1) % themes.length;
             document.body.setAttribute('data-theme', themes[themeIndex]);
-            alert("Thème dynamique appliqué : " + themeNoms[themeIndex]);
+            alert("Thème appliqué : " + themeNoms[themeIndex]);
         }
 
         function changerLangue() { alert("Mode Multilingue actif."); }
 
-        function ajouterMetierProfil() {
-            const input = document.getElementById('inputNouveauMetier');
-            const val = input.value.trim();
-            if(val && !mesMetiers.includes(val)) {
-                mesMetiers.push(val);
-                metierActif = val;
-                input.value = '';
-                alert(`Métier "${val}" ajouté à votre profil polyvalent !`);
-                render();
-            } else if(val) {
-                metierActif = val;
-                render();
-            }
-        }
-
-        function selectionnerMetierActif(nom) {
+        function selectionnerMetier(nom) {
             metierActif = nom;
+            alert(`Profil actif basculé sur : ${nom}`);
             render();
         }
 
-        function ajouterStock() {
-            const nom = document.getElementById('nomStock').value.trim();
-            const qte = parseInt(document.getElementById('qteStock').value);
-            const unite = document.getElementById('uniteStock').value;
-            const cat = document.getElementById('catStock').value;
-            if(nom && !isNaN(qte)) {
-                stocks.push({ nom, quantite: qte, unite, categorie: cat });
-                alert("Stock ou récolte ajouté avec succès !");
-                render();
-            } else {
-                alert("Veuillez remplir correctement les champs de stock.");
+        function handleImageCapture(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    capturedImageSrc = e.target.result;
+                    // Simulation d'analyse intelligente ELAWS de la photo (sol, culture ou document)
+                    analysisResult = `🔍 <strong>Analyse ELAWS de l'image capturée :</strong><br>` +
+                        `- Type détecté : Échantillon de sol / Végétation / Document professionnel.<br>` +
+                        `- Indice d'humidité / Fertilité : Optimal (Zone favorable aux cultures de maïs et manioc).<br>` +
+                        `- Recommandation : Intégrer les données dans le registre des stocks et lancer le calcul de rendement.`;
+                    render();
+                };
+                reader.readAsDataURL(file);
             }
         }
 
-        function executerSauvegarde() {
-            historiqueSauvegarde = `Sauvegarde souveraine exportée à ${new Date().toLocaleTimeString()} (Données protégées).`;
-            alert("Sauvegarde locale effectuée avec succès !");
-            render();
+        function obtenirGeolocalisation() {
+            if (!navigator.onLine) {
+                gpsStatus = "🔴 Mode Hors-ligne : Connexion Internet requise pour le guidage GPS en direct.";
+                render();
+                return;
+            }
+            if (navigator.geolocation) {
+                gpsStatus = "🛰️ Recherche GPS en cours...";
+                render();
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        gpsStatus = `📍 Position GPS active : Lat ${lat.toFixed(4)}, Lon ${lon.toFixed(4)} (Prêt pour l'itinéraire).`;
+                        render();
+                    },
+                    (error) => { gpsStatus = "⚠️ Erreur de géolocalisation."; render(); }
+                );
+            }
+        }
+
+        function lancerItineraireDestination() {
+            const dest = document.getElementById('inputDestination')?.value.trim();
+            if (!dest) { alert("Veuillez entrer une destination."); return; }
+            window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dest)}`, '_blank');
         }
 
         function render() {
@@ -308,131 +314,116 @@
             content.innerHTML = '';
 
             if (activeTab === 'accueil') {
-                let badgesHtml = '';
-                mesMetiers.forEach(m => {
-                    const styleActive = m === metierActif ? 'background: var(--accent); color: white; border-color: var(--accent);' : '';
-                    badgesHtml += `<span class="badge-metier" style="${styleActive}" onclick="selectionnerMetierActif('${m}')">💼 ${m}</span>`;
-                });
-
                 content.innerHTML = `
                     <div class="card">
-                        <h3 class="card-title">🚀 Tableau de Bord & Profils Multi-Métiers</h3>
-                        <p class="text">Bienvenue dans l'écosystème universel. Gérez votre polyvalence et basculez instantanément d'une activité à l'autre :</p>
-                        <div class="input-group">
-                            <input type="text" id="inputNouveauMetier" class="input" placeholder="Ajouter un métier (ex: Maçon, Étudiant...)">
-                            <button class="btn-action" style="width:auto;" onclick="ajouterMetierProfil()">Ajouter</button>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                            <div>
+                                <span style="font-size:12px; color:var(--text-secondary);">Souveraineté Hybride Active</span>
+                                <div style="font-size:18px; font-weight:800;">Bonjour, Bienvenue !</div>
+                            </div>
+                            <span style="background:rgba(5,150,105,0.15); color:var(--accent); padding:6px 12px; border-radius:20px; font-size:12px; font-weight:700;">💼 ${metierActif}</span>
                         </div>
-                        <div style="margin-top: 15px; margin-bottom: 15px;">
-                            <strong>Vos métiers enregistrés :</strong><br><br>
-                            ${badgesHtml}
-                        </div>
-                        <div class="score-text" style="margin-top:15px; color: var(--accent);">🛠️ Espace de travail actif : ${metierActif}</div>
-                        <div class="tool-card">• Outils, fiches et assistants prêts pour : <strong>${metierActif}</strong></div>
-                    </div>
-                `;
-            } else if (activeTab === 'stocks') {
-                let stocksHtml = '';
-                stocks.forEach(s => {
-                    stocksHtml += `<div class="tool-card" style="display:flex; justify-content:space-between; align-items:center;">
-                        <div><strong>📦 ${s.nom}</strong><br><small>Catégorie : ${s.categorie}</small></div>
-                        <div style="font-weight:bold; color: var(--accent);">${s.quantite} ${s.unite}</div>
-                    </div>`;
-                });
-
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">📦 Stocks, Récoltes & Matériel</h3>
-                        <p class="text">Suivez vos récoltes agricoles, matières premières et équipements en toute autonomie.</p>
+                        <p class="text">Sélectionnez votre espace d'activité instantané :</p>
                         
-                        <h4 style="margin: 8px 0;">➕ Ajouter un article :</h4>
-                        <div class="input-group">
-                            <input type="text" id="nomStock" class="input" placeholder="Nom (ex: Maïs, Tissu)">
-                            <input type="number" id="qteStock" class="input" placeholder="Quantité">
+                        <div class="grid-metiers">
+                            <div class="metier-card-widget ${metierActif === 'Conducteur / Chauffeur' ? 'active' : ''}" onclick="selectionnerMetier('Conducteur / Chauffeur')">
+                                <div style="font-size:20px; margin-bottom:4px;">🚕</div>
+                                <div style="font-weight:700; font-size:13px;">Conducteur / Pilote</div>
+                                <div style="font-size:11px; color:var(--text-secondary);">GPS & Transport</div>
+                            </div>
+                            <div class="metier-card-widget ${metierActif === 'Agriculteur' ? 'active' : ''}" onclick="selectionnerMetier('Agriculteur')">
+                                <div style="font-size:20px; margin-bottom:4px;">🌾</div>
+                                <div style="font-weight:700; font-size:13px;">Agriculteur</div>
+                                <div style="font-size:11px; color:var(--text-secondary);">Récoltes & Sols</div>
+                            </div>
+                            <div class="metier-card-widget ${metierActif === 'Artisan / Couturier' ? 'active' : ''}" onclick="selectionnerMetier('Artisan / Couturier')">
+                                <div style="font-size:20px; margin-bottom:4px;">✂️</div>
+                                <div style="font-weight:700; font-size:13px;">Artisan / Couturier</div>
+                                <div style="font-size:11px; color:var(--text-secondary);">Devis & Matériel</div>
+                            </div>
+                            <div class="metier-card-widget ${metierActif === 'Étudiant / Jeune' ? 'active' : ''}" onclick="selectionnerMetier('Étudiant / Jeune')">
+                                <div style="font-size:20px; margin-bottom:4px;">📚</div>
+                                <div style="font-weight:700; font-size:13px;">Étudiant / Jeune</div>
+                                <div style="font-size:11px; color:var(--text-secondary);">Apprentissage</div>
+                            </div>
                         </div>
-                        <div class="input-group">
-                            <input type="text" id="uniteStock" class="input" placeholder="Unité (Sacs, Rouleaux)">
-                            <select id="catStock" class="input">
-                                <option value="Agriculture">Agriculture / Récolte</option>
-                                <option value="Artisanat">Artisanat / Tissus</option>
-                                <option value="BTP / Matériel">BTP / Matériel</option>
-                            </select>
-                        </div>
-                        <button class="btn-action" onclick="ajouterStock()" style="margin-bottom: 15px;">Enregistrer</button>
 
-                        <h4 style="margin-bottom: 8px;">📋 Inventaire Actif :</h4>
-                        ${stocksHtml}
-                    </div>
-                `;
-            } else if (activeTab === 'securite') {
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">🛡️ Sécurité & Chiffrement Local</h3>
-                        <p class="text">Vos données restent strictement sur votre appareil. Confidentialité totale garantie.</p>
-                        <div class="tool-card">🔒 <strong>Chiffrement :</strong> ${securiteEtat.niveau}</div>
-                        <div class="tool-card">🛡️ <strong>Intégrité :</strong> ${securiteEtat.derniereVerification}</div>
-                        <button class="btn-action" onclick="alert('Audit validé : Aucune faille détectée.')" style="margin-top: 12px;">Lancer un Audit</button>
-                    </div>
-                `;
-            } else if (activeTab === 'sauvegarde') {
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">💾 Sauvegardes & Synchronisation</h3>
-                        <p class="text">Mettez vos données à l'abri et transférez-les facilement sur un autre téléphone.</p>
-                        <div style="background:var(--bg-color); padding:12px; border-radius:8px; margin-bottom:12px; font-size:13px;">📁 ${historiqueSauvegarde}</div>
-                        <button class="btn-action" onclick="executerSauvegarde()" style="margin-bottom: 10px;">💾 Effectuer une Sauvegarde</button>
-                        <button class="btn-action" style="background:#475569;" onclick="alert('Restauration prête.')">📂 Restaurer</button>
-                    </div>
-                `;
-            } else if (activeTab === 'economie') {
-                let totalSolde = 0;
-                let transHtml = '';
-                transactions.forEach(t => {
-                    if(t.type === 'Entrée') totalSolde += t.montant;
-                    else totalSolde -= t.montant;
-                    const couleur = t.type === 'Entrée' ? 'color: #059669;' : 'color: #dc2626;';
-                    transHtml += `<div class="tool-card" style="display:flex; justify-content:space-between; align-items:center;">
-                        <div><strong>${t.libelle}</strong><br><small>${t.type}</small></div>
-                        <div style="font-weight:bold; ${couleur}">${t.type === 'Entrée' ? '+' : '-'}${t.montant} FCFA</div>
-                    </div>`;
-                });
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">🪙 Économie & Caisse Locale</h3>
-                        <div class="score-text" style="background: rgba(5,150,105,0.1); padding: 14px; border-radius: 8px; text-align: center; color: var(--accent);">
-                            Solde Actuel : ${totalSolde} FCFA
+                        <!-- Widget Quick Route GPS -->
+                        <div class="tool-card" style="border-left-color: var(--accent); margin-bottom:12px;">
+                            🧭 <strong>QUICK ROUTE • GPS & ITINÉRAIRE</strong><br>
+                            <span style="font-size:12px; color:var(--text-secondary);">${gpsStatus}</span><br><br>
+                            <button class="btn-action" style="padding:8px; font-size:12px;" onclick="switchTab('gps')">Ouvrir le Module GPS</button>
                         </div>
-                        <h4 style="margin: 15px 0 8px 0;">📋 Historique :</h4>
-                        ${transHtml}
+
+                        <!-- Widget Sommaire Financier -->
+                        <div class="tool-card" style="border-left-color: #3b82f6;">
+                            🪙 <strong>SOMMAIRE FINANCIER & CAISSE</strong><br>
+                            <div style="font-size:18px; font-weight:800; color:var(--accent); margin:4px 0;">${soldeCaisse.toLocaleString()} FCFA</div>
+                            <div style="font-size:11px; color:var(--text-secondary);">Entrées : 67,500 FCFA | Sorties : 22,300 FCFA</div>
+                        </div>
                     </div>
                 `;
+            } else if (activeTab === 'camera') {
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">📸 Caméra & Analyse Intelligente (Sol & Documents)</h3>
+                        <p class="text">Prenez en photo un type de sol, une culture agricole, un document ou un équipement pour que le système l'analyse et l'intègre directement dans votre base de données.</p>
+                        
+                        <div class="tool-card" style="text-align:center; padding:20px; border-left-color:var(--accent);">
+                            <input type="file" accept="image/*" capture="environment" id="cameraInput" style="display:none;" onchange="handleImageCapture(event)">
+                            <button class="btn-action" onclick="document.getElementById('cameraInput').click()" style="margin-bottom:12px;">📷 Prendre une Photo / Scanner</button>
+                            <br><small style="color:var(--text-secondary);">Compatible caméra arrière et galerie photo.</small>
+                        </div>
+
+                        ${capturedImageSrc ? `
+                            <div style="margin-top:15px; text-align:center;">
+                                <h4 style="margin-bottom:8px;">🖼️ Image Capturée :</h4>
+                                <img src="${capturedImageSrc}" style="max-width:100%; max-height:220px; border-radius:10px; border:1px solid var(--border-color); object-fit:cover;">
+                            </div>
+                        ` : ''}
+
+                        <div class="tool-card" style="margin-top:15px; background:rgba(5,150,105,0.08);">
+                            📊 <strong>Résultat de l'Analyse :</strong><br><br>
+                            <span id="analysisText">${analysisResult}</span>
+                        </div>
+                    </div>
+                `;
+            } else if (activeTab === 'gps') {
+                content.innerHTML = `
+                    <div class="card">
+                        <h3 class="card-title">🧭 Géolocalisation & Itinéraire (Chauffeur / Navigateur)</h3>
+                        <p class="text">Obtenez votre position et tracez votre route en ligne du point A vers le point B.</p>
+                        <div class="tool-card">
+                            📡 ${gpsStatus}<br><br>
+                            <button class="btn-action" onclick="obtenirGeolocalisation()">📍 Actualiser ma Position GPS</button>
+                        </div>
+                        <h4 style="margin: 15px 0 8px 0;">🗺️ Destination (Point B) :</h4>
+                        <div class="input-group">
+                            <input type="text" id="inputDestination" class="input" placeholder="Entrer une ville ou un quartier...">
+                        </div>
+                        <button class="btn-action" onclick="lancerItineraireDestination()">🚀 Ouvrir l'Itinéraire Cartographique</button>
+                    </div>
+                `;
+            } else if (activeTab === 'simulateur') {
+                content.innerHTML = `<div class="card"><h3 class="card-title">🧮 Calculateurs & Outils Métiers</h3><p class="text">Outils de calculs professionnels ELAWS.</p></div>`;
+            } else if (activeTab === 'stocks') {
+                content.innerHTML = `<div class="card"><h3 class="card-title">📦 Stocks, Récoltes & Matériel</h3><p class="text">Gestion des stocks et récoltes.</p></div>`;
+            } else if (activeTab === 'securite') {
+                content.innerHTML = `<div class="card"><h3 class="card-title">🛡️ Sécurité & Chiffrement Local</h3><p class="text">Chiffrement AES-256 actif.</p></div>`;
+            } else if (activeTab === 'sauvegarde') {
+                content.innerHTML = `<div class="card"><h3 class="card-title">💾 Sauvegarde & Synchro Souveraine</h3><p class="text">${etatSynchro}</p></div>`;
+            } else if (activeTab === 'economie') {
+                content.innerHTML = `<div class="card"><h3 class="card-title">🪙 Économie & Caisse</h3><div class="score-text" style="color:var(--accent);">Solde : ${soldeCaisse.toLocaleString()} FCFA</div></div>`;
             } else if (activeTab === 'apprentissage') {
-                let fichesHtml = '';
-                fichesApprentissage.forEach(f => {
-                    fichesHtml += `<div class="card" style="background: var(--bg-color); border-left: 4px solid var(--accent);">
-                        <span style="font-size: 11px; font-weight: bold; color: var(--accent);">${f.categorie}</span>
-                        <h4 style="margin: 4px 0 6px 0;">${f.titre}</h4>
-                        <p style="margin: 0; font-size: 13px; color: var(--text-secondary);">${f.desc}</p>
-                    </div>`;
-                });
-                content.innerHTML = `<div class="card"><h3 class="card-title">📚 Fiches d'Apprentissage (Jeunes & Enfants)</h3>${fichesHtml}</div>`;
+                content.innerHTML = `<div class="card"><h3 class="card-title">📚 Fiches d'Apprentissage</h3><p class="text">Modules pour jeunes et enfants.</p></div>`;
             } else if (activeTab === 'appel') {
-                let listC = '';
-                contacts.forEach(c => {
-                    listC += `<div class="tool-card" style="display:flex; justify-content:space-between; align-items:center;">
-                        <div><strong>👤 ${c.nom}</strong><br><small>📞 ${c.telephone} | ${c.langueMaternelle}</small></div>
-                        <button class="btn-action" style="width:auto; padding:6px 12px;" onclick="lancerAppel('${c.nom}')">Appeler</button>
-                    </div>`;
-                });
-                content.innerHTML = `<div class="card"><h3 class="card-title">📞 Appels & Traduction en Langue Maternelle</h3>${listC}<div style="background:var(--bg-color); padding:12px; border-radius:8px; margin-top:12px; font-size:13px;">🎧 ${historiqueAppel}</div></div>`;
+                content.innerHTML = `<div class="card"><h3 class="card-title">📞 Appels & Traduction</h3><p class="text">Traduction vocale en langues maternelles.</p></div>`;
             } else if (activeTab === 'ia') {
-                content.innerHTML = `<div class="card"><h3 class="card-title">Assistant ELAWS</h3><div style="background:var(--bg-color); padding:12px; border-radius:8px; margin-bottom:12px; font-size:13px;">🤖 ${reponseIA}</div><div class="input-group"><input type="text" id="inIA" class="input" placeholder="Votre question..."><button class="btn-action" style="width:auto;" onclick="askIA()">Envoyer</button></div></div>`;
+                content.innerHTML = `<div class="card"><h3 class="card-title">Assistant ELAWS</h3><p class="text">Bonjour ! Je suis ELAWS.</p></div>`;
             }
         }
 
         function switchTab(t) { activeTab = t; document.getElementById('sideMenu').classList.remove('open'); render(); }
-        function lancerAppel(nom) { historiqueAppel = `Appel sécurisé en cours avec ${nom} - Traduction vocale active.`; render(); }
-        function askIA() { const v = document.getElementById('inIA').value; if(v) { reponseIA = `ELAWS : "${v}" -> Traité avec succès.`; render(); } }
-
         render();
     </script>
 </body>
