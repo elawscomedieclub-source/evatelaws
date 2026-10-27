@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. & ELAWS - Écosystème Souverain & Objectifs de Vie</title>
+    <title>E.V.A.T. & ELAWS - Écosystème Souverain Multi-Profils</title>
     
     <link rel="manifest" href="data:application/manifest+json,{
         'name': 'E.V.A.T. & ELAWS',
@@ -222,9 +222,8 @@
         }
         .metier-card-widget:hover { border-color: var(--accent); transform: translateY(-2px); }
         .metier-card-widget.active { border-color: var(--accent); background: rgba(5, 150, 105, 0.15); box-shadow: 0 0 10px rgba(5,150,105,0.2); }
-        .input-group { display: flex; gap: 10px; margin-bottom: 10px; }
         .input {
-            flex: 1;
+            width: 100%;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 11px;
@@ -232,10 +231,11 @@
             color: var(--text-main);
             font-size: 14px;
             outline: none;
+            margin-bottom: 10px;
             transition: border-color 0.2s;
         }
         .input:focus { border-color: var(--accent); }
-        select.input { width: 100%; margin-bottom: 10px; }
+        select.input { width: 100%; }
         textarea.input { resize: vertical; min-height: 80px; }
         .btn-action {
             background: var(--accent-gradient);
@@ -261,18 +261,19 @@
 
     <div id="toastNotification">✨ <span id="toastText">Action exécutée</span></div>
 
-    <header>
-        <div class="header-left">
-            <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-            <div class="title">✨ E.V.A.T. & ELAWS</div>
-        </div>
-        <div class="header-right">
-            <button class="btn-top" onclick="changerTheme()">🎨 Thème</button>
-            <button class="btn-top" onclick="changerLangue()">🌐 Langue</button>
-        </div>
-    </header>
-
-    <div class="badge-info">🌍 Écosystème Intégral : Gestionnaire d'Objectifs & Autonomie</div>
+    <div id="appHeader" style="display:none;">
+        <header>
+            <div class="header-left">
+                <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+                <div class="title">✨ E.V.A.T. & ELAWS</div>
+            </div>
+            <div class="header-right">
+                <button class="btn-top" onclick="changerTheme()">🎨 Thème</button>
+                <button class="btn-top" onclick="changerProfilSession()">👤 Profils</button>
+            </div>
+        </header>
+        <div class="badge-info">🌍 Écosystème Souverain Multi-Profils & Étanchéité Locale</div>
+    </div>
 
     <div id="installBanner" class="card" style="display:none; border-color:var(--accent); background:rgba(5,150,105,0.12);">
         <h3 class="card-title" style="color:var(--accent);">📲 Installer E.V.A.T. & ELAWS</h3>
@@ -282,7 +283,7 @@
 
     <div id="sideMenu" class="sidebar">
         <h3>📂 Navigation Globale E.V.A.T.</h3>
-        <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Profils</button>
+        <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Profil</button>
         <button class="menu-item" onclick="switchTab('objectifs')">🎯 Gestionnaire d'Objectifs & Vie</button>
         <button class="menu-item" onclick="switchTab('notes')">📓 Journal de Bord & Notes</button>
         <button class="menu-item" onclick="switchTab('factures')">🧾 Reçus & Factures</button>
@@ -300,7 +301,7 @@
 
     <div class="module-container" id="mainContent"></div>
 
-    <div class="bottom-action-bar">
+    <div id="bottomBar" class="bottom-action-bar" style="display:none;">
         <button class="bar-item active" onclick="switchTab('accueil')" id="barAccueil">
             <span class="icon">🌍</span><span>Profil</span>
         </button>
@@ -321,40 +322,24 @@
     <script>
         let activeTab = 'accueil';
         
-        let utilisateur = JSON.parse(localStorage.getItem('evat_utilisateur')) || {
-            nom: 'Eric Lawson',
-            nationalite: 'Togolais',
-            paysActuel: 'Togo (Lomé)',
-            langueMaternelle: 'Éwé / Français'
-        };
+        // Gestion des profils multiples stockés localement
+        let listeProfils = JSON.parse(localStorage.getItem('evat_tous_profils')) || [];
+        let idProfilActif = localStorage.getItem('evat_profil_actif_id') || null;
 
-        let listeMetiers = JSON.parse(localStorage.getItem('evat_metiers')) || [
-            { nom: 'Conducteur / Chauffeur', icone: '🚕', desc: 'GPS & Transport' },
-            { nom: 'Agriculteur', icone: '🌾', desc: 'Récoltes & Sols' },
-            { nom: 'Artisan / Entrepreneur', icone: '✂️', desc: 'Devis & Commerce' },
-            { nom: 'Explorateur / Voyageur', icone: '🌍', desc: 'Mobilité Globale' }
-        ];
-        let metierActif = localStorage.getItem('evat_metier_actif') || 'Conducteur / Chauffeur';
-        
-        // Gestionnaire d'objectifs de vie
-        let objectifsVie = JSON.parse(localStorage.getItem('evat_objectifs')) || [
-            { id: 1, categorie: "Finances & Business", titre: "Établir l'autonomie et structurer la caisse", statut: "En cours" },
-            { id: 2, categorie: "Mobilité & Papiers", titre: "Préparer les dossiers consulaires et passeport", statut: "À planifier" }
-        ];
+        let utilisateurActif = null;
 
-        let journalNotes = JSON.parse(localStorage.getItem('evat_notes')) || [
-            { id: 1, titre: "Rappel Consulat", texte: "Vérifier la validité des pièces justificatives.", date: "2026-10-27" }
-        ];
+        function chargerDonneesProfil() {
+            if (idProfilActif) {
+                const trouve = listeProfils.find(p => p.id == idProfilActif);
+                if (trouve) utilisateurActif = trouve;
+            }
+            if (!utilisateurActif && listeProfils.length > 0) {
+                utilisateurActif = listeProfils[0];
+                idProfilActif = utilisateurActif.id;
+            }
+        }
 
-        let soldeCaisse = parseFloat(localStorage.getItem('evat_solde')) || 45200;
-        let gpsStatus = "📍 Prêt pour la géolocalisation universelle.";
-        let etatSynchro = "🟢 Données souveraines et sécurisées localement (AES-256).";
-        let analysisResult = "Aucune image scannée. Prenez une photo pour lancer l'analyse ELAWS.";
-        let capturedImageSrc = null;
-
-        let carnetCommandes = JSON.parse(localStorage.getItem('evat_carnet')) || [
-            { id: 1, client: "Koffi Mensah", detail: "Mission locale (Lomé)", montant: 2500, devise: "FCFA", statut: "Terminé" }
-        ];
+        chargerDonneesProfil();
 
         function showToast(message) {
             const toast = document.getElementById('toastNotification');
@@ -383,43 +368,117 @@
         });
 
         function toggleMenu() { document.getElementById('sideMenu').classList.toggle('open'); }
-        
         function changerTheme() { showToast("Thème basculé."); }
-        function changerLangue() { showToast("Assistant ELAWS : Multilingue actif."); }
+
+        function creerNouveauProfil() {
+            const nom = document.getElementById('regNom').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const tel = document.getElementById('regTel').value.trim();
+            const nat = document.getElementById('regNationalite').value;
+            const pays = document.getElementById('regPaysActuel').value;
+
+            if (!nom || !email) {
+                showToast("Veuillez renseigner au moins votre nom et votre e-mail.");
+                return;
+            }
+
+            const nouveauId = 'prof_' + Date.now();
+            const nouveauProfil = {
+                id: nouveauId,
+                nom: nom,
+                email: email,
+                telephone: tel || '+228 00000000',
+                nationalite: nat,
+                paysActuel: pays,
+                langueMaternelle: 'Français',
+                metierActif: 'Conducteur / Chauffeur',
+                metiers: [
+                    { nom: 'Conducteur / Chauffeur', icone: '🚕', desc: 'GPS & Transport' },
+                    { nom: 'Agriculteur', icone: '🌾', desc: 'Récoltes & Sols' },
+                    { nom: 'Artisan / Entrepreneur', icone: '✂️', desc: 'Devis & Commerce' },
+                    { nom: 'Explorateur / Voyageur', icone: '🌍', desc: 'Mobilité Globale' }
+                ],
+                objectifs: [
+                    { id: 1, categorie: "Finances & Business", titre: "Établir l'autonomie et structurer la caisse", statut: "En cours" }
+                ],
+                notes: [
+                    { id: 1, titre: "Bienvenue dans E.V.A.T.", texte: "Votre espace souverain est sécurisé.", date: new Date().toLocaleDateString() }
+                ],
+                solde: 50000,
+                carnet: []
+            };
+
+            listeProfils.push(nouveauProfil);
+            localStorage.setItem('evat_tous_profils', JSON.stringify(listeProfils));
+            localStorage.setItem('evat_profil_actif_id', nouveauId);
+            
+            idProfilActif = nouveauId;
+            utilisateurActif = nouveauProfil;
+
+            showToast(`Bienvenue, ${nom} ! Profil créé avec succès.`);
+            document.getElementById('appHeader').style.display = 'block';
+            document.getElementById('bottomBar').style.display = 'flex';
+            render();
+        }
+
+        function changerProfilSession() {
+            idProfilActif = null;
+            utilisateurActif = null;
+            localStorage.removeItem('evat_profil_actif_id');
+            document.getElementById('appHeader').style.display = 'none';
+            document.getElementById('bottomBar').style.display = 'none';
+            document.getElementById('sideMenu').classList.remove('open');
+            render();
+        }
+
+        function selectionnerProfilExistant(id) {
+            idProfilActif = id;
+            localStorage.setItem('evat_profil_actif_id', id);
+            chargerDonneesProfil();
+            showToast(`Profil chargé : ${utilisateurActif.nom}`);
+            document.getElementById('appHeader').style.display = 'block';
+            document.getElementById('bottomBar').style.display = 'flex';
+            render();
+        }
 
         function selectionnerMetier(nom) {
-            metierActif = nom;
-            localStorage.setItem('evat_metier_actif', nom);
+            utilisateurActif.metierActif = nom;
+            sauvegarderProfilActif();
             showToast(`Profil actif : ${nom}`);
             render();
         }
 
+        function sauvegarderProfilActif() {
+            const index = listeProfils.findIndex(p => p.id == utilisateurActif.id);
+            if (index !== -1) {
+                listeProfils[index] = utilisateurActif;
+                localStorage.setItem('evat_tous_profils', JSON.stringify(listeProfils));
+            }
+        }
+
         function mettreAJourIdentite() {
-            const nat = document.getElementById('selectNationalite').value;
-            const pays = document.getElementById('selectPaysActuel').value;
-            const lang = document.getElementById('selectLangue').value;
+            utilisateurActif.nom = document.getElementById('inputNomUtilisateur').value.trim() || utilisateurActif.nom;
+            utilisateurActif.nationalite = document.getElementById('selectNationalite').value;
+            utilisateurActif.paysActuel = document.getElementById('selectPaysActuel').value;
+            utilisateurActif.email = document.getElementById('inputEmailUtilisateur').value.trim() || utilisateurActif.email;
+            utilisateurActif.telephone = document.getElementById('inputTelUtilisateur').value.trim() || utilisateurActif.telephone;
             
-            utilisateur.nationalite = nat;
-            utilisateur.paysActuel = pays;
-            utilisateur.langueMaternelle = lang;
-            
-            localStorage.setItem('evat_utilisateur', JSON.stringify(utilisateur));
-            showToast(`Identité mise à jour : Origine ${nat} | Actuellement en ${pays}`);
+            sauvegarderProfilActif();
+            showToast("Informations de profil mises à jour !");
             render();
         }
 
-        // Ajouter un Objectif de Vie
         function ajouterObjectifVie() {
             const cat = document.getElementById('objCategorie').value;
             const titre = document.getElementById('objTitre').value.trim();
             if (titre) {
-                objectifsVie.unshift({ id: Date.now(), categorie: cat, titre, statut: "En cours" });
-                localStorage.setItem('evat_objectifs', JSON.stringify(objectifsVie));
+                utilisateurActif.objectifs.unshift({ id: Date.now(), categorie: cat, titre, statut: "En cours" });
+                sauvegarderProfilActif();
                 document.getElementById('objTitre').value = '';
-                showToast("Objectif de vie ajouté avec succès !");
+                showToast("Objectif de vie ajouté !");
                 render();
             } else {
-                showToast("Veuillez saisir l'intitulé de l'objectif.");
+                showToast("Veuillez saisir l'intitulé.");
             }
         }
 
@@ -427,14 +486,14 @@
             const titre = document.getElementById('noteTitre').value.trim();
             const texte = document.getElementById('noteTexte').value.trim();
             if (titre && texte) {
-                journalNotes.unshift({ id: Date.now(), titre, texte, date: new Date().toLocaleDateString() });
-                localStorage.setItem('evat_notes', JSON.stringify(journalNotes));
+                utilisateurActif.notes.unshift({ id: Date.now(), titre, texte, date: new Date().toLocaleDateString() });
+                sauvegarderProfilActif();
                 document.getElementById('noteTitre').value = '';
                 document.getElementById('noteTexte').value = '';
                 showToast("Note enregistrée !");
                 render();
             } else {
-                showToast("Veuillez remplir les champs.");
+                showToast("Remplissez tous les champs.");
             }
         }
 
@@ -449,10 +508,10 @@
                     <div style="background:#ffffff; color:#0f172a; padding:20px; border-radius:10px; border:2px dashed var(--accent);">
                         <div style="text-align:center; border-bottom:2px solid #cbd5e1; padding-bottom:10px; margin-bottom:10px;">
                             <h3 style="margin:0; color:#059669;">🧾 REÇU DE PRESTATION / FACTURE</h3>
-                            <small>Écosystème Souverain E.V.A.T. & ELAWS</small>
+                            <small>Écosystème E.V.A.T. — ${utilisateurActif.nom}</small>
                         </div>
                         <p><strong>Date :</strong> ${new Date().toLocaleDateString()}</p>
-                        <p><strong>Émetteur :</strong> ${utilisateur.nom} (${utilisateur.paysActuel})</p>
+                        <p><strong>Émetteur :</strong> ${utilisateurActif.nom} (${utilisateurActif.telephone} | ${utilisateurActif.email})</p>
                         <p><strong>Client :</strong> ${client}</p>
                         <p><strong>Prestation :</strong> ${service}</p>
                         <p style="font-size:16px;"><strong>Montant :</strong> <span style="color:#059669; font-weight:800;">${parseFloat(montant).toLocaleString()} ${devise}</span></p>
@@ -466,51 +525,82 @@
         }
 
         function exporterDonneesJSON() {
-            const donneesCompletes = {
-                utilisateur, metiers: listeMetiers, metierActif, carnet: carnetCommandes, notes: journalNotes, objectifs: objectifsVie, solde: soldeCaisse
-            };
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(donneesCompletes, null, 2));
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(utilisateurActif, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `EVAT_Backup_${utilisateur.nationalite}_${Date.now()}.json`);
+            downloadAnchor.setAttribute("download", `EVAT_Profil_${utilisateurActif.nom.replace(/\s+/g, '_')}_${Date.now()}.json`);
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
-            showToast("Sauvegarde JSON exportée !");
-        }
-
-        function importerDonneesJSON(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        const parsed = JSON.parse(e.target.result);
-                        if(parsed.utilisateur) {
-                            localStorage.setItem('evat_utilisateur', JSON.stringify(parsed.utilisateur));
-                            localStorage.setItem('evat_objectifs', JSON.stringify(parsed.objectifs || []));
-                            showToast("Données restaurées ! Rechargement...");
-                            setTimeout(() => location.reload(), 1500);
-                        } else { showToast("Format invalide."); }
-                    } catch(err) { showToast("Erreur de lecture."); }
-                };
-                reader.readAsText(file);
-            }
-        }
-
-        function genererChecklistDossier() {
-            const typeDemande = document.getElementById('typeDemandeAdministrative').value;
-            const paysDestination = document.getElementById('destinationDemande').value;
-            document.getElementById('resultatChecklist').innerHTML = `
-                📋 <strong>Dossier requis pour ${typeDemande.toUpperCase()} (${paysDestination}) [Origine : ${utilisateur.nationalite}] :</strong><br>
-                1. Passeport biométrique valide.<br>
-                2. Formulaire officiel et photos d'identité.<br>
-                3. Justificatifs financiers et d'hébergement.
-            `;
-            showToast("Checklist générée !");
+            showToast("Sauvegarde JSON exportée pour ce profil !");
         }
 
         function render() {
+            const content = document.getElementById('mainContent');
+            content.innerHTML = '';
+
+            // Écran d'accueil / Inscription si aucun profil actif
+            if (!utilisateurActif) {
+                document.getElementById('appHeader').style.display = 'none';
+                document.getElementById('bottomBar').style.display = 'none';
+
+                let profilsExistantsHtml = '';
+                if (listeProfils.length > 0) {
+                    profilsExistantsHtml = `<div style="margin-bottom:20px;"><h4 style="margin-bottom:8px;">👥 Ou choisissez un profil existant :</h4><div style="display:flex; flex-direction:column; gap:8px;">`;
+                    listeProfils.forEach(p => {
+                        profilsExistantsHtml += `<button class="btn-action" style="background:var(--card-bg); border:1px solid var(--accent); color:var(--text-main); text-align:left; padding:12px;" onclick="selectionnerProfilExistant('${p.id}')">👤 <strong>${p.nom}</strong> <small style="float:right; color:var(--text-secondary);">${p.nationalite}</small></button>`;
+                    });
+                    profilsExistantsHtml += `</div></div>`;
+                }
+
+                content.innerHTML = `
+                    <div class="card" style="border-color:var(--accent); max-width:500px; margin: 30px auto;">
+                        <h2 style="color:var(--accent); text-align:center; margin-top:0;">✨ E.V.A.T. & ELAWS</h2>
+                        <p class="text" style="text-align:center;">Écosystème Souverain & Multi-Profils. Créez votre espace personnel pour sécuriser vos données en local.</p>
+                        
+                        ${profilsExistantsHtml}
+
+                        <h4 style="margin-bottom:10px; border-top:1px solid var(--border-color); padding-top:15px;">📝 Créer un nouveau profil :</h4>
+                        <label style="font-size:11px; color:var(--text-secondary);">Nom complet ou Pseudonyme * :</label>
+                        <input type="text" id="regNom" class="input" placeholder="Ex: Jean Dupont">
+                        
+                        <label style="font-size:11px; color:var(--text-secondary);">Adresse E-mail * :</label>
+                        <input type="email" id="regEmail" class="input" placeholder="Ex: monemail@domaine.com">
+
+                        <label style="font-size:11px; color:var(--text-secondary);">Téléphone :</label>
+                        <input type="text" id="regTel" class="input" placeholder="Ex: +228 98000000">
+
+                        <div style="display:flex; gap:8px;">
+                            <div style="flex:1;">
+                                <label style="font-size:11px; color:var(--text-secondary);">Nationalité :</label>
+                                <select id="regNationalite" class="input">
+                                    <option value="Togolais">🇹🇬 Togolais</option>
+                                    <option value="Allemand">🇩🇪 Allemand</option>
+                                    <option value="Anglais">🇬🇧 Anglais</option>
+                                    <option value="Haïtien">🇭🇹 Haïtien</option>
+                                    <option value="Amazonien">🌿 Amazonien</option>
+                                </select>
+                            </div>
+                            <div style="flex:1;">
+                                <label style="font-size:11px; color:var(--text-secondary);">Zone d'Évolution :</label>
+                                <select id="regPaysActuel" class="input">
+                                    <option value="Togo / Afrique">Togo / Afrique</option>
+                                    <option value="Amazonie / Sud">Amazonie / Sud</option>
+                                    <option value="Europe / Allemagne">Europe / Allemagne</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button class="btn-action" style="margin-top:10px;" onclick="creerNouveauProfil()">🚀 Commencer mon Espace Souverain</button>
+                    </div>
+                `;
+                return;
+            }
+
+            // Affichage normal des onglets de l'application pour le profil actif
+            document.getElementById('appHeader').style.display = 'block';
+            document.getElementById('bottomBar').style.display = 'flex';
+
             document.querySelectorAll('.bar-item').forEach(el => el.classList.remove('active'));
             if(activeTab === 'accueil') document.getElementById('barAccueil')?.classList.add('active');
             if(activeTab === 'objectifs') document.getElementById('barObj')?.classList.add('active');
@@ -518,13 +608,10 @@
             if(activeTab === 'factures') document.getElementById('barFactures')?.classList.add('active');
             if(activeTab === 'sauvegarde') document.getElementById('barSauv')?.classList.add('active');
 
-            const content = document.getElementById('mainContent');
-            content.innerHTML = '';
-
             if (activeTab === 'accueil') {
                 let cartesMetiersHtml = '';
-                listeMetiers.forEach(m => {
-                    const isActive = m.nom === metierActif ? 'active' : '';
+                utilisateurActif.metiers.forEach(m => {
+                    const isActive = m.nom === utilisateurActif.metierActif ? 'active' : '';
                     cartesMetiersHtml += `
                         <div class="metier-card-widget ${isActive}" onclick="selectionnerMetier('${m.nom}')">
                             <div style="font-size:20px; margin-bottom:4px;">${m.icone}</div>
@@ -538,39 +625,49 @@
                     <div class="card" style="border-color: var(--accent);">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                             <div>
-                                <span style="font-size:11px; color:var(--accent); font-weight:700;">🌍 PASSEPORT SOUVERAIN & IDENTITÉ</span>
-                                <div style="font-size:17px; font-weight:800;">Configuration Régionale & Profil :</div>
+                                <span style="font-size:11px; color:var(--accent); font-weight:700;">👤 ESPACE PROFIL SOUVERAIN</span>
+                                <div style="font-size:17px; font-weight:800;">${utilisateurActif.nom}</div>
                             </div>
-                            <span style="background:rgba(5,150,105,0.2); color:var(--accent); padding:5px 10px; border-radius:20px; font-size:11px; font-weight:700;">${utilisateur.nationalite} ➔ ${utilisateur.paysActuel}</span>
+                            <button class="btn-top" onclick="changerProfilSession()">🔄 Changer</button>
                         </div>
-                        <p class="text" style="margin-bottom:12px;">Définissez votre origine et votre zone d'évolution :</p>
+                        <p class="text" style="margin-bottom:12px;">Vos informations personnelles et coordonnées sécurisées :</p>
                         
-                        <div style="background:var(--bg-color); padding:12px; border-radius:10px; margin-bottom:15px; display:flex; flex-direction:column; gap:8px;">
+                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; display:flex; flex-direction:column; gap:10px;">
+                            <div>
+                                <label style="font-size:11px; color:var(--text-secondary);">Nom ou Pseudonyme :</label>
+                                <input type="text" id="inputNomUtilisateur" class="input" value="${utilisateurActif.nom}" style="margin-top:4px;">
+                            </div>
                             <div style="display:flex; gap:8px;">
                                 <div style="flex:1;">
-                                    <label style="font-size:11px; color:var(--text-secondary);">Nationalité d'origine :</label>
+                                    <label style="font-size:11px; color:var(--text-secondary);">Nationalité :</label>
                                     <select id="selectNationalite" class="input" style="margin-top:4px;">
-                                        <option value="Togolais" ${utilisateur.nationalite === 'Togolais' ? 'selected' : ''}>🇹🇬 Togolais</option>
-                                        <option value="Allemand" ${utilisateur.nationalite === 'Allemand' ? 'selected' : ''}>🇩🇪 Allemand</option>
-                                        <option value="Anglais" ${utilisateur.nationalite === 'Anglais' ? 'selected' : ''}>🇬🇧 Anglais</option>
-                                        <option value="Haïtien" ${utilisateur.nationalite === 'Haïtien' ? 'selected' : ''}>🇭🇹 Haïtien</option>
-                                        <option value="Amazonien" ${utilisateur.nationalite === 'Amazonien' ? 'selected' : ''}>🌿 Amazonien</option>
+                                        <option value="Togolais" ${utilisateurActif.nationalite === 'Togolais' ? 'selected' : ''}>🇹🇬 Togolais</option>
+                                        <option value="Allemand" ${utilisateurActif.nationalite === 'Allemand' ? 'selected' : ''}>🇩🇪 Allemand</option>
+                                        <option value="Anglais" ${utilisateurActif.nationalite === 'Anglais' ? 'selected' : ''}>🇬🇧 Anglais</option>
+                                        <option value="Haïtien" ${utilisateurActif.nationalite === 'Haïtien' ? 'selected' : ''}>🇭🇹 Haïtien</option>
+                                        <option value="Amazonien" ${utilisateurActif.nationalite === 'Amazonien' ? 'selected' : ''}>🌿 Amazonien</option>
                                     </select>
                                 </div>
                                 <div style="flex:1;">
                                     <label style="font-size:11px; color:var(--text-secondary);">Zone d'Évolution :</label>
                                     <select id="selectPaysActuel" class="input" style="margin-top:4px;">
-                                        <option value="Togo / Afrique" ${utilisateur.paysActuel.includes('Togo') ? 'selected' : ''}>Togo / Afrique</option>
-                                        <option value="Amazonie / Sud" ${utilisateur.paysActuel.includes('Amazonie') ? 'selected' : ''}>Amazonie / Sud</option>
-                                        <option value="Europe / Allemagne" ${utilisateur.paysActuel.includes('Europe') ? 'selected' : ''}>Europe / Allemagne</option>
+                                        <option value="Togo / Afrique" ${utilisateurActif.paysActuel.includes('Togo') ? 'selected' : ''}>Togo / Afrique</option>
+                                        <option value="Amazonie / Sud" ${utilisateurActif.paysActuel.includes('Amazonie') ? 'selected' : ''}>Amazonie / Sud</option>
+                                        <option value="Europe / Allemagne" ${utilisateurActif.paysActuel.includes('Europe') ? 'selected' : ''}>Europe / Allemagne</option>
                                     </select>
                                 </div>
                             </div>
-                            <div>
-                                <label style="font-size:11px; color:var(--text-secondary);">Langue Préférée :</label>
-                                <input type="text" id="selectLangue" class="input" value="${utilisateur.langueMaternelle}" style="margin-top:4px;">
+                            <div style="display:flex; gap:8px;">
+                                <div style="flex:1;">
+                                    <label style="font-size:11px; color:var(--text-secondary);">E-mail :</label>
+                                    <input type="email" id="inputEmailUtilisateur" class="input" value="${utilisateurActif.email}" style="margin-top:4px;">
+                                </div>
+                                <div style="flex:1;">
+                                    <label style="font-size:11px; color:var(--text-secondary);">Téléphone :</label>
+                                    <input type="text" id="inputTelUtilisateur" class="input" value="${utilisateurActif.telephone}" style="margin-top:4px;">
+                                </div>
                             </div>
-                            <button class="btn-action" style="padding:10px; font-size:13px; margin-top:4px;" onclick="mettreAJourIdentite()">💾 Enregistrer l'Identité</button>
+                            <button class="btn-action" style="padding:10px; font-size:13px; margin-top:4px;" onclick="mettreAJourIdentite()">💾 Enregistrer les Modifications</button>
                         </div>
 
                         <div style="font-size:14px; font-weight:800; margin-bottom:8px;">Sélectionnez votre rôle :</div>
@@ -581,7 +678,7 @@
                 `;
             } else if (activeTab === 'objectifs') {
                 let objHtml = '';
-                objectifsVie.forEach(o => {
+                utilisateurActif.objectifs.forEach(o => {
                     objHtml += `
                         <div class="tool-card" style="margin-bottom:10px; background:var(--bg-color); padding:12px; border-radius:8px; border-left:4px solid var(--accent);">
                             <span style="font-size:11px; color:var(--accent); font-weight:700;">📌 ${o.categorie}</span><br>
@@ -592,28 +689,24 @@
                 });
                 content.innerHTML = `
                     <div class="card" style="border-color:var(--accent);">
-                        <h3 class="card-title">🎯 Gestionnaire d'Objectifs de Vie & Projets d'Autonomie</h3>
-                        <p class="text">Structurez vos ambitions par grands piliers (Finances, Mobilité, Activité, Famille) pour réussir pas à pas.</p>
-                        
+                        <h3 class="card-title">🎯 Gestionnaire d'Objectifs de Vie & Autonomie</h3>
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                            <label style="font-size:11px; color:var(--text-secondary);">Pilier / Catégorie :</label>
+                            <label style="font-size:11px; color:var(--text-secondary);">Catégorie :</label>
                             <select id="objCategorie" class="input" style="margin-top:4px; margin-bottom:8px;">
                                 <option value="Finances & Business">🪙 Finances & Business</option>
                                 <option value="Mobilité & Papiers">📁 Mobilité & Papiers</option>
                                 <option value="Développement Personnel">🧠 Développement Personnel</option>
                                 <option value="Famille & Proches">👨‍👩‍👧 Famille & Proches</option>
                             </select>
-                            <input type="text" id="objTitre" class="input" placeholder="Intitulé de l'objectif (ex: Lancer mon activité...)" style="margin-bottom:10px;">
-                            <button class="btn-action" onclick="ajouterObjectifVie()">➕ Ajouter l'Objectif de Vie</button>
+                            <input type="text" id="objTitre" class="input" placeholder="Intitulé de l'objectif..." style="margin-bottom:10px;">
+                            <button class="btn-action" onclick="ajouterObjectifVie()">➕ Ajouter l'Objectif</button>
                         </div>
-
-                        <h4 style="margin-bottom:10px;">📋 Mes Objectifs Actuels :</h4>
                         ${objHtml}
                     </div>
                 `;
             } else if (activeTab === 'notes') {
                 let notesHtml = '';
-                journalNotes.forEach(n => {
+                utilisateurActif.notes.forEach(n => {
                     notesHtml += `
                         <div class="tool-card" style="margin-bottom:10px; background:var(--bg-color); padding:12px; border-radius:8px;">
                             <strong>📌 ${n.titre}</strong> <small style="float:right; color:var(--text-secondary);">${n.date}</small><br>
@@ -623,7 +716,7 @@
                 });
                 content.innerHTML = `
                     <div class="card">
-                        <h3 class="card-title">📓 Journal de Bord & Notes Rapides (ELAWS)</h3>
+                        <h3 class="card-title">📓 Journal de Bord (ELAWS)</h3>
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
                             <input type="text" id="noteTitre" class="input" placeholder="Titre de la note" style="margin-bottom:8px;">
                             <textarea id="noteTexte" class="input" placeholder="Contenu..." style="margin-bottom:10px;"></textarea>
@@ -637,7 +730,7 @@
                     <div class="card">
                         <h3 class="card-title">🧾 Générateur de Reçus & Factures</h3>
                         <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                            <input type="text" id="factureClient" class="input" placeholder="Client" style="margin-bottom:8px;">
+                            <input type="text" id="factureClient" class="input" placeholder="Nom du client" style="margin-bottom:8px;">
                             <input type="text" id="factureService" class="input" placeholder="Prestation" style="margin-bottom:8px;">
                             <div style="display:flex; gap:8px; margin-bottom:10px;">
                                 <input type="number" id="factureMontant" class="input" placeholder="Montant">
@@ -652,41 +745,12 @@
                 content.innerHTML = `
                     <div class="card">
                         <h3 class="card-title">💾 Sauvegarde & Restauration Souveraine (JSON)</h3>
-                        <button class="btn-action" onclick="exporterDonneesJSON()" style="margin-bottom:12px;">📥 Exporter mes Données</button>
-                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; text-align:center;">
-                            <label style="font-size:12px; color:var(--text-secondary); display:block; margin-bottom:8px;">Restaurer :</label>
-                            <input type="file" accept=".json" onchange="importerDonneesJSON(event)" style="font-size:12px;">
-                        </div>
+                        <button class="btn-action" onclick="exporterDonneesJSON()" style="margin-bottom:12px;">📥 Exporter mon Profil JSON</button>
+                        <p class="text">Chaque profil dispose de son propre fichier de sauvegarde indépendant pour garantir une étanchéité totale.</p>
                     </div>
                 `;
-            } else if (activeTab === 'dossiers') {
-                content.innerHTML = `
-                    <div class="card">
-                        <h3 class="card-title">📁 Assistant Administratif : Visas & Titres de Séjour</h3>
-                        <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px;">
-                            <select id="typeDemandeAdministrative" class="input" style="margin-bottom:10px;"><option value="visa">Visa</option><option value="sejour">Titre de Séjour</option></select>
-                            <input type="text" id="destinationDemande" class="input" value="Europe / Allemagne" style="margin-bottom:10px;">
-                            <button class="btn-action" onclick="genererChecklistDossier()">Générer la Checklist</button>
-                        </div>
-                        <div class="tool-card" id="resultatChecklist">Sélectionnez vos critères.</div>
-                    </div>
-                `;
-            } else if (activeTab === 'convertisseur') {
-                content.innerHTML = `<div class="card"><h3 class="card-title">💱 Convertisseur de Devises</h3><p class="text">Outil actif dans l'écosystème.</p></div>`;
-            } else if (activeTab === 'traduction') {
-                content.innerHTML = `<div class="card"><h3 class="card-title">🗣️ Pont ELAWS</h3><p class="text">Traduction croisée active.</p></div>`;
-            } else if (activeTab === 'carnet') {
-                content.innerHTML = `<div class="card"><h3 class="card-title">📝 Carnet</h3><p class="text">Suivi des commandes.</p></div>`;
-            } else if (activeTab === 'gps') {
-                content.innerHTML = `<div class="card"><h3 class="card-title">🧭 GPS</h3><p class="text">Localisation active.</p></div>`;
-            } else if (activeTab === 'economie') {
-                content.innerHTML = `<div class="card"><h3 class="card-title">🪙 Caisse</h3><p class="text">Solde : ${soldeCaisse.toLocaleString()} FCFA</p></div>`;
-            } else if (activeTab === 'camera') {
-                content.innerHTML = `<div class="card"><h3 class="card-title">📸 Caméra</h3><input type="file" accept="image/*" capture="environment"></div>`;
-            } else if (activeTab === 'securite') {
-                content.innerHTML = `<div class="card"><h3 class="card-title">🛡️ Sécurité</h3><p class="text">Chiffrement AES-256 actif.</p></div>`;
-            } else if (activeTab === 'ia') {
-                content.innerHTML = `<div class="card"><h3 class="card-title">Assistant ELAWS</h3><p class="text">Bonjour !</p></div>`;
+            } else {
+                content.innerHTML = `<div class="card"><h3 class="card-title">🛠️ Module actif</h3><p class="text">Ce module est prêt pour ${utilisateurActif.nom}.</p></div>`;
             }
         }
 
