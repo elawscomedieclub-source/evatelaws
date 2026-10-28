@@ -1,16 +1,12 @@
-
 let utilisateurActif = JSON.parse(localStorage.getItem('evat_profil')) || {
     nom: "Kodjo",
     metierUnique: "Développeur & Entrepreneur"
 };
 
-// Gestion de l'installation PWA (Bouton manuel)
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    
-    // Afficher les boutons d'installation
     const btnMenu = document.getElementById('btnInstallerApp');
     const btnAccueil = document.getElementById('btnInstallerAccueil');
     if(btnMenu) btnMenu.style.display = 'block';
@@ -21,15 +17,10 @@ function declencherInstallation() {
     if (deferredPrompt) {
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-                console.log('Utilisateur a installé EVAT');
-            }
             deferredPrompt = null;
         });
     } else {
-        alert("Pour installer l'application :
-1. Appuie sur les 3 points en haut à droite de ton navigateur.
-2. Sélectionne 'Ajouter à l'écran d'accueil' ou 'Installer l'application'.");
+        alert("Pour installer l'application :\n1. Appuie sur les 3 points en haut à droite de ton navigateur.\n2. Sélectionne 'Ajouter à l'écran d'accueil' ou 'Installer l'application'.");
     }
 }
 
