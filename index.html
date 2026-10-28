@@ -3,43 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EVAT & ELAWS v29.7</title>
+    <title>EVAT & ELAWS v30.3</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#0f172a">
 </head>
-<body data-theme="dark">
-    <div id="toastNotification" class="toast"><span id="toastText"></span></div>
-    
-    <header id="appHeader" class="header" style="display:none;">
-        <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
-            <div style="display:flex; align-items:center; gap:10px;">
-                <button class="btn-top" onclick="toggleMenu()">☰ Menu</button>
-                <span id="badgeDomaineActif" style="font-size:12px; font-weight:700; color:var(--accent);">EVAT</span>
+<body>
+    <div id="app">
+        <header class="header">
+            <h1>EVAT & ELAWS</h1>
+            <button onclick="toggleMenu()" class="menu-btn">☰</button>
+        </header>
+
+        <nav id="sidebar" class="sidebar">
+            <a href="#" onclick="switchTab('accueil')">🏠 Accueil / Dashboard</a>
+            <a href="#" onclick="switchTab('chat')">💬 ELAWS (IA Universelle)</a>
+            <a href="#" onclick="switchTab('outils_metier')">🛠️ Outils Métier</a>
+            <a href="#" onclick="switchTab('convertisseur')">💱 Convertisseur de Devises</a>
+            <a href="#" onclick="switchTab('profil')">⚙️ Profil & Configuration</a>
+            <div style="padding: 15px 20px; margin-top: auto;">
+                <button id="btnInstallerApp" class="btn-action" style="display:none; background:#34d399; color:#0f172a; font-size:14px; padding:10px;">📱 Installer l'Application</button>
             </div>
-            <button class="btn-top" onclick="changerTheme()">🎨 Thème</button>
-        </div>
-    </header>
+        </nav>
 
-    <div id="sideMenu" class="side-menu">
-        <h3 style="color:var(--accent); margin-top:0;">🌟 Navigation EVAT</h3>
-        <button class="btn-action" style="margin-bottom:8px; background:var(--card-bg); border:1px solid var(--accent); color:var(--text-main);" onclick="switchTab('dashboard')">📊 Tableau de Bord</button>
-        <button class="btn-action" style="margin-bottom:8px; background:var(--card-bg); border:1px solid var(--accent); color:var(--text-main);" onclick="switchTab('elaws_compagnon')">🤖 Compagnon ELAWS</button>
-        <button class="btn-action" style="margin-bottom:8px; background:var(--card-bg); border:1px solid var(--accent); color:var(--text-main);" onclick="switchTab('outils_metier')">🛠️ Outils Métier</button>
-        <button class="btn-action" style="margin-bottom:8px; background:var(--card-bg); border:1px solid var(--accent); color:var(--text-main);" onclick="switchTab('voyages_papiers')">✈️ Visas & Papiers</button>
-        <button class="btn-action" style="margin-bottom:8px; background:var(--card-bg); border:1px solid var(--accent); color:var(--text-main);" onclick="switchTab('appels_traduction')">📞 Appels & Traduction</button>
-        <button class="btn-action" style="margin-top:20px; background:#ef4444;" onclick="changerProfilSession()">🔄 Changer de Profil</button>
+        <main class="content">
+            <div id="tab-accueil" class="tab-content active">
+                <div class="card">
+                    <h2>Bienvenue dans EVAT, <span id="userNameDisplay">Mon Ami</span></h2>
+                    <p class="text">Ton écosystème universel et autonome est prêt. Ton assistant ELAWS est à tes côtés pour t'aider dans tous les domaines, même hors-ligne.</p>
+                    <div style="margin-top:15px; display:flex; flex-direction:column; gap:10px;">
+                        <button class="btn-action" onclick="switchTab('chat')">💬 Parler à ELAWS</button>
+                        <button class="btn-action" style="background:#10b981;" onclick="switchTab('convertisseur')">💱 Convertisseur de Devises</button>
+                        <button id="btnInstallerAccueil" class="btn-action" style="display:none; background:#34d399; color:#0f172a;">📱 Installer EVAT sur mon téléphone</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-chat" class="tab-content">
+                <div class="card" style="display:flex; flex-direction:column; height:70vh;">
+                    <h3>💬 Échange avec ELAWS</h3>
+                    <div id="chatMessages" style="flex:1; overflow-y:auto; padding:10px; background:var(--bg-color); border-radius:8px; margin-bottom:10px; border:1px solid var(--border-color);"></div>
+                    <div style="display:flex; gap:8px;">
+                        <input type="text" id="chatInput" class="input" placeholder="Pose n'importe quelle question (cuisine, tech, business)..." style="margin-bottom:0;" onkeypress="if(event.key==='Enter') envoyerMessageElaws()">
+                        <button class="btn-action" onclick="envoyerMessageElaws()" style="width:100px;">Envoyer</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-outils_metier" class="tab-content">
+                <div id="outilsMetierContainer"></div>
+            </div>
+
+            <div id="tab-convertisseur" class="tab-content">
+                <div class="card" style="border-color:#10b981;">
+                    <h3 class="card-title" style="color:#10b981;">💱 Convertisseur de Devises Rapide</h3>
+                    <p class="text">Convertis instantanément tes montants pour tes transactions et calculs au quotidien.</p>
+                    <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
+                        <div style="margin-bottom:10px;">
+                            <label style="display:block; margin-bottom:5px; font-size:14px;">Montant :</label>
+                            <input type="number" id="convMontant" class="input" placeholder="Ex: 10000" value="10000" oninput="calculerDevise()">
+                        </div>
+                        <div style="display:flex; gap:10px; margin-bottom:10px;">
+                            <div style="flex:1;">
+                                <label style="display:block; margin-bottom:5px; font-size:14px;">De :</label>
+                                <select id="convDe" class="input" onchange="calculerDevise()">
+                                    <option value="XOF">FCFA (XOF / XAF)</option>
+                                    <option value="EUR">Euro (EUR)</option>
+                                    <option value="USD">Dollar US (USD)</option>
+                                    <option value="NGN">Naira (NGN)</option>
+                                    <option value="GHS">Cedi (GHS)</option>
+                                </select>
+                            </div>
+                            <div style="flex:1;">
+                                <label style="display:block; margin-bottom:5px; font-size:14px;">Vers :</label>
+                                <select id="convVers" class="input" onchange="calculerDevise()">
+                                    <option value="EUR">Euro (EUR)</option>
+                                    <option value="XOF">FCFA (XOF / XAF)</option>
+                                    <option value="USD">Dollar US (USD)</option>
+                                    <option value="NGN">Naira (NGN)</option>
+                                    <option value="GHS">Cedi (GHS)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="convResultat" style="background:var(--card-bg); padding:15px; border-radius:8px; font-size:18px; font-weight:bold; color:#10b981; text-align:center; border:1px solid #10b981;">
+                            Résultat : --
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-profil" class="tab-content">
+                <div class="card">
+                    <h3>⚙️ Configuration du Profil</h3>
+                    <div style="margin-top:15px;">
+                        <label style="display:block; margin-bottom:5px;">Nom :</label>
+                        <input type="text" id="profilNom" class="input" placeholder="Ton nom">
+                        <label style="display:block; margin-bottom:5px;">Métier / Activité unique :</label>
+                        <input type="text" id="profilMetier" class="input" placeholder="Ex: Développeur, Commerçant, Couturier...">
+                        <button class="btn-action" style="margin-top:10px;" onclick="sauvegarderProfil()">💾 Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
-
-    <main id="mainContent" class="main-container"></main>
-
-    <nav id="bottomBar" class="bottom-bar" style="display:none;">
-        <button class="bar-item active" id="barAccueil" onclick="switchTab('dashboard')">📊<span>Dash</span></button>
-        <button class="bar-item" id="barElaws" onclick="switchTab('elaws_compagnon')">🤖<span>ELAWS</span></button>
-        <button class="bar-item" id="barOutil" onclick="switchTab('outils_metier')">🛠️<span>Métier</span></button>
-        <button class="bar-item" id="barVoyage" onclick="switchTab('voyages_papiers')">✈️<span>Voyages</span></button>
-        <button class="bar-item" id="barAppel" onclick="switchTab('appels_traduction')">📞<span>Appels</span></button>
-    </nav>
-
     <script src="elaws.js"></script>
     <script src="app.js"></script>
 </body>
