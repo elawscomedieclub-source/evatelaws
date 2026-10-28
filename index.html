@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EVAT & ELAWS - Assistant Universel & Bulle Magique</title>
+    <title>EVAT & ELAWS - Assistant Interactif & Suivi de Démarches</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.webmanifest">
 </head>
@@ -15,21 +15,21 @@
                 <button onclick="toggleMenu(event)" class="menu-btn" aria-label="Menu principal">☰</button>
                 <div class="header-brand">
                     <h1 id="appTitle">EVAT</h1>
-                    <span class="brand-subtitle" id="headerLocationBadge">📍 Lomé, Togo (Magic Bubble v3.15)</span>
+                    <span class="brand-subtitle" id="headerLocationBadge">📍 Lomé, Togo (Interactive Guide v3.14)</span>
                 </div>
             </div>
 
-            <!-- ELAWS : Bulle Magique interactive (Effet Sphère / Goutte d'eau) -->
+            <!-- ELAWS : Bulle en haut à droite -->
             <div id="elawsWidget" class="elaws-widget">
-                <button onclick="toggleElawsChat(event)" class="elaws-magic-bubble" title="Toucher ELAWS - Discuter avec l'IA">
-                    <div class="magic-sphere-core"></div>
-                    <span class="magic-label">🤖 ELAWS</span>
+                <button onclick="toggleElawsChat(event)" class="elaws-bubble-btn" title="Discuter avec ELAWS">
+                    <span class="pulse-dot"></span>
+                    <span>🤖 ELAWS</span>
                 </button>
                 <div id="elawsPopup" class="elaws-popup" style="display: none;" onclick="event.stopPropagation()">
                     <div class="elaws-popup-header">
                         <div style="display:flex; align-items:center; gap:8px;">
                             <span class="status-indicator"></span>
-                            <span>Assistant IA ELAWS v3.15</span>
+                            <span>Assistant IA ELAWS v3.14</span>
                         </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <button onclick="toggleMicrophone()" id="microBtn" class="micro-btn-discret" title="Commande vocale active">🎙️</button>
@@ -40,7 +40,7 @@
                         <div id="elawsMessages" class="elaws-messages"></div>
                         <div id="voiceStatus" style="display:none; font-size: 12px; color: var(--accent); margin-bottom: 8px; text-align: center; font-weight: 500;">🎙️ Écoute vocale active...</div>
                         <div class="elaws-input-area">
-                            <input type="text" id="elawsInput" placeholder="Posez votre question à ELAWS..." onkeypress="if(event.key==='Enter') envoyerMessageElaws()">
+                            <input type="text" id="elawsInput" placeholder="Écris à ELAWS..." onkeypress="if(event.key==='Enter') envoyerMessageElaws()">
                             <button onclick="envoyerMessageElaws()">Envoyer</button>
                         </div>
                     </div>
@@ -66,7 +66,7 @@
                 <a href="#" onclick="switchTab('devises')" class="nav-link" id="link-devises">💱 Échange & Devises</a>
             </div>
             <div class="sidebar-footer">
-                <p>EVAT v3.15 • Universal AI Sphere</p>
+                <p>EVAT v3.14 • Active Companion</p>
             </div>
         </nav>
 
@@ -79,8 +79,13 @@
             <section id="tab-dashboard" class="tab-content active">
                 <div class="card welcome-card">
                     <h2>Écosystème Universel EVAT</h2>
-                    <p class="text">Bienvenue, <strong id="dashNomUser" style="color:var(--accent);">Kodjo</strong>. Touchez la bulle magique ELAWS en haut à droite à tout moment pour poser vos questions et obtenir des réponses instantanées.</p>
+                    <p class="text">Bienvenue, <strong id="dashNomUser" style="color:var(--accent);">Kodjo</strong>. L'écosystème intègre désormais l'assistant interactif pas à pas pour vous accompagner jusqu'à l'accomplissement total de vos projets.</p>
                     
+                    <div id="proactiveSuggestionBox" style="background:var(--bg-color); border:1px solid var(--accent); padding:15px; border-radius:12px; margin-top:15px; display:none;">
+                        <h4 style="color:var(--accent); margin-bottom:5px; font-size:14px;">💡 Suggestion Proactive ELAWS</h4>
+                        <p id="proactiveText" class="text" style="margin-bottom:0; font-size:13px;"></p>
+                    </div>
+
                     <div class="dash-grid" style="margin-top:15px;">
                         <div class="dash-stat-box">
                             <span class="stat-icon">✈️</span>
@@ -107,24 +112,26 @@
                 </div>
 
                 <div class="card">
-                    <h3>✨ Assistant Magique ELAWS</h3>
-                    <p class="text">ELAWS est entièrement disposé à vous répondre sur n'importe quel sujet : voyage, urgence, code informatique, commerce ou questions du quotidien.</p>
+                    <h3>⚡ Accompagnement Interactif</h3>
+                    <p class="text">Laissez ELAWS vous guider étape par étape dans vos préparatifs de voyage ou vos démarches administratives.</p>
                     <div class="quick-actions">
-                        <button class="btn-action" onclick="toggleElawsChat()">Ouvrir la Bulle Magique 🤖</button>
-                        <button class="btn-action secondary" onclick="switchTab('voyage')">Guide Voyage ✈️</button>
-                        <button class="btn-action secondary" onclick="switchTab('crise')">Urgences 🚨</button>
+                        <button class="btn-action" onclick="switchTab('voyage')">Commencer un Guide Voyage ✈️</button>
+                        <button class="btn-action secondary" onclick="switchTab('crise')">Urgences & Solutions 🚨</button>
+                        <button class="btn-action secondary" onclick="switchTab('outils')">Ouvrir le Bloc-Notes 📝</button>
                     </div>
                 </div>
             </section>
 
-            <!-- 2. Section Voyage & Guide Interactif Pas à Pas -->
+            <!-- 2. Section Voyage & Guide Interactif Pas à Pas (Module v3.14) -->
             <section id="tab-voyage" class="tab-content">
                 <div class="card" style="border-left: 4px solid var(--accent);">
-                    <h2>✈️ Assistant Interactif de Voyage & Démarches</h2>
-                    <p class="text">Démarrez votre projet de voyage ou de démarche administrative. ELAWS vous accompagne pas à pas jusqu'à l'accomplissement total.</p>
+                    <h2>✈️ Assistant Interactif de Voyage & Démarches (Pas à Pas)</h2>
+                    <p class="text">Démarrez votre projet de voyage ou de démarche administrative. ELAWS vous pose des questions, identifie ce qui manque et vous accompagne jusqu'à la réussite complète.</p>
+                    
                     <div class="form-group">
                         <label>Destination ou Nom de la démarche :</label>
-                        <input type="text" id="voyageDestination" class="input" placeholder="Ex: Voyage en France, Passeport biométrique...">
+                        <input type="text" id="voyageDestination" class="input" placeholder="Ex: Voyage en France, Passeport biométrique, Visa...">
+                        
                         <label>Où en êtes-vous actuellement ?</label>
                         <select id="voyageEtapeActuelle" class="input">
                             <option value="depart">1. Rien commencé / Juste une idée</option>
@@ -132,24 +139,31 @@
                             <option value="visa">3. Formalités de Visa / Billets d'avion</option>
                             <option value="sante">4. Santé, Vaccins & Bordereau de voyage</option>
                         </select>
+
                         <button class="btn-action" onclick="lancerAssistantVoyage()" style="margin-top:12px;">Lancer l'Accompagnement ELAWS 🚀</button>
                     </div>
+
                     <div id="resultatAssistantVoyage" style="margin-top:20px; display:none;"></div>
                 </div>
+
                 <div class="card" style="margin-top: 20px;">
-                    <h3>📋 Suivi de mes Projets Actifs</h3>
+                    <h3>📋 Suivi de mes Projets & Check-lists Actifs</h3>
                     <div id="listeProjetsVoyage" style="margin-top: 10px;">
-                        <p class="text">Aucun projet de voyage en cours.</p>
+                        <p class="text">Aucun projet de voyage en cours d'enregistrement.</p>
                     </div>
                 </div>
             </section>
 
-            <!-- 3. Section Urgences -->
+            <!-- 3. Section Urgences & Solutions Globales -->
             <section id="tab-crise" class="tab-content">
                 <div class="card" style="border-left: 4px solid var(--danger);">
                     <h2>🚨 Module de Résolution d'Urgences & Problèmes</h2>
-                    <input type="text" id="criseDescription" class="input" placeholder="Décrivez l'urgence...">
-                    <button class="btn-action" style="background:var(--danger); color:#fff;" onclick="analyserEtResoudreCrise()">Générer une Solution ⚡</button>
+                    <p class="text">Décrivez une situation d'urgence pour obtenir un plan d'action immédiat.</p>
+                    <div class="form-group">
+                        <label>Description du problème :</label>
+                        <textarea id="criseDescription" class="input" rows="3" placeholder="Décrivez l'urgence..."></textarea>
+                        <button class="btn-action" style="background:var(--danger); color:#fff;" onclick="analyserEtResoudreCrise()">Générer une Solution ⚡</button>
+                    </div>
                     <div id="resultatCriseContainer" style="margin-top:15px; display:none;"></div>
                 </div>
             </section>
@@ -176,7 +190,7 @@
                 </div>
             </section>
 
-            <!-- 6. Section Profil -->
+            <!-- 6. Section Profil & Contacts -->
             <section id="tab-profil" class="tab-content">
                 <div class="card">
                     <h2>Gestion du Profil & Préférences IA</h2>
@@ -190,7 +204,7 @@
                 </div>
             </section>
 
-            <!-- 7. Section Bloc-Notes -->
+            <!-- 7. Section Outils & Bloc-Notes -->
             <section id="tab-outils" class="tab-content">
                 <div class="card">
                     <h2>🛠️ Bloc-Notes Intelligent</h2>
@@ -229,7 +243,7 @@
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
-                    .then(reg => console.log('Service Worker v3.15 enregistré !', reg.scope))
+                    .then(reg => console.log('Service Worker v3.14 enregistré !', reg.scope))
                     .catch(err => console.log('Erreur SW :', err));
             });
         }
