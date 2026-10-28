@@ -7,16 +7,48 @@ let utilisateur = JSON.parse(localStorage.getItem('evat_profil')) || {
     contacts: [
         { nom: "Service Client ELAWS", tel: "+22898231402", email: "support@evat-elaws.net" }
     ],
-    habitudes: {
-        localisationActuelle: "Lomé, Togo"
-    }
+    iaTon: "standard"
 };
 
 let ecouteVocaleActive = false;
 let appelEnCoursInterval = null;
 let secondesAppel = 0;
 
-// --- MODULE DE TRADUCTION TEMPS RÉEL EN COURS D'APPEL ---
+// --- SYNTHESE VOCALE (TEXT-TO-SPEECH) ---
+function lireVocalement(texte) {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(texte);
+        utterance.lang = 'fr-FR';
+        utterance.rate = 1.0;
+        window.speechSynthesis.speak(utterance);
+    }
+}
+
+// --- COMMANDES VOCALES & INTERACTIONS ELAWS ---
+function toggleMicrophone() {
+    const btn = document.getElementById('microBtn');
+    const status = document.getElementById('voiceStatus');
+    ecouteVocaleActive = !ecouteVocaleActive;
+    
+    if(ecouteVocaleActive) {
+        btn.classList.add('active');
+        status.style.display = 'block';
+        setTimeout(() => {
+            if(ecouteVocaleActive) {
+                const commandeSimulee = "convertis 25000 FCFA";
+                document.getElementById('elawsInput').value = commandeSimulee;
+                toggleMicrophone();
+                envoyerMessageElaws();
+            }
+        }, 3000);
+    } else {
+        btn.classList.remove('active');
+        status.style.display = 'none';
+    }
+}
+
+// --- TRADUCTION LIVE EN COURS D'APPEL ---
 function demarrerAppelTraduit() {
     const correspondant = document.getElementById('appelCorrespondant').value.trim() || "Correspondant";
     const langue = document.getElementById('langueInterlocuteur').value;
@@ -24,7 +56,7 @@ function demarrerAppelTraduit() {
     const flux = document.getElementById('fluxTraductionLive');
     
     ecran.style.display = 'block';
-    flux.innerHTML = `<div style="color:var(--success);">📞 Connexion établie avec ${correspondant} (Langue : ${langue})...</div>`;
+    flux.innerHTML = `<div style="color:var(--success);">📞 Connexion établie avec ${correspondant} (${langue}). Traduction live ELAWS active...</div>`;
     
     secondesAppel = 0;
     if(appelEnCoursInterval) clearInterval(appelEnCoursInterval);
@@ -35,15 +67,16 @@ function demarrerAppelTraduit() {
         const s = String(secondesAppel % 60).padStart(2, '0');
         document.getElementById('chronometreAppel').innerText = `${m}:${s}`;
         
-        // Simulation d'interventions en direct d'ELAWS traduisant le dialecte en temps réel
         if(secondesAppel === 3) {
-            ajouterLigneFluxLive(`🔊 [Interlocuteur (${langue})] : "Mia ɖo ɣeyiɣi nyui aɖe" -> 🇫🇷 <em>Traduction ELAWS : "Nous avons passé un très bon moment."</em>`);
-        } else if(secondesAppel === 7) {
-            ajouterLigneFluxLive(`💡 <strong>Résumé vocal ELAWS :</strong> L'interlocuteur exprime sa satisfaction et confirme l'entente.`);
-        } else if(secondesAppel === 12) {
-            ajouterLigneFluxLive(`🔊 [Interlocuteur (${langue})] : "Wò ŋɔŋlɔwo dzea ŋunye" -> 🇫🇷 <em>Traduction ELAWS : "Vos propositions me conviennent."</em>`);
+            const txt = "Mia ɖo ɣeyiɣi nyui aɖe -> Traduction : Nous avons passé un très bon moment.";
+            ajouterLigneFluxLive(`🔊 [Live] : ${txt}`);
+            lireVocalement("Nous avons passé un très bon moment.");
+        } else if(secondesAppel === 8) {
+            const resume = "Résumé vocal ELAWS : Accord confirmé sur les conditions.";
+            ajouterLigneFluxLive(`💡 <strong>${resume}</strong>`);
+            lireVocalement(resume);
         }
-    }, 1500);
+    }, 2000);
 }
 
 function ajouterLigneFluxLive(htmlTexte) {
@@ -58,29 +91,80 @@ function ajouterLigneFluxLive(htmlTexte) {
 function raccrocherAppel() {
     if(appelEnCoursInterval) clearInterval(appelEnCoursInterval);
     const flux = document.getElementById('fluxTraductionLive');
-    flux.innerHTML += `<div style="color:var(--danger); margin-top:8px;">⏹️ Appel terminé. Résumé des échanges enregistré par ELAWS.</div>`;
+    flux.innerHTML += `<div style="color:var(--danger); margin-top:8px;">⏹️ Appel terminé. ELAWS a enregistré le journal de traduction.</div>`;
     setTimeout(() => {
         document.getElementById('ecranAppelLive').style.display = 'none';
     }, 4000);
 }
 
-// --- CAPTEURS ET PROACTIVITE ---
-function initCapteursEtProactivite() {
-    const heure = new Date().getHours();
-    let momentJournee = "journée";
-    if (heure >= 5 && heure < 12) momentJournee = "matinée";
-    else if (heure >= 12 && heure < 18) momentJournee = "après-midi";
-    else momentJournee = "soirée";
-
-    const box = document.getElementById('proactiveSuggestionBox');
-    const textEl = document.getElementById('proactiveText');
-    if(box && textEl) {
-        textEl.innerText = `En cette ${momentJournee}, ELAWS est configuré pour traduire en direct tes appels téléphoniques et dialectes en temps réel.`;
-        box.style.display = 'block';
+// --- GESTION DU PROFIL & TON IA ---
+function changerTypeProfil() {
+    const type = document.getElementById('selectTypeProfil').value;
+    const container = document.getElementById('sousProfilContainer');
+    if(type === 'adulte') {
+        container.innerHTML = `
+            <label>Situation Adulte :</label>
+            <select id="selectSousProfil" class="input">
+                <option value="Travailleur">Travailleur (Formel / Indépendant)</option>
+                <option value="Non-travailleur">En recherche / Non actif</option>
+                <option value="Illettre">Accompagnement visuel & vocal (Illettré)</option>
+            </select>
+        `;
+    } else {
+        container.innerHTML = `
+            <label>Situation Enfant :</label>
+            <select id="selectSousProfil" class="input">
+                <option value="Scolarise">Élève / Scolarisé</option>
+                <option value="Non-scolarise">Non scolarisé / Apprentissage pratique</option>
+            </select>
+        `;
     }
 }
 
-// --- GESTION DES MENUS ET ONGLETS ---
+function chargerProfilInterface() {
+    document.getElementById('inputNom').value = utilisateur.nom || "";
+    document.getElementById('selectTypeProfil').value = utilisateur.type || "adulte";
+    changerTypeProfil();
+    if(document.getElementById('selectSousProfil') && utilisateur.sousType) {
+        document.getElementById('selectSousProfil').value = utilisateur.sousType;
+    }
+    document.getElementById('selectTonIa').value = utilisateur.iaTon || "standard";
+    document.getElementById('inputMetier').value = (utilisateur.metiers || []).join(', ');
+    afficherContacts();
+}
+
+function sauvegarderProfilBase() {
+    utilisateur.nom = document.getElementById('inputNom').value.trim() || "Utilisateur";
+    utilisateur.type = document.getElementById('selectTypeProfil').value;
+    const sousProfilEl = document.getElementById('selectSousProfil');
+    if(sousProfilEl) utilisateur.sousType = sousProfilEl.value;
+    
+    utilisateur.iaTon = document.getElementById('selectTonIa').value;
+    
+    const metiersBruts = document.getElementById('inputMetier').value.trim();
+    utilisateur.metiers = metiersBruts ? metiersBruts.split(',').map(m => m.trim()).filter(m => m) : ["Général"];
+    
+    localStorage.setItem('evat_profil', JSON.stringify(utilisateur));
+    actualiserDashboard();
+    alert("Profil et préférences IA enregistrés avec succès !");
+    switchTab('dashboard');
+}
+
+function actualiserDashboard() {
+    document.getElementById('dashNomUser').innerText = utilisateur.nom || "Mon Ami";
+    const nbMetiers = utilisateur.metiers ? utilisateur.metiers.length : 0;
+    document.getElementById('dashStatMetiers').innerText = `${nbMetiers} Métier${nbMetiers > 1 ? 's' : ''}`;
+    const nbContacts = utilisateur.contacts ? utilisateur.contacts.length : 0;
+    document.getElementById('dashStatContacts').innerText = `${nbContacts} Contact${nbContacts > 1 ? 's' : ''}`;
+    
+    const tonLabels = { standard: "Standard pro", pedagogique: "Pédagogique & Simple", vocal_inclusif: "Vocal & Accompagné" };
+    document.getElementById('dashStatTon').innerText = `Ton: ${tonLabels[utilisateur.iaTon] || 'Standard'}`;
+    
+    const badge = document.getElementById('sidebarUserRole');
+    if(badge) badge.innerText = `${utilisateur.nom} • ${nbMetiers} Métier(s)`;
+}
+
+// --- NAVIGATION & DIVERS ---
 function toggleMenu(event) {
     if (event) event.stopPropagation();
     const sidebar = document.getElementById('sidebar');
@@ -124,94 +208,13 @@ function toggleElawsChat(event) {
     }
 }
 
-function toggleMicrophone() {
-    const btn = document.getElementById('microBtn');
-    const status = document.getElementById('voiceStatus');
-    ecouteVocaleActive = !ecouteVocaleActive;
-    
-    if(ecouteVocaleActive) {
-        btn.classList.add('active');
-        status.style.display = 'block';
-        setTimeout(() => {
-            if(ecouteVocaleActive) {
-                document.getElementById('elawsInput').value = "ELAWS, active la traduction live pour mon prochain appel";
-                toggleMicrophone();
-                envoyerMessageElaws();
-            }
-        }, 3000);
-    } else {
-        btn.classList.remove('active');
-        status.style.display = 'none';
-    }
-}
-
-function changerTypeProfil() {
-    const type = document.getElementById('selectTypeProfil').value;
-    const container = document.getElementById('sousProfilContainer');
-    if(type === 'adulte') {
-        container.innerHTML = `
-            <label>Situation Adulte :</label>
-            <select id="selectSousProfil" class="input">
-                <option value="Travailleur">Travailleur (Formel / Indépendant)</option>
-                <option value="Non-travailleur">En recherche / Non actif</option>
-                <option value="Illettre">Accompagnement visuel & vocal (Illettré)</option>
-            </select>
-        `;
-    } else {
-        container.innerHTML = `
-            <label>Situation Enfant :</label>
-            <select id="selectSousProfil" class="input">
-                <option value="Scolarise">Élève / Scolarisé</option>
-                <option value="Non-scolarise">Non scolarisé / Apprentissage pratique</option>
-            </select>
-        `;
-    }
-}
-
-function chargerProfilInterface() {
-    document.getElementById('inputNom').value = utilisateur.nom || "";
-    document.getElementById('selectTypeProfil').value = utilisateur.type || "adulte";
-    changerTypeProfil();
-    if(document.getElementById('selectSousProfil') && utilisateur.sousType) {
-        document.getElementById('selectSousProfil').value = utilisateur.sousType;
-    }
-    document.getElementById('inputMetier').value = (utilisateur.metiers || []).join(', ');
-    afficherContacts();
-}
-
-function sauvegarderProfilBase() {
-    utilisateur.nom = document.getElementById('inputNom').value.trim() || "Utilisateur";
-    utilisateur.type = document.getElementById('selectTypeProfil').value;
-    const sousProfilEl = document.getElementById('selectSousProfil');
-    if(sousProfilEl) utilisateur.sousType = sousProfilEl.value;
-    
-    const metiersBruts = document.getElementById('inputMetier').value.trim();
-    utilisateur.metiers = metiersBruts ? metiersBruts.split(',').map(m => m.trim()).filter(m => m) : ["Général"];
-    
-    localStorage.setItem('evat_profil', JSON.stringify(utilisateur));
-    actualiserDashboard();
-    alert("Profil et métiers enregistrés avec succès !");
-    switchTab('dashboard');
-}
-
-function actualiserDashboard() {
-    document.getElementById('dashNomUser').innerText = utilisateur.nom || "Mon Ami";
-    const nbMetiers = utilisateur.metiers ? utilisateur.metiers.length : 0;
-    document.getElementById('dashStatMetiers').innerText = `${nbMetiers} Métier${nbMetiers > 1 ? 's' : ''}`;
-    const nbContacts = utilisateur.contacts ? utilisateur.contacts.length : 0;
-    document.getElementById('dashStatContacts').innerText = `${nbContacts} Contact${nbContacts > 1 ? 's' : ''}`;
-    
-    const badge = document.getElementById('sidebarUserRole');
-    if(badge) badge.innerText = `${utilisateur.nom} • ${nbMetiers} Métier(s)`;
-}
-
 function ajouterContact() {
     const nom = document.getElementById('contactNom').value.trim();
     const tel = document.getElementById('contactTel').value.trim();
     const email = document.getElementById('contactEmail').value.trim();
     
     if(!nom || (!tel && !email)) {
-        alert("Veuillez renseigner un nom et au moins un moyen de contact.");
+        alert("Veuillez renseigner un nom et un moyen de contact.");
         return;
     }
     if(!utilisateur.contacts) utilisateur.contacts = [];
@@ -303,6 +306,7 @@ function envoyerMessageElaws() {
     setTimeout(() => {
         const rep = ELAWS_BRAIN.repondre(utilisateur, txt);
         ajouterBulleElaws(rep, 'elaws');
+        lireVocalement(rep);
     }, 400);
 }
 
@@ -318,6 +322,5 @@ function ajouterBulleElaws(txt, exp) {
 
 document.addEventListener('DOMContentLoaded', () => {
     actualiserDashboard();
-    initCapteursEtProactivite();
-    ajouterBulleElaws(`Bonjour ${utilisateur.nom || 'ami'} ! Je suis ELAWS. Je gère tes appels et ta traduction live en temps réel.`, 'elaws');
+    ajouterBulleElaws(`Bonjour ${utilisateur.nom || 'ami'} ! Je suis ELAWS v3.8. Je m'adapte à ton profil (${utilisateur.iaTon}) et peux te lire mes réponses vocalement.`, 'elaws');
 });

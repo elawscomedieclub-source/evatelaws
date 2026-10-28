@@ -15,11 +15,11 @@
                 <button onclick="toggleMenu(event)" class="menu-btn" aria-label="Menu principal">☰</button>
                 <div class="header-brand">
                     <h1 id="appTitle">EVAT</h1>
-                    <span class="brand-subtitle" id="headerLocationBadge">📍 Lomé, Togo (Temps Réel)</span>
+                    <span class="brand-subtitle" id="headerLocationBadge">📍 Lomé, Togo (IA Avancée)</span>
                 </div>
             </div>
 
-            <!-- ELAWS : Bulle en haut à droite avec option message & micro discret -->
+            <!-- ELAWS : Bulle en haut à droite avec options avancées (Commandes vocales & TTS) -->
             <div id="elawsWidget" class="elaws-widget">
                 <button onclick="toggleElawsChat(event)" class="elaws-bubble-btn" title="Discuter avec ELAWS">
                     <span class="pulse-dot"></span>
@@ -29,20 +29,20 @@
                     <div class="elaws-popup-header">
                         <div style="display:flex; align-items:center; gap:8px;">
                             <span class="status-indicator"></span>
-                            <span>Assistant Temps Réel ELAWS</span>
+                            <span>Assistant IA ELAWS v3.8</span>
                         </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
-                            <!-- Petit bouton micro discret -->
-                            <button onclick="toggleMicrophone()" id="microBtn" class="micro-btn-discret" title="Parler à ELAWS">🎙️</button>
+                            <!-- Bouton micro pour commandes vocales directes -->
+                            <button onclick="toggleMicrophone()" id="microBtn" class="micro-btn-discret" title="Commande vocale active">🎙️</button>
                             <button onclick="toggleElawsChat(event)" class="close-popup-btn" aria-label="Fermer">✕</button>
                         </div>
                     </div>
                     <div class="elaws-popup-body">
                         <div id="elawsMessages" class="elaws-messages"></div>
-                        <!-- Indicateur d'écoute vocal discret -->
-                        <div id="voiceStatus" style="display:none; font-size: 12px; color: var(--accent); margin-bottom: 8px; text-align: center; font-weight: 500;">🎙️ Écoute en cours... Parlez maintenant.</div>
+                        <!-- Indicateur d'écoute vocale -->
+                        <div id="voiceStatus" style="display:none; font-size: 12px; color: var(--accent); margin-bottom: 8px; text-align: center; font-weight: 500;">🎙️ Commande vocale en cours... Dis "convertis 10000 FCFA" ou "aide".</div>
                         <div class="elaws-input-area">
-                            <input type="text" id="elawsInput" placeholder="Écrire un message à ELAWS..." onkeypress="if(event.key==='Enter') envoyerMessageElaws()">
+                            <input type="text" id="elawsInput" placeholder="Écris à ELAWS ou commande par la voix..." onkeypress="if(event.key==='Enter') envoyerMessageElaws()">
                             <button onclick="envoyerMessageElaws()">Envoyer</button>
                         </div>
                     </div>
@@ -57,16 +57,16 @@
                 <span id="sidebarUserRole" class="sidebar-badge">Chargement...</span>
             </div>
             <div class="sidebar-links">
-                <a href="#" onclick="switchTab('dashboard')" class="nav-link active" id="link-dashboard">📊 Dashboard & Proactivité</a>
+                <a href="#" onclick="switchTab('dashboard')" class="nav-link active" id="link-dashboard">📊 Dashboard & IA Proactive</a>
                 <a href="#" onclick="switchTab('appel')" class="nav-link" id="link-appel">📞 Appel Direct & Traduction Live</a>
-                <a href="#" onclick="switchTab('profil')" class="nav-link" id="link-profil">👤 Profil & Contacts</a>
+                <a href="#" onclick="switchTab('profil')" class="nav-link" id="link-profil">👤 Profil & Adaptation Vocale</a>
                 <a href="#" onclick="switchTab('outils')" class="nav-link" id="link-outils">🛠️ Outils & Métiers</a>
                 <a href="#" onclick="switchTab('voyage')" class="nav-link" id="link-voyage">✈️ Voyage & Démarches</a>
                 <a href="#" onclick="switchTab('banque')" class="nav-link" id="link-banque">💳 Banque & Cartes</a>
                 <a href="#" onclick="switchTab('devises')" class="nav-link" id="link-devises">💱 Échange & Devises</a>
             </div>
             <div class="sidebar-footer">
-                <p>EVAT v3.7 • Traduction Live Active</p>
+                <p>EVAT v3.8 • ELAWS Intelligent</p>
             </div>
         </nav>
 
@@ -78,20 +78,20 @@
             <!-- 1. Section Dashboard -->
             <section id="tab-dashboard" class="tab-content active">
                 <div class="card welcome-card">
-                    <h2>Tableau de Bord Proactif</h2>
-                    <p class="text">Bienvenue, <strong id="dashNomUser" style="color:var(--accent);">Kodjo</strong>. ELAWS gère tes appels et ta traduction simultanée en direct.</p>
+                    <h2>Tableau de Bord Intelligent</h2>
+                    <p class="text">Bienvenue, <strong id="dashNomUser" style="color:var(--accent);">Kodjo</strong>. ELAWS ajuste son ton et ses analyses selon ton profil et ta voix.</p>
                     
                     <div id="proactiveSuggestionBox" style="background:var(--bg-color); border:1px solid var(--accent); padding:15px; border-radius:12px; margin-top:15px; display:none;">
-                        <h4 style="color:var(--accent); margin-bottom:5px; font-size:14px;">💡 Suggestion Intelligente ELAWS</h4>
+                        <h4 style="color:var(--accent); margin-bottom:5px; font-size:14px;">💡 Suggestion Proactive ELAWS</h4>
                         <p id="proactiveText" class="text" style="margin-bottom:0; font-size:13px;"></p>
                     </div>
 
                     <div class="dash-grid" style="margin-top:15px;">
                         <div class="dash-stat-box">
-                            <span class="stat-icon">📞</span>
+                            <span class="stat-icon">🧠</span>
                             <div>
-                                <h4>Traduction Live</h4>
-                                <p>Prête pour les appels</p>
+                                <h4>IA Adaptative</h4>
+                                <p id="dashStatTon">Ton: Standard pro</p>
                             </div>
                         </div>
                         <div class="dash-stat-box">
@@ -112,11 +112,11 @@
                 </div>
 
                 <div class="card">
-                    <h3>⚡ Accès Rapide & Appels</h3>
-                    <p class="text">Lance un appel avec traduction instantanée ou gère tes outils.</p>
+                    <h3>⚡ Accès Rapide & Commandes Vocales</h3>
+                    <p class="text">Utilise la bulle ELAWS en haut à droite ou clique sur les raccourcis ci-dessous.</p>
                     <div class="quick-actions">
                         <button class="btn-action" onclick="switchTab('appel')">Lancer un Appel Traduit</button>
-                        <button class="btn-action secondary" onclick="switchTab('profil')">Mon Profil</button>
+                        <button class="btn-action secondary" onclick="switchTab('profil')">Paramétrer le Profil & Voix</button>
                         <button class="btn-action secondary" onclick="switchTab('devises')">Convertir des Devises</button>
                     </div>
                 </div>
@@ -126,7 +126,7 @@
             <section id="tab-appel" class="tab-content">
                 <div class="card" style="border-left: 4px solid var(--success);">
                     <h2>📞 Appel en Direct & Traduction Temps Réel (ELAWS)</h2>
-                    <p class="text">Discute avec un interlocuteur parlant un autre dialecte ou une autre langue. ELAWS traduit et résume en direct au cours de l'appel.</p>
+                    <p class="text">Discute avec un interlocuteur parlant un autre dialecte. ELAWS traduit et résume en direct.</p>
                     
                     <div class="form-group">
                         <label>Nom ou Numéro du correspondant :</label>
@@ -148,7 +148,6 @@
                         </div>
                     </div>
 
-                    <!-- Écran de simulation d'appel avec traduction en temps réel -->
                     <div id="ecranAppelLive" style="margin-top:20px; background:var(--bg-color); border:1px solid var(--border-color); padding:15px; border-radius:12px; display:none;">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                             <span style="font-weight:700; color:var(--success);">🔴 APPEL EN COURS AVEC TRADUCTION LIVE</span>
@@ -161,11 +160,11 @@
                 </div>
             </section>
 
-            <!-- 3. Section Profil & Contacts -->
+            <!-- 3. Section Profil & Contacts (avec réglage du ton et synthèse vocale) -->
             <section id="tab-profil" class="tab-content">
                 <div class="card">
-                    <h2>Gestion du Profil & Contacts</h2>
-                    <p class="text">Configure ton profil et gère ton carnet d'adresses.</p>
+                    <h2>Gestion du Profil & Adaptation Vocale de l'IA</h2>
+                    <p class="text">Configure ton profil, choisis le ton d'ELAWS et active la lecture vocale (Synthèse TTS).</p>
                     
                     <div class="form-group">
                         <label>Nom complet :</label>
@@ -179,10 +178,17 @@
 
                         <div id="sousProfilContainer" style="margin-bottom:12px;"></div>
 
+                        <label>Ton & Style de l'Assistant ELAWS :</label>
+                        <select id="selectTonIa" class="input">
+                            <option value="standard">Standard & Professionnel (Précis et direct)</option>
+                            <option value="pedagogique">Pédagogique & Simple (Idéal pour l'apprentissage)</option>
+                            <option value="vocal_inclusif">Vocal & Accompagné (Phrases courtes, explications claires)</option>
+                        </select>
+
                         <label>Corps de Métier(s) / Activité(s) (Séparés par des virgules) :</label>
                         <input type="text" id="inputMetier" class="input" placeholder="Ex: Commerçant, Développeur, Artisan...">
                         
-                        <button class="btn-action" style="margin-top:10px;" onclick="sauvegarderProfilBase()">Enregistrer le Profil</button>
+                        <button class="btn-action" style="margin-top:10px;" onclick="sauvegarderProfilBase()">Enregistrer les Préférences IA</button>
                     </div>
                 </div>
 
