@@ -9,17 +9,17 @@
 </head>
 <body>
     <div id="app">
-        <!-- En-tête principal : Menu ☰ à gauche, Titre au centre, Bulle ELAWS en haut à droite -->
+        <!-- En-tête principal : Ergonomie mobile optimisée (boutons sous le pouce) -->
         <header class="header">
             <div class="header-left">
                 <button onclick="toggleMenu(event)" class="menu-btn" aria-label="Menu principal">☰</button>
                 <div class="header-brand">
                     <h1 id="appTitle">EVAT</h1>
-                    <span class="brand-subtitle" id="headerLocationBadge">📍 Lomé, Togo (IA Avancée)</span>
+                    <span class="brand-subtitle" id="headerLocationBadge">📍 Lomé, Togo (Design Adaptatif v3.9)</span>
                 </div>
             </div>
 
-            <!-- ELAWS : Bulle en haut à droite avec options avancées (Commandes vocales & TTS) -->
+            <!-- ELAWS : Bulle en haut à droite avec options avancées -->
             <div id="elawsWidget" class="elaws-widget">
                 <button onclick="toggleElawsChat(event)" class="elaws-bubble-btn" title="Discuter avec ELAWS">
                     <span class="pulse-dot"></span>
@@ -29,20 +29,18 @@
                     <div class="elaws-popup-header">
                         <div style="display:flex; align-items:center; gap:8px;">
                             <span class="status-indicator"></span>
-                            <span>Assistant IA ELAWS v3.8</span>
+                            <span>Assistant IA ELAWS v3.9</span>
                         </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
-                            <!-- Bouton micro pour commandes vocales directes -->
                             <button onclick="toggleMicrophone()" id="microBtn" class="micro-btn-discret" title="Commande vocale active">🎙️</button>
                             <button onclick="toggleElawsChat(event)" class="close-popup-btn" aria-label="Fermer">✕</button>
                         </div>
                     </div>
                     <div class="elaws-popup-body">
                         <div id="elawsMessages" class="elaws-messages"></div>
-                        <!-- Indicateur d'écoute vocale -->
-                        <div id="voiceStatus" style="display:none; font-size: 12px; color: var(--accent); margin-bottom: 8px; text-align: center; font-weight: 500;">🎙️ Commande vocale en cours... Dis "convertis 10000 FCFA" ou "aide".</div>
+                        <div id="voiceStatus" style="display:none; font-size: 12px; color: var(--accent); margin-bottom: 8px; text-align: center; font-weight: 500;">🎙️ Écoute vocale active...</div>
                         <div class="elaws-input-area">
-                            <input type="text" id="elawsInput" placeholder="Écris à ELAWS ou commande par la voix..." onkeypress="if(event.key==='Enter') envoyerMessageElaws()">
+                            <input type="text" id="elawsInput" placeholder="Écris à ELAWS..." onkeypress="if(event.key==='Enter') envoyerMessageElaws()">
                             <button onclick="envoyerMessageElaws()">Envoyer</button>
                         </div>
                     </div>
@@ -50,36 +48,36 @@
             </div>
         </header>
 
-        <!-- Menu latéral / Navigation principale (depuis la gauche) -->
+        <!-- Menu latéral / Navigation principale -->
         <nav id="sidebar" class="sidebar" onclick="event.stopPropagation()">
             <div class="sidebar-header">
                 <h3>Navigation EVAT</h3>
                 <span id="sidebarUserRole" class="sidebar-badge">Chargement...</span>
             </div>
             <div class="sidebar-links">
-                <a href="#" onclick="switchTab('dashboard')" class="nav-link active" id="link-dashboard">📊 Dashboard & IA Proactive</a>
-                <a href="#" onclick="switchTab('appel')" class="nav-link" id="link-appel">📞 Appel Direct & Traduction Live</a>
-                <a href="#" onclick="switchTab('profil')" class="nav-link" id="link-profil">👤 Profil & Adaptation Vocale</a>
+                <a href="#" onclick="switchTab('dashboard')" class="nav-link active" id="link-dashboard">📊 Dashboard Adaptatif</a>
+                <a href="#" onclick="switchTab('appel')" class="nav-link" id="link-appel">📞 Appel Direct & Live</a>
+                <a href="#" onclick="switchTab('profil')" class="nav-link" id="link-profil">👤 Profil & Voix</a>
                 <a href="#" onclick="switchTab('outils')" class="nav-link" id="link-outils">🛠️ Outils & Métiers</a>
                 <a href="#" onclick="switchTab('voyage')" class="nav-link" id="link-voyage">✈️ Voyage & Démarches</a>
                 <a href="#" onclick="switchTab('banque')" class="nav-link" id="link-banque">💳 Banque & Cartes</a>
                 <a href="#" onclick="switchTab('devises')" class="nav-link" id="link-devises">💱 Échange & Devises</a>
             </div>
             <div class="sidebar-footer">
-                <p>EVAT v3.8 • ELAWS Intelligent</p>
+                <p>EVAT v3.9 • Ergonomie Fluide</p>
             </div>
         </nav>
 
-        <!-- Overlay pour fermer le menu ou la popup au clic à l'extérieur -->
+        <!-- Overlay -->
         <div id="appOverlay" class="app-overlay" onclick="fermerTousLesMenus()"></div>
 
-        <!-- Contenu dynamique principal -->
+        <!-- Contenu dynamique principal avec mode d'affichage adaptatif -->
         <main class="content">
             <!-- 1. Section Dashboard -->
             <section id="tab-dashboard" class="tab-content active">
                 <div class="card welcome-card">
-                    <h2>Tableau de Bord Intelligent</h2>
-                    <p class="text">Bienvenue, <strong id="dashNomUser" style="color:var(--accent);">Kodjo</strong>. ELAWS ajuste son ton et ses analyses selon ton profil et ta voix.</p>
+                    <h2>Tableau de Bord Adaptatif</h2>
+                    <p class="text">Bienvenue, <strong id="dashNomUser" style="color:var(--accent);">Kodjo</strong>. L'interface s'ajuste pour un confort visuel absolu sur mobile.</p>
                     
                     <div id="proactiveSuggestionBox" style="background:var(--bg-color); border:1px solid var(--accent); padding:15px; border-radius:12px; margin-top:15px; display:none;">
                         <h4 style="color:var(--accent); margin-bottom:5px; font-size:14px;">💡 Suggestion Proactive ELAWS</h4>
@@ -88,10 +86,10 @@
 
                     <div class="dash-grid" style="margin-top:15px;">
                         <div class="dash-stat-box">
-                            <span class="stat-icon">🧠</span>
+                            <span class="stat-icon">📱</span>
                             <div>
-                                <h4>IA Adaptative</h4>
-                                <p id="dashStatTon">Ton: Standard pro</p>
+                                <h4>Affichage Fluide</h4>
+                                <p>Optimisé mobile</p>
                             </div>
                         </div>
                         <div class="dash-stat-box">
@@ -112,11 +110,11 @@
                 </div>
 
                 <div class="card">
-                    <h3>⚡ Accès Rapide & Commandes Vocales</h3>
-                    <p class="text">Utilise la bulle ELAWS en haut à droite ou clique sur les raccourcis ci-dessous.</p>
+                    <h3>⚡ Accès Direct & Ergonomie</h3>
+                    <p class="text">Navigue rapidement vers les fonctions essentielles de l'écosystème.</p>
                     <div class="quick-actions">
                         <button class="btn-action" onclick="switchTab('appel')">Lancer un Appel Traduit</button>
-                        <button class="btn-action secondary" onclick="switchTab('profil')">Paramétrer le Profil & Voix</button>
+                        <button class="btn-action secondary" onclick="switchTab('profil')">Paramétrer le Profil</button>
                         <button class="btn-action secondary" onclick="switchTab('devises')">Convertir des Devises</button>
                     </div>
                 </div>
@@ -125,8 +123,8 @@
             <!-- 2. Section Appel en Direct & Traduction Temps Réel -->
             <section id="tab-appel" class="tab-content">
                 <div class="card" style="border-left: 4px solid var(--success);">
-                    <h2>📞 Appel en Direct & Traduction Temps Réel (ELAWS)</h2>
-                    <p class="text">Discute avec un interlocuteur parlant un autre dialecte. ELAWS traduit et résume en direct.</p>
+                    <h2>📞 Appel en Direct & Traduction Temps Réel</h2>
+                    <p class="text">Discute avec un interlocuteur en dialecte. ELAWS traduit et résume en direct.</p>
                     
                     <div class="form-group">
                         <label>Nom ou Numéro du correspondant :</label>
@@ -160,11 +158,11 @@
                 </div>
             </section>
 
-            <!-- 3. Section Profil & Contacts (avec réglage du ton et synthèse vocale) -->
+            <!-- 3. Section Profil & Contacts -->
             <section id="tab-profil" class="tab-content">
                 <div class="card">
-                    <h2>Gestion du Profil & Adaptation Vocale de l'IA</h2>
-                    <p class="text">Configure ton profil, choisis le ton d'ELAWS et active la lecture vocale (Synthèse TTS).</p>
+                    <h2>Gestion du Profil & Préférences IA</h2>
+                    <p class="text">Configure ton profil et le ton de l'assistant ELAWS.</p>
                     
                     <div class="form-group">
                         <label>Nom complet :</label>
@@ -188,7 +186,7 @@
                         <label>Corps de Métier(s) / Activité(s) (Séparés par des virgules) :</label>
                         <input type="text" id="inputMetier" class="input" placeholder="Ex: Commerçant, Développeur, Artisan...">
                         
-                        <button class="btn-action" style="margin-top:10px;" onclick="sauvegarderProfilBase()">Enregistrer les Préférences IA</button>
+                        <button class="btn-action" style="margin-top:10px;" onclick="sauvegarderProfilBase()">Enregistrer les Préférences</button>
                     </div>
                 </div>
 

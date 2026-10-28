@@ -14,7 +14,6 @@ let ecouteVocaleActive = false;
 let appelEnCoursInterval = null;
 let secondesAppel = 0;
 
-// --- SYNTHESE VOCALE (TEXT-TO-SPEECH) ---
 function lireVocalement(texte) {
     if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
@@ -25,7 +24,6 @@ function lireVocalement(texte) {
     }
 }
 
-// --- COMMANDES VOCALES & INTERACTIONS ELAWS ---
 function toggleMicrophone() {
     const btn = document.getElementById('microBtn');
     const status = document.getElementById('voiceStatus');
@@ -36,8 +34,7 @@ function toggleMicrophone() {
         status.style.display = 'block';
         setTimeout(() => {
             if(ecouteVocaleActive) {
-                const commandeSimulee = "convertis 25000 FCFA";
-                document.getElementById('elawsInput').value = commandeSimulee;
+                document.getElementById('elawsInput').value = "convertis 50000 FCFA";
                 toggleMicrophone();
                 envoyerMessageElaws();
             }
@@ -48,7 +45,6 @@ function toggleMicrophone() {
     }
 }
 
-// --- TRADUCTION LIVE EN COURS D'APPEL ---
 function demarrerAppelTraduit() {
     const correspondant = document.getElementById('appelCorrespondant').value.trim() || "Correspondant";
     const langue = document.getElementById('langueInterlocuteur').value;
@@ -56,7 +52,7 @@ function demarrerAppelTraduit() {
     const flux = document.getElementById('fluxTraductionLive');
     
     ecran.style.display = 'block';
-    flux.innerHTML = `<div style="color:var(--success);">📞 Connexion établie avec ${correspondant} (${langue}). Traduction live ELAWS active...</div>`;
+    flux.innerHTML = `<div style="color:var(--success);">📞 Connexion établie avec ${correspondant} (${langue}). Traduction live active...</div>`;
     
     secondesAppel = 0;
     if(appelEnCoursInterval) clearInterval(appelEnCoursInterval);
@@ -91,13 +87,12 @@ function ajouterLigneFluxLive(htmlTexte) {
 function raccrocherAppel() {
     if(appelEnCoursInterval) clearInterval(appelEnCoursInterval);
     const flux = document.getElementById('fluxTraductionLive');
-    flux.innerHTML += `<div style="color:var(--danger); margin-top:8px;">⏹️ Appel terminé. ELAWS a enregistré le journal de traduction.</div>`;
+    flux.innerHTML += `<div style="color:var(--danger); margin-top:8px;">⏹️ Appel terminé. Journal enregistré.</div>`;
     setTimeout(() => {
         document.getElementById('ecranAppelLive').style.display = 'none';
     }, 4000);
 }
 
-// --- GESTION DU PROFIL & TON IA ---
 function changerTypeProfil() {
     const type = document.getElementById('selectTypeProfil').value;
     const container = document.getElementById('sousProfilContainer');
@@ -146,7 +141,7 @@ function sauvegarderProfilBase() {
     
     localStorage.setItem('evat_profil', JSON.stringify(utilisateur));
     actualiserDashboard();
-    alert("Profil et préférences IA enregistrés avec succès !");
+    alert("Profil et préférences enregistrés avec succès !");
     switchTab('dashboard');
 }
 
@@ -157,14 +152,10 @@ function actualiserDashboard() {
     const nbContacts = utilisateur.contacts ? utilisateur.contacts.length : 0;
     document.getElementById('dashStatContacts').innerText = `${nbContacts} Contact${nbContacts > 1 ? 's' : ''}`;
     
-    const tonLabels = { standard: "Standard pro", pedagogique: "Pédagogique & Simple", vocal_inclusif: "Vocal & Accompagné" };
-    document.getElementById('dashStatTon').innerText = `Ton: ${tonLabels[utilisateur.iaTon] || 'Standard'}`;
-    
     const badge = document.getElementById('sidebarUserRole');
     if(badge) badge.innerText = `${utilisateur.nom} • ${nbMetiers} Métier(s)`;
 }
 
-// --- NAVIGATION & DIVERS ---
 function toggleMenu(event) {
     if (event) event.stopPropagation();
     const sidebar = document.getElementById('sidebar');
@@ -236,14 +227,14 @@ function afficherContacts() {
     }
     let html = '';
     utilisateur.contacts.forEach((c, index) => {
-        html += `<div style="background:var(--bg-color); padding:12px 15px; border-radius:10px; margin-top:10px; border-left:3px solid var(--accent); display:flex; justify-content:space-between; align-items:center; gap:10px;">
+        html += `<div style="background:var(--bg-color); padding:12px 15px; border-radius:12px; margin-top:10px; border-left:3px solid var(--accent); display:flex; justify-content:space-between; align-items:center; gap:10px;">
             <div>
-                <strong style="font-size:15px; color:var(--text-color);">${c.nom}</strong><br>
-                <span class="text" style="font-size:12px; margin-bottom:0; color:var(--text-secondary);">📱 ${c.tel || 'Pas de GSM'} | ✉️ ${c.email || 'Pas d\'e-mail'}</span>
+                <strong style="font-size:14.5px; color:var(--text-color);">${c.nom}</strong><br>
+                <span class="text" style="font-size:11.5px; margin-bottom:0; color:var(--text-secondary);">📱 ${c.tel || 'Pas de GSM'} | ✉️ ${c.email || 'Pas d\'e-mail'}</span>
             </div>
             <div style="display:flex; gap:6px; flex-shrink:0;">
                 ${c.tel ? `<a href="tel:${c.tel}" class="btn-action" style="padding:6px 12px; font-size:11px; text-decoration:none;" title="Appel GSM direct">📞 GSM</a>` : ''}
-                <button onclick="supprimerContact(${index})" style="background:var(--card-hover); border:1px solid var(--border-color); color:var(--danger); border-radius:6px; padding:6px 8px; cursor:pointer; font-size:11px;" title="Supprimer">🗑️</button>
+                <button onclick="supprimerContact(${index})" style="background:var(--card-hover); border:1px solid var(--border-color); color:var(--danger); border-radius:8px; padding:6px 10px; cursor:pointer; font-size:11px;" title="Supprimer">🗑️</button>
             </div>
         </div>`;
     });
@@ -279,14 +270,14 @@ function rechercherVoyage() {
     const pays = document.getElementById('inputPaysVoyage').value.trim();
     const res = document.getElementById('resultatVoyage');
     if(!pays) { res.innerHTML = '<p class="text" style="color:var(--danger);">Entrez un pays.</p>'; return; }
-    res.innerHTML = `<div style="background:var(--bg-color); padding:15px; border-radius:8px;"><h4>✈️ Formalités (${pays})</h4><p class="text" style="margin-top:8px;">Passeport valide 6 mois minimum.</p></div>`;
+    res.innerHTML = `<div style="background:var(--bg-color); padding:15px; border-radius:12px;"><h4>✈️ Formalités (${pays})</h4><p class="text" style="margin-top:8px;">Passeport valide 6 mois minimum.</p></div>`;
 }
 
 function rechercherBanque() {
     const pays = document.getElementById('inputPaysBanque').value.trim();
     const res = document.getElementById('resultatBanque');
     if(!pays) { res.innerHTML = '<p class="text" style="color:var(--danger);">Entrez un pays.</p>'; return; }
-    res.innerHTML = `<div style="background:var(--bg-color); padding:15px; border-radius:8px;"><h4>💳 Banque (${pays})</h4><p class="text" style="margin-top:8px;">CNI, Justificatif de domicile, Dépôt.</p></div>`;
+    res.innerHTML = `<div style="background:var(--bg-color); padding:15px; border-radius:12px;"><h4>💳 Banque (${pays})</h4><p class="text" style="margin-top:8px;">CNI, Justificatif de domicile, Dépôt.</p></div>`;
 }
 
 function convertirDevise() {
@@ -294,7 +285,7 @@ function convertirDevise() {
     const source = document.getElementById('deviseSource').value;
     const res = document.getElementById('resultatDevise');
     let eur = montant * 0.001525;
-    res.innerHTML = `<div style="background:var(--bg-color); padding:15px; border-radius:8px;"><h4>💱 Résultat</h4><p class="text" style="margin-top:8px; font-weight:bold; color:var(--accent);">${montant} ${source} = ${eur.toFixed(2)} EUR</p></div>`;
+    res.innerHTML = `<div style="background:var(--bg-color); padding:15px; border-radius:12px;"><h4>💱 Résultat</h4><p class="text" style="margin-top:8px; font-weight:bold; color:var(--accent);">${montant} ${source} = ${eur.toFixed(2)} EUR</p></div>`;
 }
 
 function envoyerMessageElaws() {
@@ -315,12 +306,12 @@ function ajouterBulleElaws(txt, exp) {
     const isUser = exp === 'user';
     const div = document.createElement('div');
     div.style.cssText = `margin-bottom:6px; text-align:${isUser ? 'right' : 'left'};`;
-    div.innerHTML = `<span style="display:inline-block; background:${isUser ? 'var(--accent)' : 'var(--card-hover)'}; color:${isUser ? '#0b0f19' : 'var(--text-color)'}; padding:8px 12px; border-radius:10px; max-width:92%; font-size:13px; text-align:left;"><strong>${isUser ? 'Moi' : 'ELAWS'} :</strong><br>${txt}</span>`;
+    div.innerHTML = `<span style="display:inline-block; background:${isUser ? 'var(--accent)' : 'var(--card-hover)'}; color:${isUser ? '#070a13' : 'var(--text-color)'}; padding:9px 13px; border-radius:12px; max-width:92%; font-size:13px; text-align:left;"><strong>${isUser ? 'Moi' : 'ELAWS'} :</strong><br>${txt}</span>`;
     chat.appendChild(div);
     chat.scrollTop = chat.scrollHeight;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     actualiserDashboard();
-    ajouterBulleElaws(`Bonjour ${utilisateur.nom || 'ami'} ! Je suis ELAWS v3.8. Je m'adapte à ton profil (${utilisateur.iaTon}) et peux te lire mes réponses vocalement.`, 'elaws');
+    ajouterBulleElaws(`Bonjour ${utilisateur.nom || 'ami'} ! Je suis ELAWS v3.9 avec interface mobile optimisée.`, 'elaws');
 });

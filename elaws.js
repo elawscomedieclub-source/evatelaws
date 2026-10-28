@@ -6,17 +6,14 @@ const ELAWS_BRAIN = {
         
         let prefixe = "";
         if (ton === "pedagogique") prefixe = "💡 [Mode Pédagogique] ";
-        if (ton === "vocal_inclusif") prefixe = "🗣️ [Mode Vocal & Accompagné] ";
+        if (ton === "vocal_inclusif") prefixe = "🗣️ [Mode Vocal] ";
 
         if(t.includes('bonjour') || t.includes('salut')) {
-            return `${prefixe}Bonjour ${profil.nom} ! Comment puis-je t'assister aujourd'hui dans l'écosystème EVAT ?`;
+            return `${prefixe}Bonjour ${profil.nom} ! Comment puis-je t'aider aujourd'hui ?`;
         }
         if(t.includes('convertis') || t.includes('fcfa')) {
-            return `${prefixe}Conversion instantanée prise en compte. Pour convertir précisément tes devises, rends-toi dans l'onglet **Échange & Devises** !`;
+            return `${prefixe}Conversion prise en compte. Consulte l'onglet **Échange & Devises** pour plus de détails !`;
         }
-        if(t.includes('aide') || t.includes('aide-moi')) {
-            return `${prefixe}Je suis ELAWS, ton assistant universel. Tu peux utiliser les commandes vocales, lancer des appels traduits en direct, ou gérer tes outils métiers.`;
-        }
-        return `${prefixe}J'ai bien compris ta demande : "${texte}". Je reste à tes côtés pour optimiser tes projets !`;
+        return `${prefixe}J'ai bien reçu ton message : "${texte}". Je veille sur l'écosystème EVAT !`;
     }
 };
