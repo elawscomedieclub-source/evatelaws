@@ -3,58 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E.V.A.T. & ELAWS - Écosystème Universel & Scolaire (v29.1)</title>
-    <link rel="manifest" href="manifest.webmanifest">
-    <meta name="theme-color" content="#059669">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>EVAT & ELAWS v29.7</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.webmanifest">
 </head>
 <body data-theme="dark">
-
-    <div id="toastNotification">✨ <span id="toastText">Action</span></div>
-
-    <div id="appHeader" style="display:none;">
-        <header>
-            <div class="header-left">
-                <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-                <img src="https://img.icons8.com/color/96/000000/artificial-intelligence.png" alt="Logo ELAWS" class="app-logo">
-                <div class="title">E.V.A.T. & ELAWS</div>
+    <div id="toastNotification" class="toast"><span id="toastText"></span></div>
+    
+    <header id="appHeader" class="header" style="display:none;">
+        <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <button class="btn-top" onclick="toggleMenu()">☰ Menu</button>
+                <span id="badgeDomaineActif" style="font-size:12px; font-weight:700; color:var(--accent);">EVAT</span>
             </div>
-            <div class="header-right">
-                <button class="btn-top" onclick="changerTheme()">🎨 Thème</button>
-                <button class="btn-top" onclick="changerProfilSession()">👤 Profils</button>
-            </div>
-        </header>
-        <div class="badge-info">
-            <span id="badgeDomaineActif">🌍 Écosystème Outils Métiers & Élèves (v29.1)</span>
-            <span class="offline-status" id="reseauStatusIndicator">⚡ 100% Hors-Ligne (Cache Actif)</span>
+            <button class="btn-top" onclick="changerTheme()">🎨 Thème</button>
         </div>
+    </header>
+
+    <div id="sideMenu" class="side-menu">
+        <h3 style="color:var(--accent); margin-top:0;">🌟 Navigation EVAT</h3>
+        <button class="btn-action" style="margin-bottom:8px; background:var(--card-bg); border:1px solid var(--accent); color:var(--text-main);" onclick="switchTab('dashboard')">📊 Tableau de Bord</button>
+        <button class="btn-action" style="margin-bottom:8px; background:var(--card-bg); border:1px solid var(--accent); color:var(--text-main);" onclick="switchTab('elaws_compagnon')">🤖 Compagnon ELAWS</button>
+        <button class="btn-action" style="margin-bottom:8px; background:var(--card-bg); border:1px solid var(--accent); color:var(--text-main);" onclick="switchTab('outils_metier')">🛠️ Outils Métier</button>
+        <button class="btn-action" style="margin-bottom:8px; background:var(--card-bg); border:1px solid var(--accent); color:var(--text-main);" onclick="switchTab('voyages_papiers')">✈️ Visas & Papiers</button>
+        <button class="btn-action" style="margin-bottom:8px; background:var(--card-bg); border:1px solid var(--accent); color:var(--text-main);" onclick="switchTab('appels_traduction')">📞 Appels & Traduction</button>
+        <button class="btn-action" style="margin-top:20px; background:#ef4444;" onclick="changerProfilSession()">🔄 Changer de Profil</button>
     </div>
 
-    <div id="sideMenu" class="sidebar">
-        <h3>📂 Navigation Universelle (v29.1)</h3>
-        <button class="menu-item" onclick="switchTab('accueil')">🏠 Accueil & Profil Actif</button>
-        <button class="menu-item" onclick="switchTab('appels_traduction')" style="background:rgba(14,165,233,0.2); border:1px solid #0ea5e9; color:#0ea5e9;">📞 <strong>Appels & Traduction de Dialecte</strong></button>
-        <button class="menu-item" onclick="switchTab('elaws_compagnon')" style="background:rgba(5,150,105,0.2); border:1px solid var(--accent);">🤖 <strong>Parler à ELAWS (Ton Ami 🎤)</strong></button>
-        <button class="menu-item" onclick="switchTab('outils_metier')" style="background:rgba(245,158,11,0.15); border:1px solid #f59e0b; color:#f59e0b;">✂️ <strong>Outils Métier & 🎒 Espace Élèves</strong></button>
-        <button class="menu-item" onclick="switchTab('voyages_papiers')" style="background:rgba(14,165,233,0.15); border:1px solid #0ea5e9; color:#0ea5e9;">✈️ <strong>Voyages, Passeport & CNI</strong></button>
-        <button class="menu-item" onclick="switchTab('dashboard')" style="background:rgba(59,130,246,0.15); border:1px solid #3b82f6; color:#3b82f6;">📊 <strong>Tableau de Bord & Score</strong></button>
-        <button class="menu-item" onclick="switchTab('agenda')">📅 Agenda & Rendez-vous</button>
-        <button class="menu-item" onclick="switchTab('economie')">🪙 Journal de Caisse</button>
-        <button class="menu-item" onclick="switchTab('sauvegarde')">💾 Sauvegarde & Sécurité</button>
-    </div>
+    <main id="mainContent" class="main-container"></main>
 
-    <div class="module-container" id="mainContent"></div>
-
-    <div id="bottomBar" class="bottom-action-bar" style="display:none;">
-        <button class="bar-item active" onclick="switchTab('accueil')" id="barAccueil"><span class="icon">💼</span><span>Profil</span></button>
-        <button class="bar-item" onclick="switchTab('appels_traduction')" id="barAppel" style="color:#0ea5e9;"><span class="icon">📞</span><span>Appels</span></button>
-        <button class="bar-item" onclick="switchTab('elaws_compagnon')" id="barElaws" style="color:var(--accent);"><span class="icon">🤖</span><span>ELAWS</span></button>
-        <button class="bar-item" onclick="switchTab('outils_metier')" id="barOutil" style="color:#f59e0b;"><span class="icon">✂️</span><span>Métier</span></button>
-        <button class="bar-item" onclick="switchTab('voyages_papiers')" id="barVoyage" style="color:#0ea5e9;"><span class="icon">✈️</span><span>Voyages</span></button>
-    </div>
+    <nav id="bottomBar" class="bottom-bar" style="display:none;">
+        <button class="bar-item active" id="barAccueil" onclick="switchTab('dashboard')">📊<span>Dash</span></button>
+        <button class="bar-item" id="barElaws" onclick="switchTab('elaws_compagnon')">🤖<span>ELAWS</span></button>
+        <button class="bar-item" id="barOutil" onclick="switchTab('outils_metier')">🛠️<span>Métier</span></button>
+        <button class="bar-item" id="barVoyage" onclick="switchTab('voyages_papiers')">✈️<span>Voyages</span></button>
+        <button class="bar-item" id="barAppel" onclick="switchTab('appels_traduction')">📞<span>Appels</span></button>
+    </nav>
 
     <script src="elaws.js"></script>
     <script src="app.js"></script>
