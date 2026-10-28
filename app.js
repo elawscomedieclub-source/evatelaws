@@ -7,8 +7,11 @@ let utilisateur = JSON.parse(localStorage.getItem('evat_profil')) || {
     contacts: []
 };
 
+let ecouteVocaleActive = false;
+
 function toggleMenu() {
-    document.getElementById('sidebar').classList.toggle('open');
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('open');
 }
 
 function switchTab(tabId) {
@@ -17,6 +20,37 @@ function switchTab(tabId) {
     document.getElementById('sidebar').classList.remove('open');
     if(tabId === 'profil') chargerProfilInterface();
     if(tabId === 'outils') afficherOutilsDynamiques();
+}
+
+function toggleElawsChat() {
+    const popup = document.getElementById('elawsPopup');
+    if(popup.style.display === 'none' || popup.style.display === '') {
+        popup.style.display = 'flex';
+    } else {
+        popup.style.display = 'none';
+    }
+}
+
+function toggleMicrophone() {
+    const btn = document.getElementById('microBtn');
+    const status = document.getElementById('voiceStatus');
+    ecouteVocaleActive = !ecouteVocaleActive;
+    
+    if(ecouteVocaleActive) {
+        btn.classList.add('active');
+        status.style.display = 'block';
+        // Simulation reconnaissance vocale
+        setTimeout(() => {
+            if(ecouteVocaleActive) {
+                document.getElementById('elawsInput').value = "Bonjour ELAWS, aide-moi dans mes tâches";
+                toggleMicrophone();
+                envoyerMessageElaws();
+            }
+        }, 3000);
+    } else {
+        btn.classList.remove('active');
+        status.style.display = 'none';
+    }
 }
 
 function changerTypeProfil() {
@@ -73,7 +107,7 @@ function ajouterContact() {
     const tel = document.getElementById('contactTel').value.trim();
     const email = document.getElementById('contactEmail').value.trim();
     if(!nom || (!tel && !email)) {
-        alert("Veuillez entrer au moins un nom et un moyen de contact (téléphone ou e-mail).");
+        alert("Veuillez entrer un nom et au moins un moyen de contact (téléphone ou e-mail).");
         return;
     }
     if(!utilisateur.contacts) utilisateur.contacts = [];
@@ -93,7 +127,7 @@ function afficherContacts() {
         return;
     }
     let html = '';
-    utilisateur.contacts.forEach((c, index) => {
+    utilisateur.contacts.forEach((c) => {
         html += `<div style="background:var(--bg-color); padding:12px; border-radius:8px; margin-top:8px; border-left:3px solid var(--accent); display:flex; justify-content:space-between; align-items:center;">
             <div>
                 <strong>${c.nom}</strong><br>
@@ -142,7 +176,7 @@ function rechercherVoyage() {
     }
     res.innerHTML = `<div style="background:var(--bg-color); padding:15px; border-radius:8px;">
         <h4>✈️ Formalités pour ${pays}</h4>
-        <p class="text" style="margin-top:8px;">• <strong>Passeport :</strong> Valide au moins 6 mois requis.<br>• <strong>Visa :</strong> Consulter l'ambassade ou le consulat de ${pays} pour les exigences actuelles.<br>• <strong>Conseil ELAWS :</strong> Vérifiez les vaccins obligatoires et billets de retour.</p>
+        <p class="text" style="margin-top:8px;">• <strong>Passeport :</strong> Valide au moins 6 mois requis.<br>• <strong>Visa :</strong> Consulter l'ambassade ou le consulat de ${pays}.</p>
     </div>`;
 }
 
@@ -154,8 +188,8 @@ function rechercherBanque() {
         return;
     }
     res.innerHTML = `<div style="background:var(--bg-color); padding:15px; border-radius:8px;">
-        <h4>💳 Obtention Carte Visa / Mastercard (${pays})</h4>
-        <p class="text" style="margin-top:8px;">• <strong>Pièces à fournir :</strong> Pièce d'identité (CNI / Passeport), Justificatif de domicile, Photos d'identité, Dépôt initial minimum.<br>• <strong>Procédure :</strong> Se rendre en agence bancaire locale ou effectuer la demande via l'application de la banque partenaire.</p>
+        <h4>💳 Carte Visa / Mastercard (${pays})</h4>
+        <p class="text" style="margin-top:8px;">• <strong>Pièces à fournir :</strong> Pièce d'identité, Justificatif de domicile, Dépôt initial.</p>
     </div>`;
 }
 
@@ -163,30 +197,15 @@ function convertirDevise() {
     const montant = parseFloat(document.getElementById('montantDevise').value) || 0;
     const source = document.getElementById('deviseSource').value;
     const res = document.getElementById('resultatDevise');
-    
-    let taux = 1;
-    let cible = "EUR";
+    let taux = 1; let cible = "EUR";
     if(source === 'XOF') { taux = 0.0015; cible = "EUR (€)"; }
     else if(source === 'EUR') { taux = 655.957; cible = "FCFA (XOF)"; }
     else if(source === 'USD') { taux = 600.0; cible = "FCFA (XOF)"; }
-    
     const resultat = montant * taux;
     res.innerHTML = `<div style="background:var(--bg-color); padding:15px; border-radius:8px;">
-        <h4>💱 Résultat de la conversion</h4>
+        <h4>💱 Résultat</h4>
         <p class="text" style="margin-top:8px; font-size:16px; font-weight:bold; color:var(--accent);">${montant} ${source} = ${resultat.toFixed(2)} ${cible}</p>
     </div>`;
-}
-
-function toggleElawsChat() {
-    const body = document.getElementById('elawsBody');
-    const icon = document.getElementById('elawsToggleIcon');
-    if(body.style.display === 'none') {
-        body.style.display = 'flex';
-        icon.innerText = '▼';
-    } else {
-        body.style.display = 'none';
-        icon.innerText = '▲';
-    }
 }
 
 function envoyerMessageElaws() {
@@ -206,12 +225,12 @@ function ajouterBulleElaws(txt, exp) {
     const isUser = exp === 'user';
     const div = document.createElement('div');
     div.style.cssText = `margin-bottom:8px; text-align:${isUser ? 'right' : 'left'};`;
-    div.innerHTML = `<span style="display:inline-block; background:${isUser ? 'var(--accent)' : 'var(--card-bg)'}; color:${isUser ? '#0f172a' : 'var(--text-color)'}; padding:8px 12px; border-radius:8px; max-width:90%; word-break:break-word; border:1px solid var(--border-color); text-align:left;"><strong>${isUser ? 'Moi' : 'ELAWS'} :</strong><br>${txt}</span>`;
+    div.innerHTML = `<span style="display:inline-block; background:${isUser ? 'var(--accent)' : 'var(--card-bg)'}; color:${isUser ? '#0f172a' : 'var(--text-color)'}; padding:6px 10px; border-radius:6px; max-width:90%; word-break:break-word; border:1px solid var(--border-color); text-align:left;"><strong>${isUser ? 'Moi' : 'ELAWS'} :</strong><br>${txt}</span>`;
     chat.appendChild(div);
     chat.scrollTop = chat.scrollHeight;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('dashNomUser').innerText = utilisateur.nom || "Mon Ami";
-    ajouterBulleElaws(`Bonjour ${utilisateur.nom || 'ami'} ! Je suis ELAWS, ton assistant universel. Comment puis-je t'aider ?`, 'elaws');
+    ajouterBulleElaws(`Bonjour ${utilisateur.nom || 'ami'} ! Je suis ELAWS.`, 'elaws');
 });
