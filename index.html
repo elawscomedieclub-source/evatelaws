@@ -12,13 +12,13 @@
         <!-- En-tête principal : Menu ☰ à gauche, Titre au centre, Bulle ELAWS en haut à droite -->
         <header class="header">
             <div class="header-left">
-                <button onclick="toggleMenu()" class="menu-btn" aria-label="Menu">☰</button>
+                <button onclick="toggleMenu(event)" class="menu-btn" aria-label="Menu">☰</button>
                 <h1 id="appTitle" style="font-size: 18px;">EVAT & ELAWS</h1>
             </div>
 
             <!-- ELAWS : Bulle en haut à droite avec option message & micro discret -->
             <div id="elawsWidget" class="elaws-widget">
-                <button onclick="toggleElawsChat()" class="elaws-bubble-btn" title="Discuter avec ELAWS">
+                <button onclick="toggleElawsChat(event)" class="elaws-bubble-btn" title="Discuter avec ELAWS">
                     <span>🤖 ELAWS</span>
                 </button>
                 <div id="elawsPopup" class="elaws-popup" style="display: none;">
@@ -27,7 +27,7 @@
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <!-- Petit bouton micro discret -->
                             <button onclick="toggleMicrophone()" id="microBtn" class="micro-btn-discret" title="Parler à ELAWS">🎙️</button>
-                            <button onclick="toggleElawsChat()" style="background:none; border:none; color:var(--text-color); cursor:pointer; font-weight:bold;">✕</button>
+                            <button onclick="toggleElawsChat(event)" style="background:none; border:none; color:var(--text-color); cursor:pointer; font-weight:bold;">✕</button>
                         </div>
                     </div>
                     <div class="elaws-popup-body">

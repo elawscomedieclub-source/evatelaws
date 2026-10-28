@@ -9,7 +9,8 @@ let utilisateur = JSON.parse(localStorage.getItem('evat_profil')) || {
 
 let ecouteVocaleActive = false;
 
-function toggleMenu() {
+function toggleMenu(event) {
+    if (event) event.stopPropagation();
     const sidebar = document.getElementById('sidebar');
     sidebar.classList.toggle('open');
 }
@@ -22,7 +23,8 @@ function switchTab(tabId) {
     if(tabId === 'outils') afficherOutilsDynamiques();
 }
 
-function toggleElawsChat() {
+function toggleElawsChat(event) {
+    if (event) event.stopPropagation();
     const popup = document.getElementById('elawsPopup');
     if(popup.style.display === 'none' || popup.style.display === '') {
         popup.style.display = 'flex';
@@ -39,7 +41,6 @@ function toggleMicrophone() {
     if(ecouteVocaleActive) {
         btn.classList.add('active');
         status.style.display = 'block';
-        // Simulation reconnaissance vocale
         setTimeout(() => {
             if(ecouteVocaleActive) {
                 document.getElementById('elawsInput').value = "Bonjour ELAWS, aide-moi dans mes tâches";
