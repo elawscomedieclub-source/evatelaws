@@ -3,109 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EVAT & ELAWS v30.3</title>
+    <title>EVAT & ELAWS - Écosystème Universel</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.webmanifest">
-    <meta name="theme-color" content="#0f172a">
 </head>
 <body>
     <div id="app">
+        <!-- En-tête principal avec le menu à 3 points (☰) -->
         <header class="header">
-            <h1>EVAT & ELAWS</h1>
-            <button onclick="toggleMenu()" class="menu-btn">☰</button>
+            <h1 id="appTitle">EVAT & ELAWS</h1>
+            <button onclick="toggleMenu()" class="menu-btn" aria-label="Menu">☰</button>
         </header>
 
+        <!-- Menu latéral / Navigation principale -->
         <nav id="sidebar" class="sidebar">
-            <a href="#" onclick="switchTab('accueil')">🏠 Accueil / Dashboard</a>
-            <a href="#" onclick="switchTab('chat')">💬 ELAWS (IA Universelle)</a>
-            <a href="#" onclick="switchTab('outils_metier')">🛠️ Outils Métier</a>
-            <a href="#" onclick="switchTab('convertisseur')">💱 Convertisseur de Devises</a>
-            <a href="#" onclick="switchTab('profil')">⚙️ Profil & Configuration</a>
-            <div style="padding: 15px 20px; margin-top: auto;">
-                <button id="btnInstallerApp" class="btn-action" style="display:none; background:#34d399; color:#0f172a; font-size:14px; padding:10px;">📱 Installer l'Application</button>
+            <div class="sidebar-header">
+                <h3>Navigation</h3>
             </div>
+            <a href="#" onclick="switchTab('dashboard')">📊 Dashboard</a>
+            <a href="#" onclick="switchTab('profil')">👤 Profil & Contacts</a>
+            <a href="#" onclick="switchTab('outils')">🛠️ Outils & Métiers</a>
+            <a href="#" onclick="switchTab('voyage')">✈️ Voyage</a>
+            <a href="#" onclick="switchTab('banque')">💳 Banque & Cartes</a>
+            <a href="#" onclick="switchTab('devises')">💱 Devises</a>
         </nav>
 
+        <!-- Contenu dynamique principal -->
         <main class="content">
-            <div id="tab-accueil" class="tab-content active">
+            <!-- 1. Section Dashboard -->
+            <section id="tab-dashboard" class="tab-content active">
                 <div class="card">
-                    <h2>Bienvenue dans EVAT, <span id="userNameDisplay">Mon Ami</span></h2>
-                    <p class="text">Ton écosystème universel et autonome est prêt. Ton assistant ELAWS est à tes côtés pour t'aider dans tous les domaines, même hors-ligne.</p>
-                    <div style="margin-top:15px; display:flex; flex-direction:column; gap:10px;">
-                        <button class="btn-action" onclick="switchTab('chat')">💬 Parler à ELAWS</button>
-                        <button class="btn-action" style="background:#10b981;" onclick="switchTab('convertisseur')">💱 Convertisseur de Devises</button>
-                        <button id="btnInstallerAccueil" class="btn-action" style="display:none; background:#34d399; color:#0f172a;">📱 Installer EVAT sur mon téléphone</button>
-                    </div>
+                    <h2>Tableau de Bord</h2>
+                    <p class="text">Bienvenue dans ton écosystème, <span id="dashNomUser">Mon Ami</span>.</p>
+                    <div id="dashResume" style="margin-top: 15px;"></div>
                 </div>
-            </div>
+            </section>
 
-            <div id="tab-chat" class="tab-content">
-                <div class="card" style="display:flex; flex-direction:column; height:70vh;">
-                    <h3>💬 Échange avec ELAWS</h3>
-                    <div id="chatMessages" style="flex:1; overflow-y:auto; padding:10px; background:var(--bg-color); border-radius:8px; margin-bottom:10px; border:1px solid var(--border-color);"></div>
-                    <div style="display:flex; gap:8px;">
-                        <input type="text" id="chatInput" class="input" placeholder="Pose n'importe quelle question (cuisine, tech, business)..." style="margin-bottom:0;" onkeypress="if(event.key==='Enter') envoyerMessageElaws()">
-                        <button class="btn-action" onclick="envoyerMessageElaws()" style="width:100px;">Envoyer</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="tab-outils_metier" class="tab-content">
-                <div id="outilsMetierContainer"></div>
-            </div>
-
-            <div id="tab-convertisseur" class="tab-content">
-                <div class="card" style="border-color:#10b981;">
-                    <h3 class="card-title" style="color:#10b981;">💱 Convertisseur de Devises Rapide</h3>
-                    <p class="text">Convertis instantanément tes montants pour tes transactions et calculs au quotidien.</p>
-                    <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
-                        <div style="margin-bottom:10px;">
-                            <label style="display:block; margin-bottom:5px; font-size:14px;">Montant :</label>
-                            <input type="number" id="convMontant" class="input" placeholder="Ex: 10000" value="10000" oninput="calculerDevise()">
-                        </div>
-                        <div style="display:flex; gap:10px; margin-bottom:10px;">
-                            <div style="flex:1;">
-                                <label style="display:block; margin-bottom:5px; font-size:14px;">De :</label>
-                                <select id="convDe" class="input" onchange="calculerDevise()">
-                                    <option value="XOF">FCFA (XOF / XAF)</option>
-                                    <option value="EUR">Euro (EUR)</option>
-                                    <option value="USD">Dollar US (USD)</option>
-                                    <option value="NGN">Naira (NGN)</option>
-                                    <option value="GHS">Cedi (GHS)</option>
-                                </select>
-                            </div>
-                            <div style="flex:1;">
-                                <label style="display:block; margin-bottom:5px; font-size:14px;">Vers :</label>
-                                <select id="convVers" class="input" onchange="calculerDevise()">
-                                    <option value="EUR">Euro (EUR)</option>
-                                    <option value="XOF">FCFA (XOF / XAF)</option>
-                                    <option value="USD">Dollar US (USD)</option>
-                                    <option value="NGN">Naira (NGN)</option>
-                                    <option value="GHS">Cedi (GHS)</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div id="convResultat" style="background:var(--card-bg); padding:15px; border-radius:8px; font-size:18px; font-weight:bold; color:#10b981; text-align:center; border:1px solid #10b981;">
-                            Résultat : --
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="tab-profil" class="tab-content">
+            <!-- 2. Section Profil & Contacts -->
+            <section id="tab-profil" class="tab-content">
                 <div class="card">
-                    <h3>⚙️ Configuration du Profil</h3>
-                    <div style="margin-top:15px;">
-                        <label style="display:block; margin-bottom:5px;">Nom :</label>
-                        <input type="text" id="profilNom" class="input" placeholder="Ton nom">
-                        <label style="display:block; margin-bottom:5px;">Métier / Activité unique :</label>
-                        <input type="text" id="profilMetier" class="input" placeholder="Ex: Développeur, Commerçant, Couturier...">
-                        <button class="btn-action" style="margin-top:10px;" onclick="sauvegarderProfil()">💾 Enregistrer</button>
+                    <h2>Gestion du Profil & Contacts</h2>
+                    <p class="text">Configure ton profil et gère ton répertoire avec appels GSM et Internet.</p>
+                    
+                    <div class="form-group">
+                        <label>Nom :</label>
+                        <input type="text" id="inputNom" class="input" placeholder="Ton nom...">
+                        
+                        <label>Type de Profil :</label>
+                        <select id="selectTypeProfil" class="input" onchange="changerTypeProfil()">
+                            <option value="adulte">Adulte (Travailleurs, non-travailleurs, lettrés/illettrés)</option>
+                            <option value="enfant">Enfant (Élèves, non scolarisés)</option>
+                        </select>
+
+                        <div id="sousProfilContainer" style="margin-bottom:10px;">
+                            <!-- Dynamique selon Adulte/Enfant -->
+                        </div>
+
+                        <label>Corps de Métier(s) / Activité(s) (Séparés par des virgules) :</label>
+                        <input type="text" id="inputMetier" class="input" placeholder="Ex: Commerçant, Développeur, Artisan...">
+                        
+                        <button class="btn-action" onclick="sauvegarderProfilBase()">Enregistrer le Profil</button>
                     </div>
                 </div>
-            </div>
+
+                <!-- Sous-section Contacts & Appels -->
+                <div class="card" style="margin-top: 20px;">
+                    <h3>📇 Carnet de Contacts & Appels</h3>
+                    <p class="text">Enregistre tes contacts pour appeler en GSM (numéro) ou par Internet (e-mail).</p>
+                    <div class="form-group">
+                        <input type="text" id="contactNom" class="input" placeholder="Nom du contact...">
+                        <input type="tel" id="contactTel" class="input" placeholder="Numéro GSM (ex: +228...)">
+                        <input type="email" id="contactEmail" class="input" placeholder="Adresse E-mail (pour appel réseau)...">
+                        <button class="btn-action" onclick="ajouterContact()">Ajouter le contact</button>
+                    </div>
+                    <div id="listeContacts" style="margin-top: 15px;"></div>
+                </div>
+            </section>
+
+            <!-- 3. Section Outils (Multi-métiers) -->
+            <section id="tab-outils" class="tab-content">
+                <div class="card">
+                    <h2>Outils & Métiers</h2>
+                    <p class="text">Outils dynamiques rattachés à tes corps de métier enregistrés.</p>
+                    <div id="zoneOutilsDynamiques">
+                        <p class="text" style="color:var(--text-secondary);">Enregistre tes métiers dans ton profil pour afficher tes outils.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Section Voyage (Par pays) -->
+            <section id="tab-voyage" class="tab-content">
+                <div class="card">
+                    <h2>Espace Voyage</h2>
+                    <p class="text">Indique ta destination pour connaître les formalités de passeport et visa.</p>
+                    <input type="text" id="inputPaysVoyage" class="input" placeholder="Entrez le pays (ex: Togo, France, Canada...)">
+                    <button class="btn-action" onclick="rechercherVoyage()">Rechercher les formalités</button>
+                    <div id="resultatVoyage" style="margin-top:15px;"></div>
+                </div>
+            </section>
+
+            <!-- 5. Section Banque (Cartes Visa/Mastercard) -->
+            <section id="tab-banque" class="tab-content">
+                <div class="card">
+                    <h2>Banque & Cartes Bancaires</h2>
+                    <p class="text">Pièces à fournir et procédures pour obtenir une carte bancaire selon le pays.</p>
+                    <input type="text" id="inputPaysBanque" class="input" placeholder="Entrez le pays ou la banque...">
+                    <button class="btn-action" onclick="rechercherBanque()">Voir les pièces à fournir</button>
+                    <div id="resultatBanque" style="margin-top:15px;"></div>
+                </div>
+            </section>
+
+            <!-- 6. Section Devises -->
+            <section id="tab-devises" class="tab-content">
+                <div class="card">
+                    <h2>Échange & Devises</h2>
+                    <p class="text">Reconnaissance et conversion rapide des devises.</p>
+                    <input type="number" id="montantDevise" class="input" placeholder="Montant à convertir...">
+                    <select id="deviseSource" class="input">
+                        <option value="XOF">FCFA (XOF / XAF)</option>
+                        <option value="EUR">Euro (€)</option>
+                        <option value="USD">Dollar US ($)</option>
+                    </select>
+                    <button class="btn-action" onclick="convertirDevise()">Calculer</button>
+                    <div id="resultatDevise" style="margin-top:15px;"></div>
+                </div>
+            </section>
         </main>
+
+        <!-- ELAWS : Assistant IA discret dans un coin -->
+        <div id="elawsWidget" class="elaws-widget">
+            <div class="elaws-header" onclick="toggleElawsChat()">
+                <span>🤖 ELAWS (Assistant)</span>
+                <span id="elawsToggleIcon">▲</span>
+            </div>
+            <div id="elawsBody" class="elaws-body">
+                <div id="elawsMessages" class="elaws-messages"></div>
+                <div class="elaws-input-area">
+                    <input type="text" id="elawsInput" placeholder="Pose ta question..." onkeypress="if(event.key==='Enter') envoyerMessageElaws()">
+                    <button onclick="envoyerMessageElaws()">Envoyer</button>
+                </div>
+            </div>
+        </div>
     </div>
+
     <script src="elaws.js"></script>
     <script src="app.js"></script>
 </body>

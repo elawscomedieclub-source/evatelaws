@@ -1,35 +1,11 @@
-let utilisateurActif = JSON.parse(localStorage.getItem('evat_profil')) || {
+
+let utilisateur = JSON.parse(localStorage.getItem('evat_profil')) || {
     nom: "Kodjo",
-    metierUnique: "Développeur & Entrepreneur"
+    type: "adulte",
+    sousType: "Travailleur",
+    metiers: ["Entrepreneur"],
+    contacts: []
 };
-
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    const btnMenu = document.getElementById('btnInstallerApp');
-    const btnAccueil = document.getElementById('btnInstallerAccueil');
-    if(btnMenu) btnMenu.style.display = 'block';
-    if(btnAccueil) btnAccueil.style.display = 'block';
-});
-
-function declencherInstallation() {
-    if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-            deferredPrompt = null;
-        });
-    } else {
-        alert("Pour installer l'application :\n1. Appuie sur les 3 points en haut à droite de ton navigateur.\n2. Sélectionne 'Ajouter à l'écran d'accueil' ou 'Installer l'application'.");
-    }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    const btnMenu = document.getElementById('btnInstallerApp');
-    const btnAccueil = document.getElementById('btnInstallerAccueil');
-    if(btnMenu) btnMenu.addEventListener('click', declencherInstallation);
-    if(btnAccueil) btnAccueil.addEventListener('click', declencherInstallation);
-});
 
 function toggleMenu() {
     document.getElementById('sidebar').classList.toggle('open');
@@ -39,103 +15,203 @@ function switchTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.getElementById('tab-' + tabId).classList.add('active');
     document.getElementById('sidebar').classList.remove('open');
-    if(tabId === 'outils_metier') rendreOutilsMetier();
-    if(tabId === 'convertisseur') calculerDevise();
+    if(tabId === 'profil') chargerProfilInterface();
+    if(tabId === 'outils') afficherOutilsDynamiques();
 }
 
-function sauvegarderProfil() {
-    const nomInput = document.getElementById('profilNom').value.trim();
-    const metierInput = document.getElementById('profilMetier').value.trim();
-    if(nomInput) utilisateurActif.nom = nomInput;
-    if(metierInput) utilisateurActif.metierUnique = metierInput;
-    localStorage.setItem('evat_profil', JSON.stringify(utilisateurActif));
-    document.getElementById('userNameDisplay').innerText = utilisateurActif.nom;
-    alert("Profil enregistré avec succès !");
-    switchTab('accueil');
+function changerTypeProfil() {
+    const type = document.getElementById('selectTypeProfil').value;
+    const container = document.getElementById('sousProfilContainer');
+    if(type === 'adulte') {
+        container.innerHTML = `
+            <label>Situation Adulte :</label>
+            <select id="selectSousProfil" class="input">
+                <option value="Travailleur">Travailleur (Formel / Indépendant)</option>
+                <option value="Non-travailleur">En recherche / Non actif</option>
+                <option value="Illettre">Accompagnement visuel & vocal (Illettré)</option>
+            </select>
+        `;
+    } else {
+        container.innerHTML = `
+            <label>Situation Enfant :</label>
+            <select id="selectSousProfil" class="input">
+                <option value="Scolarise">Élève / Scolarisé</option>
+                <option value="Non-scolarise">Non scolarisé / Apprentissage pratique</option>
+            </select>
+        `;
+    }
 }
 
-function rendreOutilsMetier() {
-    const container = document.getElementById('outilsMetierContainer');
-    let html = `
-        <div class="card" style="border-color:#38bdf8;">
-            <h3 class="card-title" style="color:#38bdf8;">🛠️ Espace Activité & Gestion — ${utilisateurActif.metierUnique}</h3>
-            <p class="text">Gère tes projets, notes et tâches professionnelles en toute simplicité et en mode hors-ligne.</p>
-            <div style="background:var(--bg-color); padding:15px; border-radius:10px; margin-bottom:15px; border:1px solid var(--border-color);">
-                <input type="text" id="tacheTitre" class="input" placeholder="Intitulé de la tâche ou du projet *" style="margin-bottom:8px;">
-                <textarea id="tacheDetails" class="input" rows="3" placeholder="Détails, notes ou prix..." style="resize:none; margin-bottom:10px;"></textarea>
-                <button class="btn-action" onclick="ajouterTacheMetier()">➕ Enregistrer dans l'activité</button>
-            </div>
-            <h4 style="margin-bottom:8px;">📋 Historique de l'activité :</h4>
-            <div id="listeTachesMetier"></div>
-        </div>
-    `;
-    container.innerHTML = html;
-    afficherTachesMetier();
+function chargerProfilInterface() {
+    document.getElementById('inputNom').value = utilisateur.nom || "";
+    document.getElementById('selectTypeProfil').value = utilisateur.type || "adulte";
+    changerTypeProfil();
+    if(document.getElementById('selectSousProfil') && utilisateur.sousType) {
+        document.getElementById('selectSousProfil').value = utilisateur.sousType;
+    }
+    document.getElementById('inputMetier').value = (utilisateur.metiers || []).join(', ');
+    afficherContacts();
 }
 
-function ajouterTacheMetier() {
-    const titre = document.getElementById('tacheTitre').value.trim();
-    const details = document.getElementById('tacheDetails').value.trim();
-    if(!titre) { alert("Veuillez saisir un intitulé."); return; }
-    if(!utilisateurActif.taches) utilisateurActif.taches = [];
-    utilisateurActif.taches.unshift({ titre, details, date: new Date().toLocaleDateString() });
-    localStorage.setItem('evat_profil', JSON.stringify(utilisateurActif));
-    document.getElementById('tacheTitre').value = '';
-    document.getElementById('tacheDetails').value = '';
-    afficherTachesMetier();
+function sauvegarderProfilBase() {
+    utilisateur.nom = document.getElementById('inputNom').value.trim() || "Utilisateur";
+    utilisateur.type = document.getElementById('selectTypeProfil').value;
+    const sousProfilEl = document.getElementById('selectSousProfil');
+    if(sousProfilEl) utilisateur.sousType = sousProfilEl.value;
+    
+    const metiersBruts = document.getElementById('inputMetier').value.trim();
+    utilisateur.metiers = metiersBruts ? metiersBruts.split(',').map(m => m.trim()).filter(m => m) : ["Général"];
+    
+    localStorage.setItem('evat_profil', JSON.stringify(utilisateur));
+    document.getElementById('dashNomUser').innerText = utilisateur.nom;
+    alert("Profil et métiers enregistrés avec succès !");
+    switchTab('dashboard');
 }
 
-function afficherTachesMetier() {
-    const listeDiv = document.getElementById('listeTachesMetier');
-    if(!listeDiv) return;
-    if(!utilisateurActif.taches || utilisateurActif.taches.length === 0) {
-        listeDiv.innerHTML = '<p style="color:var(--text-secondary);">Aucune tâche enregistrée.</p>';
+function ajouterContact() {
+    const nom = document.getElementById('contactNom').value.trim();
+    const tel = document.getElementById('contactTel').value.trim();
+    const email = document.getElementById('contactEmail').value.trim();
+    if(!nom || (!tel && !email)) {
+        alert("Veuillez entrer au moins un nom et un moyen de contact (téléphone ou e-mail).");
+        return;
+    }
+    if(!utilisateur.contacts) utilisateur.contacts = [];
+    utilisateur.contacts.push({ nom, tel, email });
+    localStorage.setItem('evat_profil', JSON.stringify(utilisateur));
+    
+    document.getElementById('contactNom').value = '';
+    document.getElementById('contactTel').value = '';
+    document.getElementById('contactEmail').value = '';
+    afficherContacts();
+}
+
+function afficherContacts() {
+    const div = document.getElementById('listeContacts');
+    if(!utilisateur.contacts || utilisateur.contacts.length === 0) {
+        div.innerHTML = '<p class="text">Aucun contact enregistré.</p>';
         return;
     }
     let html = '';
-    utilisateurActif.taches.forEach((t) => {
-        html += `<div style="background:var(--bg-color); padding:10px; border-radius:8px; margin-bottom:8px; border-left:3px solid var(--accent);"><strong>📌 ${t.titre}</strong> (${t.date})<br><p style="margin:5px 0 0 0; color:var(--text-secondary);">${t.details || 'Aucun détail'}</p></div>`;
+    utilisateur.contacts.forEach((c, index) => {
+        html += `<div style="background:var(--bg-color); padding:12px; border-radius:8px; margin-top:8px; border-left:3px solid var(--accent); display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <strong>${c.nom}</strong><br>
+                <span class="text" style="font-size:13px; margin-bottom:0;">📱 ${c.tel || 'Pas de numéro'} | ✉️ ${c.email || 'Pas d'e-mail'}</span>
+            </div>
+            <div style="display:flex; gap:6px;">
+                ${c.tel ? `<a href="tel:${c.tel}" class="btn-action" style="padding:6px 10px; font-size:12px; text-decoration:none;">📞 GSM</a>` : ''}
+                ${c.email ? `<button onclick="appelerReseau('${c.email}')" class="btn-action" style="padding:6px 10px; font-size:12px; background:var(--success); color:#fff;">🌐 ELAWS</button>` : ''}
+            </div>
+        </div>`;
     });
-    listeDiv.innerHTML = html;
+    div.innerHTML = html;
 }
 
-function calculerDevise() {
-    const montant = parseFloat(document.getElementById('convMontant').value) || 0;
-    const de = document.getElementById('convDe').value;
-    const vers = document.getElementById('convVers').value;
-    const tauxEnEuros = { 'EUR': 1.0, 'XOF': 1 / 655.957, 'USD': 1 / 1.08, 'NGN': 1 / 1650, 'GHS': 1 / 14.5 };
-    const enEuros = montant * (tauxEnEuros[de] || 1);
-    const tauxCible = { 'EUR': 1.0, 'XOF': 655.957, 'USD': 1.08, 'NGN': 1650, 'GHS': 14.5 };
-    const resultat = enEuros * (tauxCible[vers] || 1);
-    document.getElementById('convResultat').innerText = `Résultat : ${resultat.toLocaleString(undefined, {maximumFractionDigits: 2})} ${vers}`;
+function appelerReseau(email) {
+    alert(`Lancement de l'appel Internet via ELAWS vers : ${email}`);
+}
+
+function afficherOutilsDynamiques() {
+    const zone = document.getElementById('zoneOutilsDynamiques');
+    if(!utilisateur.metiers || utilisateur.metiers.length === 0) {
+        zone.innerHTML = '<p class="text">Aucun métier enregistré dans ton profil.</p>';
+        return;
+    }
+    let html = '';
+    utilisateur.metiers.forEach(metier => {
+        html += `<div class="card" style="border-left: 4px solid var(--accent); margin-bottom:15px;">
+            <h3>🛠️ Outils pour : ${metier}</h3>
+            <p class="text">Espace de travail dédié et outils pratiques adaptés.</p>
+            <input type="text" class="input" placeholder="Note rapide pour ${metier}..." onchange="sauvegarderNoteMetier('${metier}', this.value)">
+        </div>`;
+    });
+    zone.innerHTML = html;
+}
+
+function sauvegarderNoteMetier(metier, note) {
+    alert(`Note enregistrée pour ${metier} : ${note}`);
+}
+
+function rechercherVoyage() {
+    const pays = document.getElementById('inputPaysVoyage').value.trim();
+    const res = document.getElementById('resultatVoyage');
+    if(!pays) {
+        res.innerHTML = '<p class="text" style="color:#f87171;">Veuillez entrer un pays.</p>';
+        return;
+    }
+    res.innerHTML = `<div style="background:var(--bg-color); padding:15px; border-radius:8px;">
+        <h4>✈️ Formalités pour ${pays}</h4>
+        <p class="text" style="margin-top:8px;">• <strong>Passeport :</strong> Valide au moins 6 mois requis.<br>• <strong>Visa :</strong> Consulter l'ambassade ou le consulat de ${pays} pour les exigences actuelles.<br>• <strong>Conseil ELAWS :</strong> Vérifiez les vaccins obligatoires et billets de retour.</p>
+    </div>`;
+}
+
+function rechercherBanque() {
+    const pays = document.getElementById('inputPaysBanque').value.trim();
+    const res = document.getElementById('resultatBanque');
+    if(!pays) {
+        res.innerHTML = '<p class="text" style="color:#f87171;">Veuillez entrer un pays ou une banque.</p>';
+        return;
+    }
+    res.innerHTML = `<div style="background:var(--bg-color); padding:15px; border-radius:8px;">
+        <h4>💳 Obtention Carte Visa / Mastercard (${pays})</h4>
+        <p class="text" style="margin-top:8px;">• <strong>Pièces à fournir :</strong> Pièce d'identité (CNI / Passeport), Justificatif de domicile, Photos d'identité, Dépôt initial minimum.<br>• <strong>Procédure :</strong> Se rendre en agence bancaire locale ou effectuer la demande via l'application de la banque partenaire.</p>
+    </div>`;
+}
+
+function convertirDevise() {
+    const montant = parseFloat(document.getElementById('montantDevise').value) || 0;
+    const source = document.getElementById('deviseSource').value;
+    const res = document.getElementById('resultatDevise');
+    
+    let taux = 1;
+    let cible = "EUR";
+    if(source === 'XOF') { taux = 0.0015; cible = "EUR (€)"; }
+    else if(source === 'EUR') { taux = 655.957; cible = "FCFA (XOF)"; }
+    else if(source === 'USD') { taux = 600.0; cible = "FCFA (XOF)"; }
+    
+    const resultat = montant * taux;
+    res.innerHTML = `<div style="background:var(--bg-color); padding:15px; border-radius:8px;">
+        <h4>💱 Résultat de la conversion</h4>
+        <p class="text" style="margin-top:8px; font-size:16px; font-weight:bold; color:var(--accent);">${montant} ${source} = ${resultat.toFixed(2)} ${cible}</p>
+    </div>`;
+}
+
+function toggleElawsChat() {
+    const body = document.getElementById('elawsBody');
+    const icon = document.getElementById('elawsToggleIcon');
+    if(body.style.display === 'none') {
+        body.style.display = 'flex';
+        icon.innerText = '▼';
+    } else {
+        body.style.display = 'none';
+        icon.innerText = '▲';
+    }
 }
 
 function envoyerMessageElaws() {
-    const input = document.getElementById('chatInput');
-    const texte = input.value.trim();
-    if(!texte) return;
-    ajouterBulleChat(texte, 'user');
+    const input = document.getElementById('elawsInput');
+    const txt = input.value.trim();
+    if(!txt) return;
+    ajouterBulleElaws(txt, 'user');
     input.value = '';
     setTimeout(() => {
-        const reponse = ELAWS_BRAIN.repondre(utilisateurActif, texte);
-        ajouterBulleChat(reponse, 'elaws');
-    }, 300);
+        const rep = ELAWS_BRAIN.repondre(utilisateur, txt);
+        ajouterBulleElaws(rep, 'elaws');
+    }, 400);
 }
 
-function ajouterBulleChat(texte, expediteur) {
-    const chat = document.getElementById('chatMessages');
-    const isUser = expediteur === 'user';
+function ajouterBulleElaws(txt, exp) {
+    const chat = document.getElementById('elawsMessages');
+    const isUser = exp === 'user';
     const div = document.createElement('div');
-    div.style.cssText = `margin-bottom:10px; display:flex; justify-content:${isUser ? 'flex-end' : 'flex-start'};`;
-    div.innerHTML = `<div style="background:${isUser ? 'var(--accent)' : 'var(--card-bg)'}; color:${isUser ? '#0f172a' : 'var(--text-color)'}; padding:10px 14px; border-radius:10px; max-width:80%; word-break:break-word; border:1px solid var(--border-color); white-space:pre-line;"><strong>${isUser ? 'Moi' : 'ELAWS'} :</strong><br>${texte}</div>`;
+    div.style.cssText = `margin-bottom:8px; text-align:${isUser ? 'right' : 'left'};`;
+    div.innerHTML = `<span style="display:inline-block; background:${isUser ? 'var(--accent)' : 'var(--card-bg)'}; color:${isUser ? '#0f172a' : 'var(--text-color)'}; padding:8px 12px; border-radius:8px; max-width:90%; word-break:break-word; border:1px solid var(--border-color); text-align:left;"><strong>${isUser ? 'Moi' : 'ELAWS'} :</strong><br>${txt}</span>`;
     chat.appendChild(div);
     chat.scrollTop = chat.scrollHeight;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('userNameDisplay').innerText = utilisateurActif.nom;
-    document.getElementById('profilNom').value = utilisateurActif.nom;
-    document.getElementById('profilMetier').value = utilisateurActif.metierUnique;
-    ajouterBulleChat(`Bonjour ${utilisateurActif.nom} ! C'est ELAWS, ton assistant universel. Comment puis-je t'aider aujourd'hui ?`, 'elaws');
-    calculerDevise();
+    document.getElementById('dashNomUser').innerText = utilisateur.nom || "Mon Ami";
+    ajouterBulleElaws(`Bonjour ${utilisateur.nom || 'ami'} ! Je suis ELAWS, ton assistant universel. Comment puis-je t'aider ?`, 'elaws');
 });

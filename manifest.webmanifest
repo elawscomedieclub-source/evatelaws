@@ -1,15 +1,1 @@
-{
-  "name": "EVAT & ELAWS",
-  "short_name": "EVAT",
-  "start_url": "index.html",
-  "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#0f172a",
-  "icons": [
-    {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%2338bdf8'/><text x='50%' y='55%' font-size='220' font-weight='bold' fill='%230f172a' text-anchor='middle' dominant-baseline='middle'>E</text></svg>",
-      "sizes": "192x192 512x512",
-      "type": "image/svg+xml"
-    }
-  ]
-}
+{"name": "EVAT & ELAWS", "short_name": "EVAT", "start_url": "index.html", "display": "standalone", "background_color": "#0f172a", "theme_color": "#38bdf8"}
