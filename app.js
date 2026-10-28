@@ -3,22 +3,91 @@ let utilisateur = JSON.parse(localStorage.getItem('evat_profil')) || {
     nom: "Kodjo Marceline",
     type: "adulte",
     sousType: "Travailleur",
-    metiers: ["Entrepreneur / Développeur"],
-    contacts: []
+    metiers: ["Entrepreneur", "Développeur Web"],
+    contacts: [
+        { nom: "Service Client ELAWS", tel: "+22898231402", email: "support@evat-elaws.net" }
+    ],
+    habitudes: {
+        localisationActuelle: "Lomé, Togo"
+    }
 };
 
 let ecouteVocaleActive = false;
+let appelEnCoursInterval = null;
+let secondesAppel = 0;
 
+// --- MODULE DE TRADUCTION TEMPS RÉEL EN COURS D'APPEL ---
+function demarrerAppelTraduit() {
+    const correspondant = document.getElementById('appelCorrespondant').value.trim() || "Correspondant";
+    const langue = document.getElementById('langueInterlocuteur').value;
+    const ecran = document.getElementById('ecranAppelLive');
+    const flux = document.getElementById('fluxTraductionLive');
+    
+    ecran.style.display = 'block';
+    flux.innerHTML = `<div style="color:var(--success);">📞 Connexion établie avec ${correspondant} (Langue : ${langue})...</div>`;
+    
+    secondesAppel = 0;
+    if(appelEnCoursInterval) clearInterval(appelEnCoursInterval);
+    
+    appelEnCoursInterval = setInterval(() => {
+        secondesAppel++;
+        const m = String(Math.floor(secondesAppel / 60)).padStart(2, '0');
+        const s = String(secondesAppel % 60).padStart(2, '0');
+        document.getElementById('chronometreAppel').innerText = `${m}:${s}`;
+        
+        // Simulation d'interventions en direct d'ELAWS traduisant le dialecte en temps réel
+        if(secondesAppel === 3) {
+            ajouterLigneFluxLive(`🔊 [Interlocuteur (${langue})] : "Mia ɖo ɣeyiɣi nyui aɖe" -> 🇫🇷 <em>Traduction ELAWS : "Nous avons passé un très bon moment."</em>`);
+        } else if(secondesAppel === 7) {
+            ajouterLigneFluxLive(`💡 <strong>Résumé vocal ELAWS :</strong> L'interlocuteur exprime sa satisfaction et confirme l'entente.`);
+        } else if(secondesAppel === 12) {
+            ajouterLigneFluxLive(`🔊 [Interlocuteur (${langue})] : "Wò ŋɔŋlɔwo dzea ŋunye" -> 🇫🇷 <em>Traduction ELAWS : "Vos propositions me conviennent."</em>`);
+        }
+    }, 1500);
+}
+
+function ajouterLigneFluxLive(htmlTexte) {
+    const flux = document.getElementById('fluxTraductionLive');
+    const div = document.createElement('div');
+    div.style.cssText = "margin-bottom:4px; border-left:2px solid var(--accent); padding-left:8px; font-size:12.5px;";
+    div.innerHTML = htmlTexte;
+    flux.appendChild(div);
+    flux.scrollTop = flux.scrollHeight;
+}
+
+function raccrocherAppel() {
+    if(appelEnCoursInterval) clearInterval(appelEnCoursInterval);
+    const flux = document.getElementById('fluxTraductionLive');
+    flux.innerHTML += `<div style="color:var(--danger); margin-top:8px;">⏹️ Appel terminé. Résumé des échanges enregistré par ELAWS.</div>`;
+    setTimeout(() => {
+        document.getElementById('ecranAppelLive').style.display = 'none';
+    }, 4000);
+}
+
+// --- CAPTEURS ET PROACTIVITE ---
+function initCapteursEtProactivite() {
+    const heure = new Date().getHours();
+    let momentJournee = "journée";
+    if (heure >= 5 && heure < 12) momentJournee = "matinée";
+    else if (heure >= 12 && heure < 18) momentJournee = "après-midi";
+    else momentJournee = "soirée";
+
+    const box = document.getElementById('proactiveSuggestionBox');
+    const textEl = document.getElementById('proactiveText');
+    if(box && textEl) {
+        textEl.innerText = `En cette ${momentJournee}, ELAWS est configuré pour traduire en direct tes appels téléphoniques et dialectes en temps réel.`;
+        box.style.display = 'block';
+    }
+}
+
+// --- GESTION DES MENUS ET ONGLETS ---
 function toggleMenu(event) {
     if (event) event.stopPropagation();
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('appOverlay');
     const isOpen = sidebar.classList.toggle('open');
-    if (isOpen) {
-        overlay.classList.add('active');
-    } else {
-        overlay.classList.remove('active');
-    }
+    if (isOpen) overlay.classList.add('active');
+    else overlay.classList.remove('active');
 }
 
 function fermerTousLesMenus() {
@@ -36,7 +105,7 @@ function switchTab(tabId) {
     if(link) link.classList.add('active');
     
     fermerTousLesMenus();
-    
+
     if(tabId === 'profil') chargerProfilInterface();
     if(tabId === 'outils') afficherOutilsDynamiques();
     if(tabId === 'dashboard') actualiserDashboard();
@@ -65,7 +134,7 @@ function toggleMicrophone() {
         status.style.display = 'block';
         setTimeout(() => {
             if(ecouteVocaleActive) {
-                document.getElementById('elawsInput').value = "Bonjour ELAWS, peux-tu m'assister ?";
+                document.getElementById('elawsInput').value = "ELAWS, active la traduction live pour mon prochain appel";
                 toggleMicrophone();
                 envoyerMessageElaws();
             }
@@ -121,14 +190,12 @@ function sauvegarderProfilBase() {
     
     localStorage.setItem('evat_profil', JSON.stringify(utilisateur));
     actualiserDashboard();
-    alert("Profil, situation et métiers enregistrés avec succès !");
+    alert("Profil et métiers enregistrés avec succès !");
     switchTab('dashboard');
 }
 
 function actualiserDashboard() {
     document.getElementById('dashNomUser').innerText = utilisateur.nom || "Mon Ami";
-    const typeLabel = utilisateur.type === 'adulte' ? `Adulte (${utilisateur.sousType || 'Travailleur'})` : `Enfant (${utilisateur.sousType || 'Scolarisé'})`;
-    document.getElementById('dashStatProfil').innerText = typeLabel;
     const nbMetiers = utilisateur.metiers ? utilisateur.metiers.length : 0;
     document.getElementById('dashStatMetiers').innerText = `${nbMetiers} Métier${nbMetiers > 1 ? 's' : ''}`;
     const nbContacts = utilisateur.contacts ? utilisateur.contacts.length : 0;
@@ -144,7 +211,7 @@ function ajouterContact() {
     const email = document.getElementById('contactEmail').value.trim();
     
     if(!nom || (!tel && !email)) {
-        alert("Veuillez renseigner un nom et au moins un moyen de contact (numéro GSM ou e-mail).");
+        alert("Veuillez renseigner un nom et au moins un moyen de contact.");
         return;
     }
     if(!utilisateur.contacts) utilisateur.contacts = [];
@@ -161,7 +228,7 @@ function ajouterContact() {
 function afficherContacts() {
     const div = document.getElementById('listeContacts');
     if(!utilisateur.contacts || utilisateur.contacts.length === 0) {
-        div.innerHTML = '<p class="text">Aucun contact enregistré pour l\'instant.</p>';
+        div.innerHTML = '<p class="text">Aucun contact enregistré.</p>';
         return;
     }
     let html = '';
@@ -173,7 +240,6 @@ function afficherContacts() {
             </div>
             <div style="display:flex; gap:6px; flex-shrink:0;">
                 ${c.tel ? `<a href="tel:${c.tel}" class="btn-action" style="padding:6px 12px; font-size:11px; text-decoration:none;" title="Appel GSM direct">📞 GSM</a>` : ''}
-                ${c.email ? `<button onclick="appelerReseau('${c.email}')" class="btn-action" style="padding:6px 12px; font-size:11px; background:var(--success); color:#fff;" title="Appel réseau ELAWS">🌐 Réseau</button>` : ''}
                 <button onclick="supprimerContact(${index})" style="background:var(--card-hover); border:1px solid var(--border-color); color:var(--danger); border-radius:6px; padding:6px 8px; cursor:pointer; font-size:11px;" title="Supprimer">🗑️</button>
             </div>
         </div>`;
@@ -182,17 +248,12 @@ function afficherContacts() {
 }
 
 function supprimerContact(index) {
-    if(confirm("Voulez-vous supprimer ce contact ?")) {
+    if(confirm("Supprimer ce contact ?")) {
         utilisateur.contacts.splice(index, 1);
         localStorage.setItem('evat_profil', JSON.stringify(utilisateur));
         afficherContacts();
         actualiserDashboard();
     }
-}
-
-function appelerReseau(email) {
-    alert(`🌐 Connexion Écosystème ELAWS :
-L'appel Internet chiffré a été initié avec succès vers l'adresse : ${email}`);
 }
 
 function afficherOutilsDynamiques() {
@@ -204,91 +265,33 @@ function afficherOutilsDynamiques() {
     let html = '';
     utilisateur.metiers.forEach(metier => {
         html += `<div class="card" style="border-left: 4px solid var(--accent); margin-bottom:15px; background:var(--bg-color);">
-            <h3 style="color:var(--accent); margin-bottom:6px;">🛠️ Espace Outils : ${metier}</h3>
-            <p class="text" style="font-size:13px;">Outils de travail, notes et calculateurs instantanés pour ${metier}.</p>
-            <div class="form-group" style="margin-top:10px;">
-                <label style="font-size:12px;">Notes / Tâches en cours :</label>
-                <input type="text" class="input" placeholder="Ajouter une note pour ${metier}..." onchange="sauvegarderNoteMetier('${metier}', this.value)">
-            </div>
+            <h3 style="color:var(--accent); margin-bottom:6px;">🛠️ Outils Actifs : ${metier}</h3>
+            <p class="text" style="font-size:13px;">Espace de travail optimisé pour ${metier}.</p>
         </div>`;
     });
     zone.innerHTML = html;
 }
 
-function sauvegarderNoteMetier(metier, note) {
-    if(note.trim()) {
-        alert(`Note enregistrée avec succès pour le métier : ${metier} !`);
-    }
-}
-
 function rechercherVoyage() {
     const pays = document.getElementById('inputPaysVoyage').value.trim();
     const res = document.getElementById('resultatVoyage');
-    if(!pays) {
-        res.innerHTML = '<p class="text" style="color:var(--danger);">Veuillez entrer un pays valide.</p>';
-        return;
-    }
-    res.innerHTML = `<div style="background:var(--bg-color); padding:16px; border-radius:12px; border:1px solid var(--border-color);">
-        <h4 style="color:var(--accent); margin-bottom:8px;">✈️ Exigences & Formalités pour : ${pays}</h4>
-        <p class="text" style="margin-bottom:6px; font-size:13px;">• <strong>Passeport :</strong> Validité minimale de 6 mois exigée à la date d'entrée.</p>
-        <p class="text" style="margin-bottom:6px; font-size:13px;">• <strong>Visa & Autorisations :</strong> Vérifier auprès des services consulaires officiels de ${pays} selon votre nationalité.</p>
-        <p class="text" style="margin-bottom:0; font-size:13px; color:var(--success);">• <strong>Assistance ELAWS :</strong> Pensez à regrouper vos justificatifs d'hébergement et billets retour.</p>
-    </div>`;
+    if(!pays) { res.innerHTML = '<p class="text" style="color:var(--danger);">Entrez un pays.</p>'; return; }
+    res.innerHTML = `<div style="background:var(--bg-color); padding:15px; border-radius:8px;"><h4>✈️ Formalités (${pays})</h4><p class="text" style="margin-top:8px;">Passeport valide 6 mois minimum.</p></div>`;
 }
 
 function rechercherBanque() {
     const pays = document.getElementById('inputPaysBanque').value.trim();
     const res = document.getElementById('resultatBanque');
-    if(!pays) {
-        res.innerHTML = '<p class="text" style="color:var(--danger);">Veuillez entrer un pays ou une institution financière.</p>';
-        return;
-    }
-    res.innerHTML = `<div style="background:var(--bg-color); padding:16px; border-radius:12px; border:1px solid var(--border-color);">
-        <h4 style="color:var(--accent); margin-bottom:8px;">💳 Obtention Carte Bancaire (Visa / Mastercard) - ${pays}</h4>
-        <p class="text" style="margin-bottom:6px; font-size:13px;">• <strong>Pièces justificatives requises :</strong> Pièce d'identité officielle (CNI ou Passeport), Justificatif de domicile récent, Photos d'identité.</p>
-        <p class="text" style="margin-bottom:0; font-size:13px;">• <strong>Dépôt initial :</strong> Requis selon les grilles tarifaires de la banque locale choisie.</p>
-    </div>`;
+    if(!pays) { res.innerHTML = '<p class="text" style="color:var(--danger);">Entrez un pays.</p>'; return; }
+    res.innerHTML = `<div style="background:var(--bg-color); padding:15px; border-radius:8px;"><h4>💳 Banque (${pays})</h4><p class="text" style="margin-top:8px;">CNI, Justificatif de domicile, Dépôt.</p></div>`;
 }
 
 function convertirDevise() {
     const montant = parseFloat(document.getElementById('montantDevise').value) || 0;
     const source = document.getElementById('deviseSource').value;
     const res = document.getElementById('resultatDevise');
-    
-    if(montant <= 0) {
-        res.innerHTML = '<p class="text" style="color:var(--danger);">Veuillez entrer un montant valide supérieur à 0.</p>';
-        return;
-    }
-
-    let resultatFCFA = 0;
-    let resultatEUR = 0;
-    let resultatUSD = 0;
-
-    if(source === 'XOF') {
-        resultatEUR = montant * 0.001525;
-        resultatUSD = montant * 0.00165;
-        res.innerHTML = `<div style="background:var(--bg-color); padding:16px; border-radius:12px; border:1px solid var(--border-color);">
-            <h4>💱 Résultat de la conversion (depuis FCFA XOF)</h4>
-            <p class="text" style="margin-top:8px; font-size:15px; font-weight:bold; color:var(--accent);">• ${montant.toLocaleString()} FCFA = ${resultatEUR.toFixed(2)} EUR (€)</p>
-            <p class="text" style="margin-bottom:0; font-size:15px; font-weight:bold; color:var(--success);">• ${montant.toLocaleString()} FCFA = ${resultatUSD.toFixed(2)} USD ($)</p>
-        </div>`;
-    } else if(source === 'EUR') {
-        resultatFCFA = montant * 655.957;
-        resultatUSD = montant * 1.08;
-        res.innerHTML = `<div style="background:var(--bg-color); padding:16px; border-radius:12px; border:1px solid var(--border-color);">
-            <h4>💱 Résultat de la conversion (depuis Euro)</h4>
-            <p class="text" style="margin-top:8px; font-size:15px; font-weight:bold; color:var(--accent);">• ${montant.toLocaleString()} EUR = ${resultatFCFA.toLocaleString(undefined, {maximumFractionDigits:2})} FCFA (XOF)</p>
-            <p class="text" style="margin-bottom:0; font-size:15px; font-weight:bold; color:var(--success);">• ${montant.toLocaleString()} EUR = ${resultatUSD.toFixed(2)} USD ($)</p>
-        </div>`;
-    } else if(source === 'USD') {
-        resultatFCFA = montant * 605.0;
-        resultatEUR = montant * 0.925;
-        res.innerHTML = `<div style="background:var(--bg-color); padding:16px; border-radius:12px; border:1px solid var(--border-color);">
-            <h4>💱 Résultat de la conversion (depuis Dollar US)</h4>
-            <p class="text" style="margin-top:8px; font-size:15px; font-weight:bold; color:var(--accent);">• ${montant.toLocaleString()} USD = ${resultatFCFA.toLocaleString(undefined, {maximumFractionDigits:2})} FCFA (XOF)</p>
-            <p class="text" style="margin-bottom:0; font-size:15px; font-weight:bold; color:var(--success);">• ${montant.toLocaleString()} USD = ${resultatEUR.toFixed(2)} EUR (€)</p>
-        </div>`;
-    }
+    let eur = montant * 0.001525;
+    res.innerHTML = `<div style="background:var(--bg-color); padding:15px; border-radius:8px;"><h4>💱 Résultat</h4><p class="text" style="margin-top:8px; font-weight:bold; color:var(--accent);">${montant} ${source} = ${eur.toFixed(2)} EUR</p></div>`;
 }
 
 function envoyerMessageElaws() {
@@ -307,13 +310,14 @@ function ajouterBulleElaws(txt, exp) {
     const chat = document.getElementById('elawsMessages');
     const isUser = exp === 'user';
     const div = document.createElement('div');
-    div.style.cssText = `margin-bottom:6px; text-align:${isUser ? 'right' : 'left'}; display:flex; flex-direction:column; align-items:${isUser ? 'flex-end' : 'flex-start'};`;
-    div.innerHTML = `<span style="display:inline-block; background:${isUser ? 'var(--accent)' : 'var(--card-hover)'}; color:${isUser ? '#0b0f19' : 'var(--text-color)'}; padding:8px 12px; border-radius:10px; max-width:92%; word-break:break-word; border:1px solid var(--border-color); text-align:left; font-size:13px; line-height:1.4;"><strong>${isUser ? 'Moi' : 'ELAWS'} :</strong><br>${txt}</span>`;
+    div.style.cssText = `margin-bottom:6px; text-align:${isUser ? 'right' : 'left'};`;
+    div.innerHTML = `<span style="display:inline-block; background:${isUser ? 'var(--accent)' : 'var(--card-hover)'}; color:${isUser ? '#0b0f19' : 'var(--text-color)'}; padding:8px 12px; border-radius:10px; max-width:92%; font-size:13px; text-align:left;"><strong>${isUser ? 'Moi' : 'ELAWS'} :</strong><br>${txt}</span>`;
     chat.appendChild(div);
     chat.scrollTop = chat.scrollHeight;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     actualiserDashboard();
-    ajouterBulleElaws(`Bonjour ${utilisateur.nom || 'ami'} ! Je suis ELAWS, ton assistant universel au sein de l'écosystème EVAT. Comment puis-je t'aider ?`, 'elaws');
+    initCapteursEtProactivite();
+    ajouterBulleElaws(`Bonjour ${utilisateur.nom || 'ami'} ! Je suis ELAWS. Je gère tes appels et ta traduction live en temps réel.`, 'elaws');
 });

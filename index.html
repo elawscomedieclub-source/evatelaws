@@ -15,7 +15,7 @@
                 <button onclick="toggleMenu(event)" class="menu-btn" aria-label="Menu principal">☰</button>
                 <div class="header-brand">
                     <h1 id="appTitle">EVAT</h1>
-                    <span class="brand-subtitle">Écosystème Universel</span>
+                    <span class="brand-subtitle" id="headerLocationBadge">📍 Lomé, Togo (Temps Réel)</span>
                 </div>
             </div>
 
@@ -29,7 +29,7 @@
                     <div class="elaws-popup-header">
                         <div style="display:flex; align-items:center; gap:8px;">
                             <span class="status-indicator"></span>
-                            <span>Assistant ELAWS</span>
+                            <span>Assistant Temps Réel ELAWS</span>
                         </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <!-- Petit bouton micro discret -->
@@ -57,7 +57,8 @@
                 <span id="sidebarUserRole" class="sidebar-badge">Chargement...</span>
             </div>
             <div class="sidebar-links">
-                <a href="#" onclick="switchTab('dashboard')" class="nav-link active" id="link-dashboard">📊 Dashboard</a>
+                <a href="#" onclick="switchTab('dashboard')" class="nav-link active" id="link-dashboard">📊 Dashboard & Proactivité</a>
+                <a href="#" onclick="switchTab('appel')" class="nav-link" id="link-appel">📞 Appel Direct & Traduction Live</a>
                 <a href="#" onclick="switchTab('profil')" class="nav-link" id="link-profil">👤 Profil & Contacts</a>
                 <a href="#" onclick="switchTab('outils')" class="nav-link" id="link-outils">🛠️ Outils & Métiers</a>
                 <a href="#" onclick="switchTab('voyage')" class="nav-link" id="link-voyage">✈️ Voyage & Démarches</a>
@@ -65,7 +66,7 @@
                 <a href="#" onclick="switchTab('devises')" class="nav-link" id="link-devises">💱 Échange & Devises</a>
             </div>
             <div class="sidebar-footer">
-                <p>EVAT v3.4 • ELAWS Active</p>
+                <p>EVAT v3.7 • Traduction Live Active</p>
             </div>
         </nav>
 
@@ -77,14 +78,20 @@
             <!-- 1. Section Dashboard -->
             <section id="tab-dashboard" class="tab-content active">
                 <div class="card welcome-card">
-                    <h2>Tableau de Bord</h2>
-                    <p class="text">Bienvenue dans ton écosystème centralisé, <strong id="dashNomUser" style="color:var(--accent);">Mon Ami</strong>.</p>
-                    <div class="dash-grid">
+                    <h2>Tableau de Bord Proactif</h2>
+                    <p class="text">Bienvenue, <strong id="dashNomUser" style="color:var(--accent);">Kodjo</strong>. ELAWS gère tes appels et ta traduction simultanée en direct.</p>
+                    
+                    <div id="proactiveSuggestionBox" style="background:var(--bg-color); border:1px solid var(--accent); padding:15px; border-radius:12px; margin-top:15px; display:none;">
+                        <h4 style="color:var(--accent); margin-bottom:5px; font-size:14px;">💡 Suggestion Intelligente ELAWS</h4>
+                        <p id="proactiveText" class="text" style="margin-bottom:0; font-size:13px;"></p>
+                    </div>
+
+                    <div class="dash-grid" style="margin-top:15px;">
                         <div class="dash-stat-box">
-                            <span class="stat-icon">👤</span>
+                            <span class="stat-icon">📞</span>
                             <div>
-                                <h4 id="dashStatProfil">Adulte (Travailleur)</h4>
-                                <p>Type de profil actif</p>
+                                <h4>Traduction Live</h4>
+                                <p>Prête pour les appels</p>
                             </div>
                         </div>
                         <div class="dash-stat-box">
@@ -105,21 +112,60 @@
                 </div>
 
                 <div class="card">
-                    <h3>⚡ Accès Rapide</h3>
-                    <p class="text">Sélectionne une action pour démarrer instantanément.</p>
+                    <h3>⚡ Accès Rapide & Appels</h3>
+                    <p class="text">Lance un appel avec traduction instantanée ou gère tes outils.</p>
                     <div class="quick-actions">
-                        <button class="btn-action" onclick="switchTab('profil')">Modifier mon Profil</button>
-                        <button class="btn-action secondary" onclick="switchTab('outils')">Ouvrir mes Outils Métiers</button>
-                        <button class="btn-action secondary" onclick="switchTab('voyage')">Rechercher des formalités</button>
+                        <button class="btn-action" onclick="switchTab('appel')">Lancer un Appel Traduit</button>
+                        <button class="btn-action secondary" onclick="switchTab('profil')">Mon Profil</button>
+                        <button class="btn-action secondary" onclick="switchTab('devises')">Convertir des Devises</button>
                     </div>
                 </div>
             </section>
 
-            <!-- 2. Section Profil & Contacts -->
+            <!-- 2. Section Appel en Direct & Traduction Temps Réel -->
+            <section id="tab-appel" class="tab-content">
+                <div class="card" style="border-left: 4px solid var(--success);">
+                    <h2>📞 Appel en Direct & Traduction Temps Réel (ELAWS)</h2>
+                    <p class="text">Discute avec un interlocuteur parlant un autre dialecte ou une autre langue. ELAWS traduit et résume en direct au cours de l'appel.</p>
+                    
+                    <div class="form-group">
+                        <label>Nom ou Numéro du correspondant :</label>
+                        <input type="text" id="appelCorrespondant" class="input" placeholder="Ex: Partenaire / +228 ...">
+                        
+                        <label>Langue / Dialecte de l'interlocuteur :</label>
+                        <select id="langueInterlocuteur" class="input">
+                            <option value="miny">Mina / Gen</option>
+                            <option value="ewe">Ewé</option>
+                            <option value="kabiye">Kabyè</option>
+                            <option value="yoruba">Yoruba</option>
+                            <option value="hausa">Haoussa</option>
+                            <option value="anglais">Anglais</option>
+                        </select>
+
+                        <div style="display:flex; gap:10px; margin-top:12px;">
+                            <button class="btn-action" onclick="demarrerAppelTraduit()" style="background:var(--success); color:#fff;">Démarrer l'Appel Live 📞</button>
+                            <button class="btn-action secondary" onclick="raccrocherAppel()" style="color:var(--danger); border-color:var(--danger);">Raccrocher ⏹️</button>
+                        </div>
+                    </div>
+
+                    <!-- Écran de simulation d'appel avec traduction en temps réel -->
+                    <div id="ecranAppelLive" style="margin-top:20px; background:var(--bg-color); border:1px solid var(--border-color); padding:15px; border-radius:12px; display:none;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                            <span style="font-weight:700; color:var(--success);">🔴 APPEL EN COURS AVEC TRADUCTION LIVE</span>
+                            <span id="chronometreAppel" style="font-size:13px; color:var(--text-secondary);">00:00</span>
+                        </div>
+                        <div id="fluxTraductionLive" style="background:var(--card-bg); padding:12px; border-radius:8px; height:140px; overflow-y:auto; font-size:13px; display:flex; flex-direction:column; gap:6px;">
+                            <div style="color:var(--accent);">🤖 ELAWS est à l'écoute et traduit en temps réel...</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Section Profil & Contacts -->
             <section id="tab-profil" class="tab-content">
                 <div class="card">
                     <h2>Gestion du Profil & Contacts</h2>
-                    <p class="text">Configure ton profil en toute flexibilité (Adulte/Enfant, lettré/illettré, multi-métiers) et gère ton carnet d'adresses.</p>
+                    <p class="text">Configure ton profil et gère ton carnet d'adresses.</p>
                     
                     <div class="form-group">
                         <label>Nom complet :</label>
@@ -135,78 +181,64 @@
 
                         <label>Corps de Métier(s) / Activité(s) (Séparés par des virgules) :</label>
                         <input type="text" id="inputMetier" class="input" placeholder="Ex: Commerçant, Développeur, Artisan...">
-                        <span class="input-hint">Tu peux ajouter plusieurs métiers pour cumuler leurs outils.</span>
                         
                         <button class="btn-action" style="margin-top:10px;" onclick="sauvegarderProfilBase()">Enregistrer le Profil</button>
                     </div>
                 </div>
 
                 <div class="card" style="margin-top: 20px;">
-                    <h3>📇 Carnet de Contacts & Double Appel</h3>
-                    <p class="text">Enregistre tes contacts pour appeler en **GSM** (numéro direct) ou par **Internet/Réseau** (e-mail).</p>
+                    <h3>📇 Carnet de Contacts & Appels</h3>
                     <div class="form-group">
                         <input type="text" id="contactNom" class="input" placeholder="Nom du contact...">
-                        <input type="tel" id="contactTel" class="input" placeholder="Numéro GSM (ex: +228...)">
-                        <input type="email" id="contactEmail" class="input" placeholder="Adresse E-mail (pour appel réseau ELAWS)...">
+                        <input type="tel" id="contactTel" class="input" placeholder="Numéro GSM...">
+                        <input type="email" id="contactEmail" class="input" placeholder="Adresse E-mail...">
                         <button class="btn-action" onclick="ajouterContact()">Ajouter au répertoire</button>
                     </div>
                     <div id="listeContacts" style="margin-top: 15px;"></div>
                 </div>
             </section>
 
-            <!-- 3. Section Outils -->
+            <!-- 4. Section Outils -->
             <section id="tab-outils" class="tab-content">
                 <div class="card">
-                    <h2>Outils & Métiers</h2>
-                    <p class="text">Ces outils s'adaptent dynamiquement selon tes corps de métier enregistrés dans ton profil.</p>
+                    <h2>Outils & Métiers Multi-actifs</h2>
                     <div id="zoneOutilsDynamiques">
-                        <p class="text" style="color:var(--text-secondary);">Enregistre tes métiers dans ton profil pour afficher tes outils dédiés.</p>
+                        <p class="text" style="color:var(--text-secondary);">Enregistre tes métiers pour afficher tes outils.</p>
                     </div>
                 </div>
             </section>
 
-            <!-- 4. Section Voyage -->
+            <!-- 5. Section Voyage -->
             <section id="tab-voyage" class="tab-content">
                 <div class="card">
                     <h2>Espace Voyage & Démarches</h2>
-                    <p class="text">Indique le pays de destination pour afficher dynamiquement les formalités et exigences à la demande.</p>
-                    <div class="form-group">
-                        <input type="text" id="inputPaysVoyage" class="input" placeholder="Entrez le pays (ex: Togo, France, Canada...)">
-                        <button class="btn-action" onclick="rechercherVoyage()">Rechercher les formalités par pays</button>
-                    </div>
+                    <input type="text" id="inputPaysVoyage" class="input" placeholder="Entrez le pays...">
+                    <button class="btn-action" onclick="rechercherVoyage()">Rechercher</button>
                     <div id="resultatVoyage" style="margin-top:15px;"></div>
                 </div>
             </section>
 
-            <!-- 5. Section Banque -->
+            <!-- 6. Section Banque -->
             <section id="tab-banque" class="tab-content">
                 <div class="card">
                     <h2>Banque & Cartes Bancaires</h2>
-                    <p class="text">Obtiens les procédures et pièces à fournir pour l'obtention de cartes bancaires (Visa / Mastercard) selon le pays.</p>
-                    <div class="form-group">
-                        <input type="text" id="inputPaysBanque" class="input" placeholder="Entrez le pays ou la banque...">
-                        <button class="btn-action" onclick="rechercherBanque()">Consulter les exigences bancaires</button>
-                    </div>
+                    <input type="text" id="inputPaysBanque" class="input" placeholder="Entrez le pays ou la banque...">
+                    <button class="btn-action" onclick="rechercherBanque()">Consulter</button>
                     <div id="resultatBanque" style="margin-top:15px;"></div>
                 </div>
             </section>
 
-            <!-- 6. Section Devises -->
+            <!-- 7. Section Devises -->
             <section id="tab-devises" class="tab-content">
                 <div class="card">
                     <h2>Échange & Devises</h2>
-                    <p class="text">Convertis et reconnais instantanément les devises selon les zones monétaires.</p>
-                    <div class="form-group">
-                        <label>Montant à convertir :</label>
-                        <input type="number" id="montantDevise" class="input" placeholder="Entrez le montant...">
-                        <label>Devise source :</label>
-                        <select id="deviseSource" class="input">
-                            <option value="XOF">FCFA (XOF / XAF - Afrique de l'Ouest/Centrale)</option>
-                            <option value="EUR">Euro (€ - Zone Euro)</option>
-                            <option value="USD">Dollar US ($ - États-Unis / International)</option>
-                        </select>
-                        <button class="btn-action" onclick="convertirDevise()">Calculer l'échange</button>
-                    </div>
+                    <input type="number" id="montantDevise" class="input" placeholder="Montant...">
+                    <select id="deviseSource" class="input">
+                        <option value="XOF">FCFA (XOF / XAF)</option>
+                        <option value="EUR">Euro (€)</option>
+                        <option value="USD">Dollar US ($)</option>
+                    </select>
+                    <button class="btn-action" onclick="convertirDevise()">Calculer</button>
                     <div id="resultatDevise" style="margin-top:15px;"></div>
                 </div>
             </section>
