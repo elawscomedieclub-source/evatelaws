@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EVAT & ELAWS - Résolution d'Urgences & Solutions Globales</title>
+    <title>EVAT & ELAWS - Assistant Interactif & Suivi de Démarches</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.webmanifest">
 </head>
@@ -15,7 +15,7 @@
                 <button onclick="toggleMenu(event)" class="menu-btn" aria-label="Menu principal">☰</button>
                 <div class="header-brand">
                     <h1 id="appTitle">EVAT</h1>
-                    <span class="brand-subtitle" id="headerLocationBadge">📍 Lomé, Togo (Crisis Response v3.13)</span>
+                    <span class="brand-subtitle" id="headerLocationBadge">📍 Lomé, Togo (Interactive Guide v3.14)</span>
                 </div>
             </div>
 
@@ -29,7 +29,7 @@
                     <div class="elaws-popup-header">
                         <div style="display:flex; align-items:center; gap:8px;">
                             <span class="status-indicator"></span>
-                            <span>Assistant IA ELAWS v3.13</span>
+                            <span>Assistant IA ELAWS v3.14</span>
                         </div>
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <button onclick="toggleMicrophone()" id="microBtn" class="micro-btn-discret" title="Commande vocale active">🎙️</button>
@@ -56,17 +56,17 @@
             </div>
             <div class="sidebar-links">
                 <a href="#" onclick="switchTab('dashboard')" class="nav-link active" id="link-dashboard">📊 Dashboard</a>
+                <a href="#" onclick="switchTab('voyage')" class="nav-link" id="link-voyage">✈️ Guide Voyage & Démarches (Pas à Pas)</a>
                 <a href="#" onclick="switchTab('crise')" class="nav-link" id="link-crise">🚨 Urgences & Solutions</a>
                 <a href="#" onclick="switchTab('audit')" class="nav-link" id="link-audit">🌐 Évaluation Web (Global)</a>
                 <a href="#" onclick="switchTab('appel')" class="nav-link" id="link-appel">📞 Appel Direct & Live</a>
                 <a href="#" onclick="switchTab('profil')" class="nav-link" id="link-profil">👤 Profil & Voix</a>
                 <a href="#" onclick="switchTab('outils')" class="nav-link" id="link-outils">🛠️ Outils & Bloc-Notes</a>
-                <a href="#" onclick="switchTab('voyage')" class="nav-link" id="link-voyage">✈️ Voyage & Démarches</a>
                 <a href="#" onclick="switchTab('banque')" class="nav-link" id="link-banque">💳 Banque & Cartes</a>
                 <a href="#" onclick="switchTab('devises')" class="nav-link" id="link-devises">💱 Échange & Devises</a>
             </div>
             <div class="sidebar-footer">
-                <p>EVAT v3.13 • Global Crisis Shield</p>
+                <p>EVAT v3.14 • Active Companion</p>
             </div>
         </nav>
 
@@ -79,7 +79,7 @@
             <section id="tab-dashboard" class="tab-content active">
                 <div class="card welcome-card">
                     <h2>Écosystème Universel EVAT</h2>
-                    <p class="text">Bienvenue, <strong id="dashNomUser" style="color:var(--accent);">Kodjo</strong>. L'écosystème intègre désormais le module de résolution d'urgences et de solutions rapides pour le monde entier.</p>
+                    <p class="text">Bienvenue, <strong id="dashNomUser" style="color:var(--accent);">Kodjo</strong>. L'écosystème intègre désormais l'assistant interactif pas à pas pour vous accompagner jusqu'à l'accomplissement total de vos projets.</p>
                     
                     <div id="proactiveSuggestionBox" style="background:var(--bg-color); border:1px solid var(--accent); padding:15px; border-radius:12px; margin-top:15px; display:none;">
                         <h4 style="color:var(--accent); margin-bottom:5px; font-size:14px;">💡 Suggestion Proactive ELAWS</h4>
@@ -88,17 +88,17 @@
 
                     <div class="dash-grid" style="margin-top:15px;">
                         <div class="dash-stat-box">
+                            <span class="stat-icon">✈️</span>
+                            <div>
+                                <h4 id="dashStatVoyages">0 Projet</h4>
+                                <p>Démarches suivies</p>
+                            </div>
+                        </div>
+                        <div class="dash-stat-box">
                             <span class="stat-icon">🚨</span>
                             <div>
                                 <h4 id="dashStatCrises">0 Résolution</h4>
                                 <p>Problèmes traités</p>
-                            </div>
-                        </div>
-                        <div class="dash-stat-box">
-                            <span class="stat-icon">🌐</span>
-                            <div>
-                                <h4 id="dashStatAudits">0 Audit</h4>
-                                <p>Sites évalués</p>
                             </div>
                         </div>
                         <div class="dash-stat-box">
@@ -112,210 +112,106 @@
                 </div>
 
                 <div class="card">
-                    <h3>⚡ Action Rapide & Urgences</h3>
-                    <p class="text">Soumettez une situation de crise ou un problème urgent pour obtenir une solution immédiate par ELAWS.</p>
+                    <h3>⚡ Accompagnement Interactif</h3>
+                    <p class="text">Laissez ELAWS vous guider étape par étape dans vos préparatifs de voyage ou vos démarches administratives.</p>
                     <div class="quick-actions">
-                        <button class="btn-action" style="background:var(--danger); color:#fff;" onclick="switchTab('crise')">Lancer une Alerte / Solution 🚨</button>
-                        <button class="btn-action secondary" onclick="switchTab('audit')">Évaluer un Site Web 🌐</button>
+                        <button class="btn-action" onclick="switchTab('voyage')">Commencer un Guide Voyage ✈️</button>
+                        <button class="btn-action secondary" onclick="switchTab('crise')">Urgences & Solutions 🚨</button>
                         <button class="btn-action secondary" onclick="switchTab('outils')">Ouvrir le Bloc-Notes 📝</button>
                     </div>
                 </div>
             </section>
 
-            <!-- 2. Section Urgences & Solutions Globales (Module v3.13) -->
-            <section id="tab-crise" class="tab-content">
-                <div class="card" style="border-left: 4px solid var(--danger);">
-                    <h2>🚨 Module de Résolution d'Urgences & Problèmes (Global / Local)</h2>
-                    <p class="text">Face à un souci (crise sanitaire, économique, panne technique, blocage secteur d'activité, situation d'urgence), ELAWS analyse le problème et génère instantanément un plan d'action de terrain.</p>
+            <!-- 2. Section Voyage & Guide Interactif Pas à Pas (Module v3.14) -->
+            <section id="tab-voyage" class="tab-content">
+                <div class="card" style="border-left: 4px solid var(--accent);">
+                    <h2>✈️ Assistant Interactif de Voyage & Démarches (Pas à Pas)</h2>
+                    <p class="text">Démarrez votre projet de voyage ou de démarche administrative. ELAWS vous pose des questions, identifie ce qui manque et vous accompagne jusqu'à la réussite complète.</p>
                     
                     <div class="form-group">
-                        <label>Décrivez le problème ou la situation d'urgence :</label>
-                        <textarea id="criseDescription" class="input" rows="3" placeholder="Ex: Panne d'électricité générale, hausse subite des prix des matières premières, blocage administratif..."></textarea>
+                        <label>Destination ou Nom de la démarche :</label>
+                        <input type="text" id="voyageDestination" class="input" placeholder="Ex: Voyage en France, Passeport biométrique, Visa...">
                         
-                        <label>Échelle de la situation :</label>
-                        <select id="criseEchelle" class="input">
-                            <option value="local">📍 Local / Communautaire (Quartier, Ville / Lomé)</option>
-                            <option value="national">🇹🇬 National / Pays</option>
-                            <option value="mondial">🌍 Mondial / International</option>
+                        <label>Où en êtes-vous actuellement ?</label>
+                        <select id="voyageEtapeActuelle" class="input">
+                            <option value="depart">1. Rien commencé / Juste une idée</option>
+                            <option value="passeport">2. Documents d'identité (Passeport / Nationalité) en cours</option>
+                            <option value="visa">3. Formalités de Visa / Billets d'avion</option>
+                            <option value="sante">4. Santé, Vaccins & Bordereau de voyage</option>
                         </select>
 
-                        <label>Secteur concerné :</label>
-                        <select id="criseSecteur" class="input">
-                            <option value="general">Général / Urgence Humanitaire ou Sociale</option>
-                            <option value="commerce">Commerce, Artisanat & Petites Entreprises</option>
-                            <option value="technologie">Technologie, Web & Connectivité</option>
-                            <option value="sante">Santé, Sécurité & Alimentation</option>
-                        </select>
-
-                        <button class="btn-action" onclick="analyserEtResoudreCrise()" style="background:var(--danger); color:#fff; margin-top:12px;">Générer une Solution ELAWS ⚡</button>
+                        <button class="btn-action" onclick="lancerAssistantVoyage()" style="margin-top:12px;">Lancer l'Accompagnement ELAWS 🚀</button>
                     </div>
 
-                    <div id="resultatCriseContainer" style="margin-top:20px; display:none;"></div>
+                    <div id="resultatAssistantVoyage" style="margin-top:20px; display:none;"></div>
                 </div>
 
                 <div class="card" style="margin-top: 20px;">
-                    <h3>📜 Historique des Urgences Traitées</h3>
-                    <div id="listeHistoriqueCrises" style="margin-top: 10px;">
-                        <p class="text">Aucune urgence enregistrée pour le moment.</p>
+                    <h3>📋 Suivi de mes Projets & Check-lists Actifs</h3>
+                    <div id="listeProjetsVoyage" style="margin-top: 10px;">
+                        <p class="text">Aucun projet de voyage en cours d'enregistrement.</p>
                     </div>
                 </div>
             </section>
 
-            <!-- 3. Section Évaluation Web (Global Audit Module v3.12) -->
+            <!-- 3. Section Urgences & Solutions Globales -->
+            <section id="tab-crise" class="tab-content">
+                <div class="card" style="border-left: 4px solid var(--danger);">
+                    <h2>🚨 Module de Résolution d'Urgences & Problèmes</h2>
+                    <p class="text">Décrivez une situation d'urgence pour obtenir un plan d'action immédiat.</p>
+                    <div class="form-group">
+                        <label>Description du problème :</label>
+                        <textarea id="criseDescription" class="input" rows="3" placeholder="Décrivez l'urgence..."></textarea>
+                        <button class="btn-action" style="background:var(--danger); color:#fff;" onclick="analyserEtResoudreCrise()">Générer une Solution ⚡</button>
+                    </div>
+                    <div id="resultatCriseContainer" style="margin-top:15px; display:none;"></div>
+                </div>
+            </section>
+
+            <!-- 4. Section Évaluation Web -->
             <section id="tab-audit" class="tab-content">
                 <div class="card" style="border-left: 4px solid var(--accent);">
                     <h2>🌐 Module Mondial d'Évaluation de Sites Web</h2>
-                    <p class="text">Soumettez l'URL d'un site web (créateur, e-commerce, portfolio) pour une analyse instantanée par ELAWS (Performance, Ergonomie Mobile, Accessibilité WCAG).</p>
-                    
-                    <div class="form-group">
-                        <label>URL du site web à auditer :</label>
-                        <input type="url" id="auditUrl" class="input" placeholder="https://exemple.com">
-                        
-                        <label>Portée géographique cible :</label>
-                        <select id="auditPortee" class="input">
-                            <option value="global">🌍 Internationale (Global Scale)</option>
-                            <option value="afrique">🌍 Afrique de l'Ouest & Émergente (Optimisé faible connexion)</option>
-                            <option value="local">📍 Locale / Communautaire (Togo / Régional)</option>
-                        </select>
-
-                        <label>Objectif principal du site :</label>
-                        <select id="auditObjectif" class="input">
-                            <option value="vitrine">Site Vitrine / Portfolio</option>
-                            <option value="ecommerce">E-commerce / Vente en ligne</option>
-                            <option value="webapp">Application Web / SaaS</option>
-                            <option value="medias">Blog / Actualités / Média</option>
-                        </select>
-
-                        <button class="btn-action" onclick="lancerAuditSite()" style="margin-top:12px;">Lancer l'Évaluation ELAWS 🚀</button>
-                    </div>
-
-                    <div id="resultatAuditContainer" style="margin-top:20px; display:none;"></div>
-                </div>
-
-                <div class="card" style="margin-top: 20px;">
-                    <h3>📜 Historique des Audits Enregistrés</h3>
-                    <div id="listeHistoriqueAudits" style="margin-top: 10px;">
-                        <p class="text">Aucun audit enregistré pour le moment.</p>
-                    </div>
+                    <input type="url" id="auditUrl" class="input" placeholder="https://exemple.com">
+                    <button class="btn-action" onclick="lancerAuditSite()">Lancer l'Évaluation 🚀</button>
+                    <div id="resultatAuditContainer" style="margin-top:15px; display:none;"></div>
                 </div>
             </section>
 
-            <!-- 4. Section Appel en Direct & Traduction Temps Réel -->
+            <!-- 5. Section Appel en Direct -->
             <section id="tab-appel" class="tab-content">
                 <div class="card" style="border-left: 4px solid var(--success);">
                     <h2>📞 Appel en Direct & Traduction Temps Réel</h2>
-                    <p class="text">Discute avec un interlocuteur en dialecte. ELAWS traduit et résume en direct.</p>
-                    
-                    <div class="form-group">
-                        <label>Nom ou Numéro du correspondant :</label>
-                        <input type="text" id="appelCorrespondant" class="input" placeholder="Ex: Partenaire / +228 ...">
-                        
-                        <label>Langue / Dialecte de l'interlocuteur :</label>
-                        <select id="langueInterlocuteur" class="input">
-                            <option value="miny">Mina / Gen</option>
-                            <option value="ewe">Ewé</option>
-                            <option value="kabiye">Kabyè</option>
-                            <option value="yoruba">Yoruba</option>
-                            <option value="hausa">Haoussa</option>
-                            <option value="anglais">Anglais</option>
-                        </select>
-
-                        <div style="display:flex; gap:10px; margin-top:12px;">
-                            <button class="btn-action" onclick="demarrerAppelTraduit()" style="background:var(--success); color:#fff;">Démarrer l'Appel Live 📞</button>
-                            <button class="btn-action secondary" onclick="raccrocherAppel()" style="color:var(--danger); border-color:var(--danger);">Raccrocher ⏹️</button>
-                        </div>
-                    </div>
-
-                    <div id="ecranAppelLive" style="margin-top:20px; background:var(--bg-color); border:1px solid var(--border-color); padding:15px; border-radius:12px; display:none;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                            <span style="font-weight:700; color:var(--success);">🔴 APPEL EN COURS AVEC TRADUCTION LIVE</span>
-                            <span id="chronometreAppel" style="font-size:13px; color:var(--text-secondary);">00:00</span>
-                        </div>
-                        <div id="fluxTraductionLive" style="background:var(--card-bg); padding:12px; border-radius:8px; height:140px; overflow-y:auto; font-size:13px; display:flex; flex-direction:column; gap:6px;">
-                            <div style="color:var(--accent);">🤖 ELAWS est à l'écoute et traduit en temps réel...</div>
-                        </div>
+                    <input type="text" id="appelCorrespondant" class="input" placeholder="Nom du correspondant...">
+                    <button class="btn-action" style="background:var(--success); color:#fff;" onclick="demarrerAppelTraduit()">Démarrer l'Appel Live 📞</button>
+                    <div id="ecranAppelLive" style="margin-top:15px; display:none;">
+                        <div id="fluxTraductionLive" style="background:var(--bg-color); padding:10px; border-radius:8px; height:100px; overflow-y:auto;"></div>
                     </div>
                 </div>
             </section>
 
-            <!-- 5. Section Profil & Contacts -->
+            <!-- 6. Section Profil & Contacts -->
             <section id="tab-profil" class="tab-content">
                 <div class="card">
                     <h2>Gestion du Profil & Préférences IA</h2>
-                    <p class="text">Configure ton profil et le ton de l'assistant ELAWS.</p>
-                    
-                    <div class="form-group">
-                        <label>Nom complet :</label>
-                        <input type="text" id="inputNom" class="input" placeholder="Ton nom...">
-                        
-                        <label>Type de Profil :</label>
-                        <select id="selectTypeProfil" class="input" onchange="changerTypeProfil()">
-                            <option value="adulte">Adulte (Travailleurs, non-travailleurs, lettrés/illettrés)</option>
-                            <option value="enfant">Enfant (Élèves, non scolarisés)</option>
-                        </select>
-
-                        <div id="sousProfilContainer" style="margin-bottom:12px;"></div>
-
-                        <label>Ton & Style de l'Assistant ELAWS :</label>
-                        <select id="selectTonIa" class="input">
-                            <option value="standard">Standard & Professionnel (Précis et direct)</option>
-                            <option value="pedagogique">Pédagogique & Simple (Idéal pour l'apprentissage)</option>
-                            <option value="vocal_inclusif">Vocal & Accompagné (Phrases courtes, explications claires)</option>
-                        </select>
-
-                        <label>Corps de Métier(s) / Activité(s) (Séparés par des virgules) :</label>
-                        <input type="text" id="inputMetier" class="input" placeholder="Ex: Commerçant, Développeur, Artisan...">
-                        
-                        <button class="btn-action" style="margin-top:10px;" onclick="sauvegarderProfilBase()">Enregistrer les Préférences</button>
-                    </div>
-                </div>
-
-                <div class="card" style="margin-top: 20px;">
-                    <h3>📇 Carnet de Contacts & Appels</h3>
-                    <div class="form-group">
-                        <input type="text" id="contactNom" class="input" placeholder="Nom du contact...">
-                        <input type="tel" id="contactTel" class="input" placeholder="Numéro GSM...">
-                        <input type="email" id="contactEmail" class="input" placeholder="Adresse E-mail...">
-                        <button class="btn-action" onclick="ajouterContact()">Ajouter au répertoire</button>
-                    </div>
-                    <div id="listeContacts" style="margin-top: 15px;"></div>
+                    <input type="text" id="inputNom" class="input" placeholder="Ton nom...">
+                    <select id="selectTonIa" class="input">
+                        <option value="standard">Standard & Professionnel</option>
+                        <option value="pedagogique">Pédagogique & Simple</option>
+                        <option value="vocal_inclusif">Vocal & Accompagné</option>
+                    </select>
+                    <button class="btn-action" onclick="sauvegarderProfilBase()">Enregistrer</button>
                 </div>
             </section>
 
-            <!-- 6. Section Outils & Bloc-Notes Intelligent -->
+            <!-- 7. Section Outils & Bloc-Notes -->
             <section id="tab-outils" class="tab-content">
                 <div class="card">
-                    <h2>🛠️ Outils & Bloc-Notes Intelligent</h2>
-                    <p class="text">Enregistrez vos notes, idées, codes ou rappels professionnels. Sauvegardé instantanément en local.</p>
-                    
-                    <div class="form-group">
-                        <label>Titre de la note :</label>
-                        <input type="text" id="noteTitre" class="input" placeholder="Ex: Idée de projet / Commande client...">
-                        
-                        <label>Contenu :</label>
-                        <textarea id="noteContenu" class="input" rows="3" placeholder="Écrivez votre note ici..."></textarea>
-                        
-                        <button class="btn-action" onclick="ajouterNoteBlocNotes()">Enregistrer dans le Bloc-Notes 📝</button>
-                    </div>
-                    
-                    <div id="listeNotesBlocNotes" style="margin-top: 20px;"></div>
-                </div>
-
-                <div class="card" style="margin-top: 20px;">
-                    <h3>Espaces Métiers Actifs</h3>
-                    <div id="zoneOutilsDynamiques">
-                        <p class="text" style="color:var(--text-secondary);">Enregistre tes métiers pour afficher tes outils spécifiques.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 7. Section Voyage -->
-            <section id="tab-voyage" class="tab-content">
-                <div class="card">
-                    <h2>Espace Voyage & Démarches</h2>
-                    <input type="text" id="inputPaysVoyage" class="input" placeholder="Entrez le pays...">
-                    <button class="btn-action" onclick="rechercherVoyage()">Rechercher</button>
-                    <div id="resultatVoyage" style="margin-top:15px;"></div>
+                    <h2>🛠️ Bloc-Notes Intelligent</h2>
+                    <input type="text" id="noteTitre" class="input" placeholder="Titre de la note...">
+                    <textarea id="noteContenu" class="input" rows="3" placeholder="Contenu..."></textarea>
+                    <button class="btn-action" onclick="ajouterNoteBlocNotes()">Enregistrer 📝</button>
+                    <div id="listeNotesBlocNotes" style="margin-top:15px;"></div>
                 </div>
             </section>
 
@@ -323,7 +219,7 @@
             <section id="tab-banque" class="tab-content">
                 <div class="card">
                     <h2>Banque & Cartes Bancaires</h2>
-                    <input type="text" id="inputPaysBanque" class="input" placeholder="Entrez le pays ou la banque...">
+                    <input type="text" id="inputPaysBanque" class="input" placeholder="Pays ou banque...">
                     <button class="btn-action" onclick="rechercherBanque()">Consulter</button>
                     <div id="resultatBanque" style="margin-top:15px;"></div>
                 </div>
@@ -334,11 +230,6 @@
                 <div class="card">
                     <h2>Échange & Devises</h2>
                     <input type="number" id="montantDevise" class="input" placeholder="Montant...">
-                    <select id="deviseSource" class="input">
-                        <option value="XOF">FCFA (XOF / XAF)</option>
-                        <option value="EUR">Euro (€)</option>
-                        <option value="USD">Dollar US ($)</option>
-                    </select>
                     <button class="btn-action" onclick="convertirDevise()">Calculer</button>
                     <div id="resultatDevise" style="margin-top:15px;"></div>
                 </div>
@@ -352,7 +243,7 @@
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
-                    .then(reg => console.log('Service Worker v3.13 enregistré !', reg.scope))
+                    .then(reg => console.log('Service Worker v3.14 enregistré !', reg.scope))
                     .catch(err => console.log('Erreur SW :', err));
             });
         }

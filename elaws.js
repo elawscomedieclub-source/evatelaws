@@ -8,11 +8,11 @@ const ELAWS_BRAIN = {
         if (ton === "vocal_inclusif") prefixe = "🗣️ [Mode Vocal] ";
 
         if(t.includes('bonjour') || t.includes('salut')) {
-            return `${prefixe}Bonjour ${profil.nom} ! Bouclier d'urgence EVAT activé.`;
+            return `${prefixe}Bonjour ${profil.nom} ! Assistant interactif EVAT v3.14 prêt.`;
         }
-        if(t.includes('urgence') || t.includes('crise') || t.includes('problème')) {
-            return `${prefixe}Rendez-vous dans l'onglet **Urgences & Solutions** pour soumettre votre situation et obtenir un plan d'action immédiat par ELAWS !`;
+        if(t.includes('voyage') || t.includes('démarche') || t.includes('passeport')) {
+            return `${prefixe}Rendez-vous dans l'onglet **Guide Voyage & Démarches** pour lancer votre suivi interactif pas à pas !`;
         }
-        return `${prefixe}Requête d'urgence traitée : "${texte}". Écosystème de terrain opérationnel.`;
+        return `${prefixe}Requête traitée : "${texte}". Accompagnement en cours.`;
     }
 };
